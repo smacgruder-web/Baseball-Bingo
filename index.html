@@ -411,7 +411,7 @@
           </button>
 
           <!-- Cracker Jack Themed Audio Narration Tour (harmonized with the full demo) -->
-          <button onclick="playCrackerJackNarration()" 
+          <button id="crackerjack-tour-btn" onclick="toggleCrackerJackNarration()" 
                   class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-extrabold rounded-full border-2 border-[#ab3334] text-[#ab3334] hover:bg-[#ab3334] hover:text-white active:scale-[0.95] transition shadow-sm">
             <span class="material-symbols-outlined text-base">volume_up</span>
             <span class="hidden sm:inline">🎤 Cracker Jack Tour</span>
@@ -1970,16 +1970,25 @@ Baseball Bingo Pro. The most fun you can have between pitches. Now let's go get 
 
       utterance.onend = () => {
         isNarrationPlaying = false;
+        resetCrackerJackButton();
         showToast('Thanks for taking the Cracker Jack Tour!');
       };
 
       utterance.onerror = (e) => {
         console.warn('Narration error', e);
+        isNarrationPlaying = false;
+        resetCrackerJackButton();
         showToast('Narration playback issue – your browser may not support speech synthesis.');
+      };
+
+      // Also reset if the user leaves the page or something
+      window.onbeforeunload = () => {
+        if (isNarrationPlaying) window.speechSynthesis.cancel();
       };
 
       narrationUtterance = utterance;
       isNarrationPlaying = true;
+      updateCrackerJackButton(true); // set to stop state
       window.speechSynthesis.speak(utterance);
 
       // Little festive burst to celebrate the narration starting
@@ -1988,9 +1997,46 @@ Baseball Bingo Pro. The most fun you can have between pitches. Now let's go get 
       showToast('Cracker Jack Narration playing... (old-timey baseball hype!)');
     }
 
-    // Optional: expose a stop function if needed later
     function stopNarration() {
       window.speechSynthesis.cancel();
+      isNarrationPlaying = false;
+      resetCrackerJackButton();
+    }
+
+    function toggleCrackerJackNarration() {
+      if (isNarrationPlaying) {
+        stopNarration();
+      } else {
+        playCrackerJackNarration();
+      }
+    }
+
+    function updateCrackerJackButton(playing) {
+      const btn = document.getElementById('crackerjack-tour-btn');
+      if (!btn) return;
+
+      if (playing) {
+        btn.innerHTML = `
+          <span class="material-symbols-outlined text-base">stop</span>
+          <span class="hidden sm:inline">Stop Tour</span>
+        `;
+        btn.classList.add('!border-red-500', '!text-red-500', '!hover:bg-red-500');
+        btn.classList.remove('border-[#ab3334]', 'text-[#ab3334]', 'hover:bg-[#ab3334]');
+      } else {
+        resetCrackerJackButton(btn);
+      }
+    }
+
+    function resetCrackerJackButton(btn = null) {
+      if (!btn) btn = document.getElementById('crackerjack-tour-btn');
+      if (!btn) return;
+
+      btn.innerHTML = `
+        <span class="material-symbols-outlined text-base">volume_up</span>
+        <span class="hidden sm:inline">🎤 Cracker Jack Tour</span>
+      `;
+      btn.classList.remove('!border-red-500', '!text-red-500', '!hover:bg-red-500');
+      btn.classList.add('border-[#ab3334]', 'text-[#ab3334]', 'hover:bg-[#ab3334]');
       isNarrationPlaying = false;
     }
 
