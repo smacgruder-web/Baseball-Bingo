@@ -30,3 +30,4 @@ build/
 
 # Keep the code.html prototypes as they are the source material for the stitch
 # The main deliverable is index.html + icons/ + PWA files at root
+.vercel
