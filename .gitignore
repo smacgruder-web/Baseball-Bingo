@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# Vercel
+.vercel/
+
+# OS / Editor
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Build / temp (if any)
+dist/
+build/
+*.tmp
+
+# Large reference screenshots (optional - uncomment if you want to slim the repo)
+# */screen.png
+# **/screen.png
+
+# Keep the code.html prototypes as they are the source material for the stitch
+# The main deliverable is index.html + icons/ + PWA files at root
