@@ -375,9 +375,18 @@
 
       <!-- Upcoming Games / Schedule -->
       <div class="mb-8">
-        <div class="flex items-center justify-between mb-3 px-1">
-          <div class="font-bold text-sm tracking-widest text-[#414941]">UPCOMING GAMES — SELECT TO PLAY</div>
-          <div class="text-[10px] text-[#735c00]">Tap any matchup to load it into your bingo card</div>
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3 px-1">
+          <div>
+            <div class="font-bold text-sm tracking-widest text-[#414941]">UPCOMING GAMES — SELECT TO PLAY</div>
+            <div class="text-[10px] text-[#735c00]">Tap to load • ＋ to add to your personal schedule</div>
+          </div>
+          <!-- Filter controls -->
+          <div class="flex gap-1 text-xs">
+            <button data-upcoming-filter="all" onclick="filterUpcoming('all')"
+                    class="px-3 py-1 rounded-full border border-[#c1c9bf] bg-[#033016] text-white">All</button>
+            <button data-upcoming-filter="my-team" onclick="filterUpcoming('my-team')"
+                    class="px-3 py-1 rounded-full border border-[#c1c9bf]">My Team</button>
+          </div>
         </div>
         <div id="upcoming-games-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           <!-- Populated by renderUpcomingGames() -->
@@ -578,6 +587,25 @@
           </div>
         </div>
 
+        <!-- Favorite Team -->
+        <div class="mt-6 pt-4 border-t border-[#c1c9bf]/40">
+          <div class="text-xs font-bold uppercase tracking-widest text-[#414941] mb-2">FAVORITE TEAM</div>
+          <select id="fav-team-select" onchange="saveFavoriteTeam(this.value)" class="w-full bg-white border border-[#c1c9bf] rounded-xl px-3 py-2 text-sm">
+            <option value="">-- Select your team --</option>
+            <option value="SF Giants">San Francisco Giants</option>
+            <option value="Chicago Cubs">Chicago Cubs</option>
+            <option value="LA Dodgers">Los Angeles Dodgers</option>
+            <option value="New York Yankees">New York Yankees</option>
+            <option value="Boston Red Sox">Boston Red Sox</option>
+            <option value="Baltimore Orioles">Baltimore Orioles</option>
+            <option value="Atlanta Braves">Atlanta Braves</option>
+            <option value="Philadelphia Phillies">Philadelphia Phillies</option>
+            <option value="St. Louis Cardinals">St. Louis Cardinals</option>
+            <option value="Houston Astros">Houston Astros</option>
+          </select>
+          <p class="text-[10px] text-[#414941] mt-1">Games involving your team will be highlighted and filterable in the Lobby.</p>
+        </div>
+
         <div class="my-6 h-px bg-[#c1c9bf]/40"></div>
 
         <div class="grid grid-cols-3 gap-4 text-center">
@@ -621,6 +649,15 @@
             <div class="text-[10px] text-[#735c00]">Complete in a shutout</div>
           </div>
         </div>
+      </div>
+
+      <!-- My Schedule -->
+      <div class="mt-6 pt-4 border-t border-[#c1c9bf]/40">
+        <div class="flex items-center justify-between mb-2 px-1">
+          <div class="font-bold">My Schedule</div>
+          <div class="text-[10px] text-[#414941]">Games you want to play</div>
+        </div>
+        <div id="my-schedule-list" class="space-y-2"></div>
       </div>
     </div>
 
@@ -777,6 +814,11 @@
       avatar: "JD",
       bingos: 14
     };
+
+    // Personalization: Favorite team + personal schedule
+    let favoriteTeam = null;
+    let mySchedule = [];
+    let currentUpcomingFilter = 'all';
 
     let chatMessages = [];
 
@@ -1448,6 +1490,10 @@
       }
       if (view === 'profile') {
         updateNavUser();
+        // Set favorite team select
+        const favSelect = document.getElementById('fav-team-select');
+        if (favSelect) favSelect.value = favoriteTeam || '';
+        renderMySchedule();
       }
     }
 
@@ -1503,29 +1549,73 @@
       if (!container) return;
       container.innerHTML = '';
 
-      upcomingGames.forEach((game) => {
+      let gamesToShow = [...upcomingGames];
+
+      // Apply filter
+      if (currentUpcomingFilter === 'my-team' && favoriteTeam) {
+        gamesToShow = gamesToShow.filter(g =>
+          g.away === favoriteTeam || g.home === favoriteTeam
+        );
+      }
+
+      if (gamesToShow.length === 0) {
+        container.innerHTML = `<p class="text-sm text-[#414941] px-2 py-4">No upcoming games for ${favoriteTeam || 'your team'} right now.</p>`;
+        return;
+      }
+
+      gamesToShow.forEach((game) => {
         const isLive = game.status === 'Live';
+        const isMyTeam = favoriteTeam && (game.away === favoriteTeam || game.home === favoriteTeam);
+        const alreadyScheduled = mySchedule.some(g => g.id === game.id);
+
         const card = document.createElement('div');
-        card.className = `room-card surface-glass rounded-2xl p-4 cursor-pointer border border-[#c1c9bf]/60 ${isLive ? 'ring-1 ring-[#ab3334]' : ''}`;
+        card.className = `room-card surface-glass rounded-2xl p-4 border border-[#c1c9bf]/60 ${isLive ? 'ring-1 ring-[#ab3334]' : ''} ${isMyTeam ? 'border-[#ab3334]/40' : ''}`;
 
         card.innerHTML = `
           <div>
             <div class="flex justify-between items-start">
-              <div>
+              <div onclick="event.stopImmediatePropagation(); selectUpcomingGame(${JSON.stringify(game)})" class="flex-1 cursor-pointer">
                 <div class="text-[10px] font-bold uppercase tracking-wider ${isLive ? 'text-[#ab3334]' : 'text-[#414941]'}">${game.status} • ${game.venue}</div>
                 <div class="font-display text-xl font-bold text-[#033016] leading-tight mt-1">${game.away} <span class="text-[#414941]">@</span> ${game.home}</div>
               </div>
+              ${isMyTeam ? '<span class="text-[#ab3334] text-lg">★</span>' : ''}
             </div>
             <div class="mt-3 text-xs text-[#414941]">
               <div class="font-semibold">${game.time}</div>
               <div class="mt-1 text-[10px] opacity-80">${game.awayPitcher} vs ${game.homePitcher}</div>
             </div>
+
+            <!-- Actions -->
+            <div class="mt-3 flex gap-2" onclick="event.stopImmediatePropagation()">
+              <button onclick='selectUpcomingGame(${JSON.stringify(game)})' class="text-[10px] flex-1 py-1 rounded-lg bg-[#033016] text-white font-bold">Play This Game</button>
+              <button onclick='addToMySchedule(${JSON.stringify(game)})' class="text-[10px] px-2 py-1 rounded-lg border ${alreadyScheduled ? 'opacity-50 cursor-default' : 'border-[#c1c9bf] hover:bg-white'}">${alreadyScheduled ? 'In Schedule' : '＋ Schedule'}</button>
+            </div>
           </div>
         `;
 
-        card.onclick = () => selectUpcomingGame(game);
         container.appendChild(card);
       });
+    }
+
+    function filterUpcoming(filter) {
+      if (filter === 'my-team' && !favoriteTeam) {
+        showToast('Set your favorite team in Profile to use this filter');
+        filter = 'all';
+      }
+      currentUpcomingFilter = filter;
+
+      // Re-render with active state on buttons
+      document.querySelectorAll('[data-upcoming-filter]').forEach(btn => {
+        const isActive = btn.dataset.upcomingFilter === filter;
+        btn.classList.toggle('bg-[#033016]', isActive);
+        btn.classList.toggle('text-white', isActive);
+        btn.classList.toggle('border-[#033016]', isActive);
+        if (!isActive) {
+          btn.classList.add('border-[#c1c9bf]');
+          btn.classList.remove('border-[#033016]');
+        }
+      });
+      renderUpcomingGames();
     }
 
     function selectUpcomingGame(game) {
@@ -1615,8 +1705,71 @@
       try {
         const savedUser = localStorage.getItem('bpb_user');
         if (savedUser) user = { ...user, ...JSON.parse(savedUser) };
+
+        const savedFav = localStorage.getItem('bpb_favorite_team');
+        if (savedFav) favoriteTeam = savedFav;
+
+        const savedSchedule = localStorage.getItem('bpb_my_schedule');
+        if (savedSchedule) mySchedule = JSON.parse(savedSchedule);
       } catch(e){}
       updateNavUser();
+    }
+
+    function saveFavoriteTeam(team) {
+      favoriteTeam = team;
+      localStorage.setItem('bpb_favorite_team', team);
+      renderUpcomingGames();
+      // Update profile UI if visible
+      const favSelect = document.getElementById('fav-team-select');
+      if (favSelect) favSelect.value = team || '';
+      showToast(`Favorite team set to ${team}`);
+    }
+
+    function addToMySchedule(game) {
+      const exists = mySchedule.some(g => g.id === game.id);
+      if (exists) {
+        showToast('Already in your schedule');
+        return;
+      }
+      mySchedule.push({...game});
+      localStorage.setItem('bpb_my_schedule', JSON.stringify(mySchedule));
+      renderUpcomingGames();
+      showToast(`Added ${game.away} @ ${game.home} to My Schedule`);
+    }
+
+    function removeFromMySchedule(gameId) {
+      mySchedule = mySchedule.filter(g => g.id !== gameId);
+      localStorage.setItem('bpb_my_schedule', JSON.stringify(mySchedule));
+      renderUpcomingGames();
+      // Re-render profile schedule if open
+      renderMySchedule();
+    }
+
+    function renderMySchedule() {
+      const container = document.getElementById('my-schedule-list');
+      if (!container) return;
+
+      if (!mySchedule.length) {
+        container.innerHTML = `<p class="text-xs text-[#414941] px-1">No games scheduled yet. Add some from the Lobby.</p>`;
+        return;
+      }
+
+      container.innerHTML = mySchedule.map(game => {
+        const isFav = favoriteTeam && (game.away === favoriteTeam || game.home === favoriteTeam);
+        return `
+          <div class="flex items-center justify-between bg-white/60 border border-[#c1c9bf]/60 rounded-xl px-3 py-2 text-sm">
+            <div>
+              <span class="font-semibold">${game.away} @ ${game.home}</span>
+              <span class="text-xs text-[#414941] ml-2">${game.time}</span>
+              ${isFav ? '<span class="ml-1 text-[10px] text-[#ab3334]">★</span>' : ''}
+            </div>
+            <div class="flex gap-2">
+              <button onclick='selectUpcomingGame(${JSON.stringify(game)})' class="text-xs px-2 py-0.5 rounded bg-[#033016] text-white">Play</button>
+              <button onclick="removeFromMySchedule(${game.id})" class="text-xs px-2 py-0.5 rounded border border-[#c1c9bf]">Remove</button>
+            </div>
+          </div>
+        `;
+      }).join('');
     }
 
     function initBingoFromHashOrDefault() {
@@ -1673,6 +1826,17 @@
 
       // Render the upcoming games list (clickable to load matchups)
       renderUpcomingGames();
+
+      // Initialize filter button states
+      const allFilterBtn = document.querySelector('[data-upcoming-filter="all"]');
+      if (allFilterBtn) {
+        allFilterBtn.classList.add('bg-[#033016]', 'text-white', 'border-[#033016]');
+      }
+      const myTeamBtn = document.querySelector('[data-upcoming-filter="my-team"]');
+      if (myTeamBtn && !favoriteTeam) {
+        myTeamBtn.classList.add('opacity-50');
+        myTeamBtn.setAttribute('title', 'Set favorite team in your Profile');
+      }
 
       // Basic offline detection for PWA resilience
       const offlineBanner = document.getElementById('offline-banner');
