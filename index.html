@@ -233,6 +233,13 @@
             <span class="hidden sm:inline">Quick Join</span>
           </button>
 
+          <!-- Cracker Jack Themed Audio Narration Tour (harmonized with the full demo) -->
+          <button onclick="playCrackerJackNarration()" 
+                  class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-full border-2 border-[#ab3334] text-[#ab3334] hover:bg-[#ab3334] hover:text-white active:scale-[0.985] transition">
+            <span class="material-symbols-outlined text-base">volume_up</span>
+            <span class="hidden sm:inline">Cracker Jack Tour</span>
+          </button>
+
           <!-- PWA Install Button (shown by JS when beforeinstallprompt fires) -->
           <button id="install-btn"
                   onclick="triggerPWAInstall()"
@@ -758,6 +765,35 @@
       awayScore: 3, homeScore: 4, inning: 5, top: true,
       awayPitcher: "Trevor McDonald", homePitcher: "Jameson Taillon"
     };
+
+    // Cracker Jack / Baseball themed lively narration script (harmonized with the demo)
+    const crackerJackNarrationScript = `HEY NOW, BATTER UP! Ladies and gentlemen, boys and girls, step right up to the greatest show on grass! Welcome to Baseball Bingo Pro – where Cracker Jack meets the crack of the bat!
+
+That's right, folks! We're talking peanuts, we're talking Cracker Jack, we're talking the seventh-inning stretch of pure, unadulterated baseball fun!
+
+First things first, true believers. Head on over to your Profile – click that little person up in the corner. See that shiny "Favorite Team" selector? Go ahead and pick your squad! Giants? Cubs? Yankees? Dodgers? Whoever makes you stand up and holler "Take me out to the ball game!" Set it and forget it. From now on, this app knows who you're rooting for.
+
+Now hustle back to the Lobby. Look at all these upcoming games! Hot dogs! Peanuts! Cracker Jack!
+
+See a matchup that gets your blood pumping? Tap "Play This Game" and boom – you're in the action with a fresh bingo card tailored to those starting pitchers.
+
+Or better yet – and here's the real Cracker Jack prize – hit that plus button to add games to Your Schedule. Build your own personal season ticket book! Curate the exact matchups you want to play bingo for. Your favorites, your rivalries, your dream slate.
+
+When you're ready for action, jump into the Play view. You'll get a fresh 5-by-5 bingo card, custom-built for the starting pitchers and star players of the game. The center square? That's your free space – always live, just like the seventh-inning stretch.
+
+As the game unfolds – whether it's a real contest or our high-octane simulator – keep your eyes on the field. Base hit to left? Stamp it! Strikeout swinging? Mark it off! Diving catch in the gap? You better believe that's a square!
+
+Complete a row, a column, or one of those beautiful diagonals and – BINGO! The organ swells, the crowd roars, and you just earned yourself another trophy for the case.
+
+Got a beef with the umpire? Rules question got you twisted like a knuckleball? Slide on over to Stadium Chatter and talk to Bleacher Bill, our AI color commentator. He'll explain the infield fly rule faster than you can say "Cracker Jack!"
+
+Climb the league standings, show the world your hot streak, and collect those shiny trophies like they were vintage baseball cards.
+
+And here's the best part, sports fans – this ain't no ordinary website. This is a real Progressive Web App! Tap that Install button or use your browser's "Add to Home Screen." Your phone will stay wide awake during extra innings thanks to screen wake lock. And if life throws you a curveball – phone call, bathroom break, whatever – your board saves automatically. Come back and pick up right where you left off.
+
+So what are you waiting for? Buy me some peanuts and Cracker Jack! Let's play some Baseball Bingo!
+
+Baseball Bingo Pro. The most fun you can have between pitches. Now let's go get that grand slam!`;
 
     // Upcoming games data (mock for static PWA; in a real app this would come from MLB Stats API)
     const upcomingGames = [
@@ -1616,6 +1652,52 @@
         }
       });
       renderUpcomingGames();
+    }
+
+    // ========== CRACKER JACK THEMED AUDIO NARRATION (Web Speech API - harmonized with demo) ==========
+    let narrationUtterance = null;
+    let isNarrationPlaying = false;
+
+    function playCrackerJackNarration() {
+      // Cancel any existing speech
+      window.speechSynthesis.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(crackerJackNarrationScript);
+      
+      // Lively baseball announcer settings
+      utterance.rate = 1.05;     // Slightly fast and energetic
+      utterance.pitch = 1.08;    // Lively, not too deep
+      utterance.volume = 0.95;
+
+      // Try to pick a good voice if available (prefers en-US energetic voices)
+      const voices = window.speechSynthesis.getVoices();
+      const preferredVoices = ['Alex', 'Samantha', 'Karen', 'Daniel', 'Fred', 'Tom'];
+      let selectedVoice = voices.find(v => 
+        preferredVoices.some(name => v.name.includes(name)) && v.lang.startsWith('en')
+      );
+      if (selectedVoice) utterance.voice = selectedVoice;
+
+      utterance.onend = () => {
+        isNarrationPlaying = false;
+        showToast('Thanks for taking the Cracker Jack Tour!');
+      };
+
+      utterance.onerror = (e) => {
+        console.warn('Narration error', e);
+        showToast('Narration playback issue – your browser may not support speech synthesis.');
+      };
+
+      narrationUtterance = utterance;
+      isNarrationPlaying = true;
+      window.speechSynthesis.speak(utterance);
+
+      showToast('Cracker Jack Narration playing... (old-timey baseball hype!)');
+    }
+
+    // Optional: expose a stop function if needed later
+    function stopNarration() {
+      window.speechSynthesis.cancel();
+      isNarrationPlaying = false;
     }
 
     function selectUpcomingGame(game) {
