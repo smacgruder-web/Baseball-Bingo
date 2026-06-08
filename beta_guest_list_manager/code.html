@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Beta Guest List Management</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400;700&amp;family=Work+Sans:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#ffdad7",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed-variant": "#8a1a1f",
+                        "inverse-primary": "#a3d2ab",
+                        "secondary-container": "#ff716d",
+                        "primary-fixed-dim": "#a3d2ab",
+                        "on-tertiary": "#ffffff",
+                        "surface-dim": "#d9dad6",
+                        "outline-variant": "#c1c9bf",
+                        "outline": "#727971",
+                        "on-tertiary-container": "#4e3d00",
+                        "on-primary-container": "#88b590",
+                        "surface-container-highest": "#e2e3de",
+                        "inverse-surface": "#2f312e",
+                        "background": "#f9faf5",
+                        "primary-fixed": "#bfeec5",
+                        "on-surface-variant": "#414941",
+                        "on-primary-fixed": "#00210c",
+                        "surface-tint": "#3d6748",
+                        "on-surface": "#1a1c19",
+                        "inverse-on-surface": "#f0f1ec",
+                        "tertiary-container": "#cea700",
+                        "primary": "#033016",
+                        "tertiary-fixed-dim": "#eec209",
+                        "on-background": "#1a1c19",
+                        "surface-bright": "#f9faf5",
+                        "secondary": "#ab3334",
+                        "on-error-container": "#93000a",
+                        "surface-container": "#edeee9",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#1d472a",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed": "#410005",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#574500",
+                        "tertiary": "#735c00",
+                        "surface-container-low": "#f3f4ef",
+                        "surface-container-high": "#e8e9e4",
+                        "on-tertiary-fixed": "#231b00",
+                        "on-primary-fixed-variant": "#254f31",
+                        "tertiary-fixed": "#ffe084",
+                        "surface": "#f9faf5",
+                        "secondary-fixed-dim": "#ffb3ae",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-container": "#700310",
+                        "surface-variant": "#e2e3de"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "grid-margin-desktop": "32px",
+                        "xs": "4px",
+                        "lg": "48px",
+                        "xl": "64px",
+                        "grid-margin-mobile": "16px",
+                        "base": "8px",
+                        "md": "24px",
+                        "sm": "12px",
+                        "grid-gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Domine"],
+                        "body-lg": ["Work Sans"],
+                        "headline-md": ["Domine"],
+                        "label-bold": ["Work Sans"],
+                        "headline-sm": ["Domine"],
+                        "caption": ["Work Sans"],
+                        "body-md": ["Work Sans"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .paper-texture {
+            background-image: radial-gradient(#d1d5db 0.5px, transparent 0.5px);
+            background-size: 16px 16px;
+            background-color: #f9faf5;
+        }
+        .pinstripe {
+            background-image: repeating-linear-gradient(90deg, rgba(3, 48, 22, 0.05) 0px, rgba(3, 48, 22, 0.05) 1px, transparent 1px, transparent 40px);
+        }
+        .inset-shadow {
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+        }
+        .stitching {
+            background-image: linear-gradient(90deg, currentColor 50%, transparent 50%);
+            background-size: 12px 1px;
+            background-repeat: repeat-x;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/90 dark:bg-surface/90 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm">
+<div class="flex items-center justify-between px-md py-sm w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-base">
+<button class="p-2 transition-colors duration-200 ease-in-out hover:bg-primary/5 rounded-full">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-primary">Room Access Control</h1>
+</div>
+<div class="flex items-center gap-base">
+<button class="p-2 transition-colors duration-200 ease-in-out hover:bg-primary/5 rounded-full">
+<span class="material-symbols-outlined text-primary">share</span>
+</button>
+</div>
+</div>
+</header>
+<main class="pt-24 px-grid-margin-mobile md:px-grid-margin-desktop max-w-5xl mx-auto paper-texture min-h-screen">
+<!-- Header Section with Bento Style Capacity Card -->
+<section class="mb-lg grid grid-cols-1 md:grid-cols-3 gap-grid-gutter">
+<!-- Main Title & Progress (Spans 2 columns) -->
+<div class="md:col-span-2 bg-surface p-md rounded-xl border border-outline-variant/30 shadow-sm relative overflow-hidden">
+<div class="absolute inset-0 pinstripe opacity-20 pointer-events-none"></div>
+<div class="relative z-10">
+<h2 class="font-headline-sm text-headline-sm text-primary mb-xs">Beta Guest List</h2>
+<p class="font-body-md text-on-surface-variant mb-md">Manage exclusive access to your private suite.</p>
+<div class="space-y-sm">
+<div class="flex justify-between items-end">
+<span class="font-label-bold text-label-bold uppercase text-primary">Capacity Progress</span>
+<span class="font-label-bold text-label-bold text-primary">8 OF 12 SLOTS FILLED</span>
+</div>
+<!-- Stitching Style Progress Bar -->
+<div class="h-6 w-full bg-surface-container rounded-sm border border-outline-variant p-0.5 relative">
+<div class="h-full bg-primary-container flex items-center justify-center transition-all duration-1000 ease-out" style="width: 66%;">
+<div class="w-full stitching text-on-primary-container/30 h-[1px]"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Stats / Action -->
+<div class="bg-primary p-md rounded-xl border border-primary-container shadow-sm flex flex-col justify-between text-on-primary group hover:scale-[1.01] transition-transform">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-[32px]">person_add</span>
+<span class="font-label-bold text-label-bold border border-on-primary/30 px-2 py-0.5 rounded-full">NEW</span>
+</div>
+<div>
+<p class="font-label-bold text-label-bold uppercase tracking-widest opacity-80 mb-xs">Invite</p>
+<button class="w-full bg-surface text-primary py-sm rounded-lg font-label-bold text-label-bold uppercase shadow-sm active:translate-y-[2px] transition-all">
+                        ADD GUEST
+                    </button>
+</div>
+</div>
+</section>
+<!-- Guest List Sections -->
+<div class="space-y-md">
+<!-- Pending Invites Section -->
+<section>
+<div class="flex items-center gap-base mb-sm px-xs">
+<span class="material-symbols-outlined text-secondary">pending</span>
+<h3 class="font-label-bold text-label-bold uppercase tracking-widest text-secondary">Pending Invites</h3>
+</div>
+<div class="grid grid-cols-1 gap-sm">
+<!-- Guest Card 1 -->
+<div class="bg-surface border border-outline-variant/30 rounded-lg p-sm flex flex-col sm:flex-row items-center justify-between gap-md transition-all hover:border-outline">
+<div class="flex items-center gap-md w-full sm:w-auto">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-outline-variant">
+<img alt="Guest" class="w-full h-full object-cover" data-alt="A professional headshot of a person with a friendly expression, set against a clean studio background. The lighting is bright and even, reinforcing a polished and modern aesthetic. The color palette is composed of natural skin tones and soft neutrals, fitting a high-end light-mode user interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMRygi4wAWBqLGw98nIB4csxscBxyI62h_QPoq2hlgB7l51n8UbxNwnLwIIDbvNcQeYW3CNgnqYLVeGtAT6OGuSv7aiJZMTPjb8JdZgEs4bcwAhPUg17yZx29oPPNCo3mREDcM-a3-CwT21zNl3rSamsYEW-opqCafikj-7i7UUNy7I2Rg9Jh3naXo5tIpG-xpVV4tSnFUcI7RNd3wv2xlwWMcMO_BoaLoxEmeh3RhHPIWCZAj9NHgeGJmYN-jT2GjhjEbN5hFvi1P"/>
+</div>
+<div>
+<h4 class="font-label-bold text-label-bold text-on-surface">Julian Rivers</h4>
+<p class="text-caption font-caption text-on-surface-variant">julian.r@example.com</p>
+</div>
+</div>
+<div class="flex items-center gap-sm w-full sm:w-auto justify-end">
+<button class="flex items-center gap-xs px-sm py-xs text-primary border border-primary/20 rounded font-label-bold text-label-bold hover:bg-primary/5 active:translate-y-[2px] transition-all">
+<span class="material-symbols-outlined text-[18px]">refresh</span>
+                                RESEND
+                            </button>
+<button class="flex items-center gap-xs px-sm py-xs text-secondary border border-secondary/20 rounded font-label-bold text-label-bold hover:bg-secondary/5 active:translate-y-[2px] transition-all">
+<span class="material-symbols-outlined text-[18px]">cancel</span>
+                                REVOKE
+                            </button>
+</div>
+</div>
+<!-- Guest Card 2 -->
+<div class="bg-surface border border-outline-variant/30 rounded-lg p-sm flex flex-col sm:flex-row items-center justify-between gap-md transition-all hover:border-outline">
+<div class="flex items-center gap-md w-full sm:w-auto">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-outline-variant">
+<img alt="Guest" class="w-full h-full object-cover" data-alt="A portrait of a male professional in an outdoor urban setting with blurred architecture behind him. The lighting is golden hour warm, creating a nostalgic yet high-end look. The style is minimalist and clean, using a natural color palette that complements a sophisticated light-mode mobile application design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXqhOSUJGG-w6EKtCM2xuGQfXP5zoXCWGg55svbQ5MNzUZRzLEI3CRVjWzlAmcz_4lGyWOsOMreGK0D8J8vje2jDKQtg7BqGoGb25fvVZZ256b0IATwpm3tJiTlJBZaNz29XlKXuhBQ5WQO-qx0o1uwB2TpoTmvRE3mAloOpuKqIlKCNiJYL_EeHKPRDG7YYu9V23NnpEoE0Is8RUT10PqOYt6kvDq90Gf50ICtfTTCSXPzsPGXB6dznqXP0nWheroanXovwVf85gt"/>
+</div>
+<div>
+<h4 class="font-label-bold text-label-bold text-on-surface">Markus Bennett</h4>
+<p class="text-caption font-caption text-on-surface-variant">m.bennett@tech.io</p>
+</div>
+</div>
+<div class="flex items-center gap-sm w-full sm:w-auto justify-end">
+<button class="flex items-center gap-xs px-sm py-xs text-primary border border-primary/20 rounded font-label-bold text-label-bold hover:bg-primary/5 active:translate-y-[2px] transition-all">
+<span class="material-symbols-outlined text-[18px]">refresh</span>
+                                RESEND
+                            </button>
+<button class="flex items-center gap-xs px-sm py-xs text-secondary border border-secondary/20 rounded font-label-bold text-label-bold hover:bg-secondary/5 active:translate-y-[2px] transition-all">
+<span class="material-symbols-outlined text-[18px]">cancel</span>
+                                REVOKE
+                            </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Accepted Invites Section -->
+<section>
+<div class="flex items-center gap-base mb-sm px-xs">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<h3 class="font-label-bold text-label-bold uppercase tracking-widest text-primary">Accepted Invites</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-sm">
+<!-- Guest Tile 1 -->
+<div class="bg-surface-container-low border border-outline-variant/20 rounded-lg p-sm flex items-center justify-between group transition-colors hover:bg-surface">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full border border-primary/20 overflow-hidden">
+<img alt="Accepted" class="w-full h-full object-cover" data-alt="A portrait of a person with a bright, welcoming smile, wearing business casual attire. The setting is a brightly lit, modern office environment with soft natural light streaming in. The image has a clean, airy quality that aligns with a premium minimalist UI style, emphasizing clarity and professionalism." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyd5xWjS7FVpte6oqY1PRyOQCLqAf3PkyZX-FbrMteHhuaq_JZx51yIXCyGyDx_vEs6_HwCNTYWaAKNTOrbmaXNLhY9nMd5rbztGroDaMYHZ-Q7iE2k_o77WGXM8B3bOrJ6ZfdL2M1h0Zhw8szUuoEuGhIvIkEWlvSfZYq2VEjzyjSF2_u09_h6Z2bl1aN3wGJqC0bH41EITVYdPwZSCZVuKTgyEnAgzyQbqeerIco4T7JeYpuCJ3MpOrXQ885HT5KZBHuKdYcFKk1"/>
+</div>
+<div>
+<h4 class="font-label-bold text-label-bold text-on-surface">Sarah Connor</h4>
+<p class="text-caption font-caption text-primary">Member since May 24</p>
+</div>
+</div>
+<button class="opacity-0 group-hover:opacity-100 p-2 text-secondary hover:bg-secondary/5 rounded-full transition-opacity">
+<span class="material-symbols-outlined">person_remove</span>
+</button>
+</div>
+<!-- Guest Tile 2 -->
+<div class="bg-surface-container-low border border-outline-variant/20 rounded-lg p-sm flex items-center justify-between group transition-colors hover:bg-surface">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full border border-primary/20 overflow-hidden">
+<img alt="Accepted" class="w-full h-full object-cover" data-alt="A male subject in sharp focus against a soft, out-of-focus park background. The lighting is subtle afternoon sun, highlighting facial features with a warm glow. The overall aesthetic is one of heritage and playfulness, fitting a modern sports-related branding. The color palette is earthy and professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDylAgqSEgppyUhYXy0glYNjl__BKEUWUiBRgyZc1QDHYHsxYOzfZThgtfFwnkD9bE8yNE6oFFWqWk0fz1OhgtnUCTCpFnlPfr72bGKmFdoOA0s0n8PfCI61SgkjdGxyyohUrjUBPgrnVByHoYX46deIvdTRJilhTGQDopeMzYE4fnmEdDNhQa-XpSajInC4VtKl1GQ1GJoexg-ZUfdgGIo6bSKA5Fk6a7xjkHLRXMUJuTAR7vE1GzusiZDkujU7wC7mntJkB5SHqUv"/>
+</div>
+<div>
+<h4 class="font-label-bold text-label-bold text-on-surface">Dave Miller</h4>
+<p class="text-caption font-caption text-primary">Member since May 25</p>
+</div>
+</div>
+<button class="opacity-0 group-hover:opacity-100 p-2 text-secondary hover:bg-secondary/5 rounded-full transition-opacity">
+<span class="material-symbols-outlined">person_remove</span>
+</button>
+</div>
+<!-- Guest Tile 3 -->
+<div class="bg-surface-container-low border border-outline-variant/20 rounded-lg p-sm flex items-center justify-between group transition-colors hover:bg-surface">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full border border-primary/20 overflow-hidden">
+<img alt="Accepted" class="w-full h-full object-cover" data-alt="A thoughtful woman looking slightly away from the camera, captured in high-definition with soft bokeh lighting. The style is editorial and clean, with a focus on tactile warmth. The image uses a palette of soft whites and deep greens, consistent with a premium athletic brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBieEEvLh1oZG1k-WP2PsAApqyiCXVSXjWfdcSBz65_VWtlBc7dbT_0a0NbdVXGZU4A5rp8X2eI3S5qvwsXXyeLpjXJ59ibLlUl1lzA07TvdSrZBCdxWXW-kO2jy4q0neLPH2pswnI_N1xyOcAJ6FhR4qhh6_0zFlGPTLfCp4oZGREnYtK81gaejWQRkJYOkUswwMZTSvjFCUTde99ML7r_T8z9pNrObrMBiIkQ08L0cJVuwI6GsPTqPjVoEZNqc290ZK3QkC4paH_q"/>
+</div>
+<div>
+<h4 class="font-label-bold text-label-bold text-on-surface">Elena Rodriguez</h4>
+<p class="text-caption font-caption text-primary">Member since Jun 01</p>
+</div>
+</div>
+<button class="opacity-0 group-hover:opacity-100 p-2 text-secondary hover:bg-secondary/5 rounded-full transition-opacity">
+<span class="material-symbols-outlined">person_remove</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface/90 backdrop-blur-xl border-t border-outline-variant/30 shadow-lg md:hidden">
+<div class="flex justify-around items-center h-16 w-full px-base">
+<button class="flex flex-col items-center justify-center text-on-surface-variant transition-transform active:scale-90">
+<span class="material-symbols-outlined">stadium</span>
+<span class="font-label-md text-label-md">Lobby</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant transition-transform active:scale-90">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="font-label-md text-label-md">Bingo</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 transition-transform active:scale-90">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-md text-label-md">Players</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant transition-transform active:scale-90">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-label-md text-label-md">Stats</span>
+</button>
+</div>
+</nav>
+<!-- Floating Action Button (Only for relevant desktop screens, but here for consistency) -->
+<button class="fixed bottom-20 right-6 md:bottom-8 md:right-8 bg-primary text-on-primary w-14 h-14 rounded-full shadow-xl flex items-center justify-center group active:scale-90 transition-all">
+<span class="material-symbols-outlined text-[28px] group-hover:rotate-90 transition-transform">add</span>
+</button>
+<script>
+        // Micro-interaction for resend buttons
+        document.querySelectorAll('button').forEach(button => {
+            if (button.textContent.includes('RESEND')) {
+                button.addEventListener('click', function() {
+                    const icon = this.querySelector('.material-symbols-outlined');
+                    icon.classList.add('animate-spin');
+                    setTimeout(() => icon.classList.remove('animate-spin'), 1000);
+                });
+            }
+        });
+    </script>
+</body></html>

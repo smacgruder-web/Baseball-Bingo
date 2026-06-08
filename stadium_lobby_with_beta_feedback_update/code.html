@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Baseball Bingo - Stadium Lobby</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400;600;700&amp;family=Work+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Config Verbatim -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed": "#bfeec5",
+                    "on-tertiary-container": "#acaaa1",
+                    "surface-container-high": "#eae7e7",
+                    "surface-container-highest": "#e4e2e1",
+                    "error-container": "#ffdad6",
+                    "error": "#ba1a1a",
+                    "secondary-fixed-dim": "#ffb4a6",
+                    "on-background": "#1b1c1c",
+                    "surface-container-low": "#f6f3f2",
+                    "on-surface-variant": "#414941",
+                    "secondary-container": "#fd7e67",
+                    "on-primary-container": "#88b590",
+                    "tertiary": "#292923",
+                    "on-secondary-fixed-variant": "#842416",
+                    "secondary-fixed": "#ffdad4",
+                    "on-tertiary-fixed-variant": "#484740",
+                    "surface-dim": "#dcd9d9",
+                    "on-tertiary": "#ffffff",
+                    "primary": "#033016",
+                    "inverse-primary": "#a3d2ab",
+                    "surface-container": "#f0eded",
+                    "primary-container": "#1d472a",
+                    "outline-variant": "#c1c9bf",
+                    "on-tertiary-fixed": "#1c1c16",
+                    "background": "#fcf9f8",
+                    "on-primary-fixed": "#00210c",
+                    "tertiary-fixed-dim": "#c9c6bd",
+                    "secondary": "#a43c2b",
+                    "surface-variant": "#e4e2e1",
+                    "on-primary": "#ffffff",
+                    "on-primary-fixed-variant": "#254f31",
+                    "inverse-on-surface": "#f3f0f0",
+                    "on-error-container": "#93000a",
+                    "on-surface": "#1b1c1c",
+                    "primary-fixed-dim": "#a3d2ab",
+                    "on-secondary": "#ffffff",
+                    "surface-tint": "#3d6748",
+                    "surface-container-lowest": "#ffffff",
+                    "surface": "#fcf9f8",
+                    "tertiary-fixed": "#e5e2d9",
+                    "surface-bright": "#fcf9f8",
+                    "on-error": "#ffffff",
+                    "inverse-surface": "#303030",
+                    "outline": "#727971",
+                    "on-secondary-container": "#71170a",
+                    "tertiary-container": "#403f38",
+                    "on-secondary-fixed": "#3f0200"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "xs": "4px",
+                    "md": "24px",
+                    "container-max": "1280px",
+                    "xl": "80px",
+                    "base": "8px",
+                    "sm": "12px",
+                    "lg": "48px",
+                    "gutter": "24px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Work Sans"],
+                    "stats-number": ["Domine"],
+                    "label-md": ["Work Sans"],
+                    "headline-lg": ["Domine"],
+                    "headline-lg-mobile": ["Domine"],
+                    "headline-md": ["Domine"],
+                    "display-lg": ["Domine"],
+                    "body-md": ["Work Sans"]
+            },
+            "fontSize": {
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "stats-number": ["36px", {"lineHeight": "44px", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      .glass-panel {
+        background: rgba(252, 249, 248, 0.85);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(114, 121, 113, 0.1);
+      }
+      .stadium-glow {
+        box-shadow: 0 0 60px 0 rgba(3, 48, 22, 0.1);
+      }
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/90 dark:bg-surface-container-low/90 backdrop-blur-xl border-b border-outline-variant/30 dark:border-outline/20 shadow-[0_4px_20px_rgba(3,48,22,0.05)]">
+<div class="flex justify-between items-center px-gutter py-4 w-full max-w-container-max mx-auto">
+<div class="flex items-center gap-4">
+<img alt="Baseball Bingo Logo" class="h-10 w-10 object-contain" src="https://lh3.googleusercontent.com/aida/AP1WRLtfZ4yqAuQCyESlZB5kPyWRpLKoMJhs4LNVJfT03Y9XMmJ9nf9hLeiKBwGAjC6Du8deeTEJkGxUhy97i1Z_jAEd-etBj3ArhfgfvWWmpFEKx_kV0S2FERZadnsn4Sd0n64746_00NqcmazNH0-DTpO_VZyE7fsktocsda3PY8ZOlHwVR0-d8fTywFBqJ1ndbyRmwDk13FEpuPI3fYPvujDel0c0t7vMg7lWu4X4I2VpuqnbVD93n4dtos4v"/>
+<h1 class="font-headline-lg text-headline-lg text-primary dark:text-primary-fixed tracking-tight">Stadium Lobby</h1><span class="ml-2 px-2 py-0.5 bg-secondary/10 text-secondary border border-secondary/20 text-[10px] font-bold tracking-widest uppercase rounded-sm">Beta</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary p-2 rounded-full hover:bg-surface-container-high transition-colors active:scale-95 duration-150">search</button>
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container border-2 border-primary/10 overflow-hidden">
+<span class="material-symbols-outlined">person</span>
+</div>
+<button class="material-symbols-outlined text-primary p-2 rounded-full hover:bg-surface-container-high transition-colors active:scale-95 duration-150">settings</button>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-32 max-w-container-max mx-auto px-gutter space-y-lg">
+<!-- My Rooms (Horizontal Scroll) -->
+<section>
+<div class="flex justify-between items-end mb-md">
+<h2 class="font-headline-md text-headline-md text-primary">My Rooms</h2>
+<a class="font-label-md text-label-md text-secondary hover:underline" href="#">View All</a>
+<button class="ml-4 bg-secondary text-white font-label-md text-label-md px-4 py-2 rounded-full flex items-center gap-2 hover:bg-secondary-container transition-all active:scale-95 shadow-sm"><span class="material-symbols-outlined text-[18px]">bolt</span>Quick Join Active Game</button></div>
+<div class="flex overflow-x-auto gap-md no-scrollbar pb-xs">
+<!-- Live Card -->
+<div class="glass-panel stadium-glow min-w-[280px] md:min-w-[320px] p-md rounded-xl relative overflow-hidden group hover:border-primary/30 transition-all duration-300 cursor-pointer">
+<div class="absolute top-0 right-0 p-sm">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 bg-secondary text-white text-[10px] font-bold tracking-widest uppercase rounded-sm">
+<span class="w-2 h-2 bg-white rounded-full animate-pulse"></span> Live Now
+                        </span>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant mb-xs">Cubs @ Cardinals</p>
+<h3 class="font-headline-md text-headline-md text-primary mb-md">Wrigley Field Faithful</h3>
+<div class="flex items-center justify-between mt-auto">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-primary-fixed flex items-center justify-center text-[10px] font-bold">JD</div>
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-secondary-fixed flex items-center justify-center text-[10px] font-bold">RK</div>
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-tertiary-fixed flex items-center justify-center text-[10px] font-bold">+5</div>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant">Top 7th</span>
+</div>
+</div>
+<!-- Game Ending Card -->
+<div class="glass-panel min-w-[280px] md:min-w-[320px] p-md rounded-xl relative group hover:border-primary/30 transition-all duration-300 cursor-pointer">
+<div class="absolute top-0 right-0 p-sm">
+<span class="inline-flex items-center px-3 py-1 bg-on-tertiary-container text-white text-[10px] font-bold tracking-widest uppercase rounded-sm">
+                            Final Inning
+                        </span>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant mb-xs">Yankees @ Red Sox</p>
+<h3 class="font-headline-md text-headline-md text-primary mb-md">Fenway Fanatics</h3>
+<div class="flex items-center justify-between mt-auto">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-primary-fixed flex items-center justify-center text-[10px] font-bold">ML</div>
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-secondary-fixed flex items-center justify-center text-[10px] font-bold">ST</div>
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-tertiary-fixed flex items-center justify-center text-[10px] font-bold">+12</div>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant">Bot 9th</span>
+</div>
+</div>
+<!-- Create New Placeholder -->
+<div class="border-2 border-dashed border-outline-variant/50 min-w-[200px] flex flex-col items-center justify-center gap-2 rounded-xl hover:bg-surface-container-low transition-colors group cursor-pointer">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors text-4xl">add_circle</span>
+<span class="font-label-md text-label-md text-on-surface-variant group-hover:text-primary transition-colors">Start New Room</span>
+</div>
+</div>
+</section>
+<!-- Bento Layout: League Tiers and Room List -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-lg">
+<!-- League Tiers (Left Side) -->
+<section class="lg:col-span-4 space-y-md">
+<h2 class="font-headline-md text-headline-md text-primary">League Tiers</h2>
+<div class="space-y-sm">
+<!-- Heritage League -->
+<div class="glass-panel p-md rounded-xl group cursor-pointer hover:bg-primary/5 transition-colors border-l-4 border-l-primary">
+<div class="flex gap-4">
+<div class="bg-primary-fixed/30 w-12 h-12 flex items-center justify-center rounded-lg">
+<span class="material-symbols-outlined text-primary text-3xl">sports_baseball</span>
+</div>
+<div>
+<h3 class="font-body-lg text-body-lg font-bold text-primary">Heritage League</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">The Professional Experience</p>
+</div>
+</div>
+</div>
+<!-- Daily Derby -->
+<div class="glass-panel p-md rounded-xl group cursor-pointer hover:bg-secondary/5 transition-colors border-l-4 border-l-secondary">
+<div class="flex gap-4">
+<div class="bg-secondary-fixed/30 w-12 h-12 flex items-center justify-center rounded-lg">
+<span class="material-symbols-outlined text-secondary text-3xl">trophy</span>
+</div>
+<div>
+<h3 class="font-body-lg text-body-lg font-bold text-primary">Daily Derby</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Fast-paced Casual Play</p>
+</div>
+</div>
+</div>
+<!-- Private Boxes -->
+<div class="glass-panel p-md rounded-xl group cursor-pointer hover:bg-tertiary/5 transition-colors border-l-4 border-l-tertiary">
+<div class="flex gap-4">
+<div class="bg-tertiary-fixed/30 w-12 h-12 flex items-center justify-center rounded-lg">
+<span class="material-symbols-outlined text-tertiary text-3xl">lock</span>
+</div>
+<div>
+<h3 class="font-body-lg text-body-lg font-bold text-primary">Private Boxes</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Play with Your Friends</p>
+</div>
+</div>
+</div>
+<div class="glass-panel p-md rounded-xl group cursor-pointer hover:bg-primary/5 transition-colors border-l-4 border-l-primary"><div class="flex gap-4"><div class="bg-primary-fixed/30 w-12 h-12 flex items-center justify-center rounded-lg"><span class="material-symbols-outlined text-primary text-3xl">shuffle</span></div><div><h3 class="font-body-lg text-body-lg font-bold text-primary">Random Matchup</h3><p class="font-body-md text-body-md text-on-surface-variant">Jump into any active game instantly</p></div></div></div></div>
+<!-- Promotional Spot -->
+<div class="mt-lg rounded-xl overflow-hidden relative h-48 group">
+<img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A cinematic low-angle shot of a historic baseball stadium's emerald green grass and red clay path during golden hour. The sunlight reflects off the empty seats, creating a nostalgic and premium sporting atmosphere. The color palette is dominated by Stadium Green and Cream, with a sense of anticipation for the big game." src="https://lh3.googleusercontent.com/aida-public/AB6AXuARfRf_BMlsid6usKv1gGSWRZ8QOb4vqE8anhHNZb6eodR8BsRtpRj364eMh83V-PbZtFmxpMeuPScskXexlnjoP0U-mAWspHKiSFwDFHdnvcjuVRY8uoMLMwB2ng90aW-3ssuBvaxwd11PN0U1Gg9GZOQrs0nt0bWWHfR9-X3xVNX6aHCoFXvbkwLqhn9H9eNKvGZXsla1OpKziLypQ3XeE5ieR8qvwngGr4fnkd3FAzM15J_PpBsovVg6_baClBBCKsmAjC_RA1DY"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/90 to-transparent flex flex-col justify-end p-md">
+<h4 class="font-headline-md text-white text-headline-md">World Series Bingo</h4>
+<p class="font-body-md text-white/80">Exclusive rewards starting Oct 24th</p>
+</div>
+</div>
+</section>
+<!-- Room List (Right Side) -->
+<section class="lg:col-span-8 space-y-md">
+<div class="flex justify-between items-center mb-md">
+<h2 class="font-headline-md text-headline-md text-primary">Active Rooms</h2>
+<div class="flex bg-surface-container rounded-full p-1">
+<button class="px-4 py-1 text-label-md font-label-md bg-white rounded-full shadow-sm text-primary">All Games</button>
+<button class="px-4 py-1 text-label-md font-label-md text-on-surface-variant hover:text-primary">Featured</button>
+</div>
+</div>
+<div class="space-y-xs">
+<!-- Room Entry 1 -->
+<div class="glass-panel p-md rounded-lg flex flex-col md:flex-row md:items-center justify-between gap-md group hover:bg-white transition-all">
+<div class="flex items-center gap-4">
+<div class="flex flex-col items-center justify-center w-12 h-12 bg-surface-container-high rounded text-primary">
+<span class="font-stats-number text-lg">W</span>
+</div>
+<div>
+<h4 class="font-body-lg text-body-lg font-bold text-primary">Dodger Blue Crew</h4>
+<div class="flex items-center gap-3 text-on-surface-variant">
+<span class="flex items-center gap-1 font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">groups</span> 18/20
+                                    </span>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<span class="flex items-center gap-1 font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px] text-secondary">schedule</span> 4th Inning
+                                    </span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="hidden md:block text-right">
+<p class="text-[10px] font-bold tracking-widest uppercase text-on-surface-variant">Pot Size</p>
+<p class="font-stats-number text-primary text-xl">1,200 <span class="text-xs">PTS</span></p>
+</div>
+<button class="bg-primary text-white font-label-md text-label-md px-6 py-3 rounded-sm hover:bg-primary-container transition-colors active:scale-95">Join Game</button>
+</div>
+</div>
+<!-- Room Entry 2 -->
+<div class="glass-panel p-md rounded-lg flex flex-col md:flex-row md:items-center justify-between gap-md group hover:bg-white transition-all">
+<div class="flex items-center gap-4">
+<div class="flex flex-col items-center justify-center w-12 h-12 bg-surface-container-high rounded text-primary">
+<span class="font-stats-number text-lg">P</span>
+</div>
+<div>
+<h4 class="font-body-lg text-body-lg font-bold text-primary">The Bronx Bombers</h4>
+<div class="flex items-center gap-3 text-on-surface-variant">
+<span class="flex items-center gap-1 font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">groups</span> 5/20
+                                    </span>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<span class="flex items-center gap-1 font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px] text-primary">stadium</span> Warm-ups
+                                    </span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="hidden md:block text-right">
+<p class="text-[10px] font-bold tracking-widest uppercase text-on-surface-variant">Pot Size</p>
+<p class="font-stats-number text-primary text-xl">450 <span class="text-xs">PTS</span></p>
+</div>
+<button class="bg-primary text-white font-label-md text-label-md px-6 py-3 rounded-sm hover:bg-primary-container transition-colors active:scale-95">Join Game</button>
+</div>
+</div>
+<!-- Room Entry 3 -->
+<div class="glass-panel p-md rounded-lg flex flex-col md:flex-row md:items-center justify-between gap-md group hover:bg-white transition-all">
+<div class="flex items-center gap-4">
+<div class="flex flex-col items-center justify-center w-12 h-12 bg-surface-container-high rounded text-primary">
+<span class="font-stats-number text-lg">G</span>
+</div>
+<div>
+<h4 class="font-body-lg text-body-lg font-bold text-primary">Golden Gate Giants</h4>
+<div class="flex items-center gap-3 text-on-surface-variant">
+<span class="flex items-center gap-1 font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">groups</span> 12/20
+                                    </span>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<span class="flex items-center gap-1 font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px] text-secondary">schedule</span> 1st Inning
+                                    </span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="hidden md:block text-right">
+<p class="text-[10px] font-bold tracking-widest uppercase text-on-surface-variant">Pot Size</p>
+<p class="font-stats-number text-primary text-xl">800 <span class="text-xs">PTS</span></p>
+</div>
+<button class="bg-primary text-white font-label-md text-label-md px-6 py-3 rounded-sm hover:bg-primary-container transition-colors active:scale-95">Join Game</button>
+</div>
+</div>
+<!-- Room Entry 4 -->
+<div class="glass-panel p-md rounded-lg flex flex-col md:flex-row md:items-center justify-between gap-md group hover:bg-white transition-all">
+<div class="flex items-center gap-4">
+<div class="flex flex-col items-center justify-center w-12 h-12 bg-surface-container-high rounded text-primary">
+<span class="font-stats-number text-lg">T</span>
+</div>
+<div>
+<h4 class="font-body-lg text-body-lg font-bold text-primary">Southside Sox Party</h4>
+<div class="flex items-center gap-3 text-on-surface-variant">
+<span class="flex items-center gap-1 font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">groups</span> 20/20
+                                    </span>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<span class="flex items-center gap-1 font-label-md text-label-md text-error font-bold">
+<span class="material-symbols-outlined text-[16px]">lock</span> Full
+                                    </span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="hidden md:block text-right">
+<p class="text-[10px] font-bold tracking-widest uppercase text-on-surface-variant">Pot Size</p>
+<p class="font-stats-number text-primary text-xl">2,100 <span class="text-xs">PTS</span></p>
+</div>
+<button class="border-2 border-outline-variant text-outline font-label-md text-label-md px-6 py-3 rounded-sm cursor-not-allowed">Full</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface/95 dark:bg-surface-container-lowest/95 backdrop-blur-md border-t border-outline-variant/50 shadow-[0_-8px_30px_rgba(0,0,0,0.04)]">
+<div class="max-w-container-max mx-auto flex justify-around items-center px-4 pb-6 pt-2"><button class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim bg-primary-fixed/30 rounded-full px-4 py-1 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">stadium</span>
+<span class="font-label-md text-label-md">Lobby</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">sports_baseball</span>
+<span class="font-label-md text-label-md">My Games</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">bolt</span>
+<span class="font-label-md text-label-md">Quick Join</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-md text-label-md">Stats</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md">Profile</span>
+</button></div>
+</nav>
+<script>
+        // Micro-interaction for room hover effects
+        document.querySelectorAll('.glass-panel').forEach(panel => {
+            panel.addEventListener('mouseenter', () => {
+                panel.style.transform = 'translateY(-2px)';
+            });
+            panel.addEventListener('mouseleave', () => {
+                panel.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+<button class="fixed bottom-24 right-4 z-50 bg-primary text-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 hover:bg-primary-container transition-all active:scale-95 border border-white/20 font-label-md text-label-md"><span class="material-symbols-outlined text-[18px]">rate_review</span>Beta Feedback</button><div class="hidden fixed inset-0 z-[60] flex items-center justify-center p-gutter bg-on-surface/20 backdrop-blur-sm" id="feedback-modal"><div class="glass-panel w-full max-w-md p-md rounded-xl shadow-xl space-y-md"><div class="flex justify-between items-center"><h3 class="font-headline-md text-primary">Beta Feedback</h3><button class="material-symbols-outlined text-on-surface-variant">close</button></div><p class="font-body-md text-on-surface-variant">Your feedback goes directly to Rasheed and the Slingshot team.</p><div class="space-y-xs mb-sm"><p class="font-label-md text-label-md text-on-surface-variant">Category</p><div class="flex gap-2"><button class="px-3 py-1 rounded-full border border-outline-variant text-label-md font-label-md hover:bg-primary/5 transition-colors">General</button><button class="px-3 py-1 rounded-full border border-primary bg-primary/5 text-primary text-label-md font-label-md">Bug Report</button><button class="px-3 py-1 rounded-full border border-outline-variant text-label-md font-label-md hover:bg-primary/5 transition-colors">Feature</button></div></div><textarea class="w-full p-sm rounded border-outline-variant bg-surface focus:ring-primary focus:border-primary" placeholder="Tell us what you think..." rows="4"></textarea><button class="w-full bg-secondary text-white py-3 rounded-sm font-label-md uppercase tracking-widest" onclick="const modal = document.getElementById('feedback-modal'); const content = modal.querySelector('.glass-panel'); content.innerHTML = '&lt;div class=\'flex flex-col items-center justify-center py-lg text-center space-y-md\'&gt;&lt;span class=\'material-symbols-outlined text-primary text-4xl\'&gt;check_circle&lt;/span&gt;&lt;h3 class=\'font-headline-md text-primary\'&gt;Thank you!&lt;/h3&gt;&lt;p class=\'font-body-md text-on-surface-variant\'&gt;Our scouting team has received your feedback and is on it.&lt;/p&gt;&lt;button onclick=\'location.reload()\' class=\'mt-md text-secondary font-label-md hover:underline\'&gt;Close&lt;/button&gt;&lt;/div&gt;';">Send to Admin</button></div></div></body></html>

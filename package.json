@@ -1,0 +1,13 @@
+{
+  "name": "ballpark-bingo",
+  "version": "1.0.0",
+  "description": "Stitched interactive MLB Live Bingo PWA — fully offline-capable, installable, with wake lock, auto-save, and instant tap protection.",
+  "private": true,
+  "scripts": {
+    "serve": "python3 -m http.server 5173 || (npx --yes http-server -p 5173 -c-1 --cors)",
+    "build": "echo 'Static PWA — no build step required. Icons and assets are ready in /icons. Deploy the folder as-is.'",
+    "icons:info": "echo 'PWA icons live in icons/ (192, 512, 180). Replace with your own branded PNGs for production.'"
+  },
+  "keywords": ["pwa", "baseball", "bingo", "mlb", "offline-first", "sports"],
+  "license": "MIT"
+}

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Player Profile | Ballpark Bingo</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400;600;700&amp;family=Work+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-primary": "#ffffff",
+            "primary-fixed": "#bfeec5",
+            "error": "#ba1a1a",
+            "primary": "#033016",
+            "secondary": "#a43c2b",
+            "on-secondary-fixed": "#3f0200",
+            "surface-bright": "#fcf9f8",
+            "surface-container-high": "#eae7e7",
+            "on-tertiary-fixed-variant": "#484740",
+            "on-primary-fixed": "#00210c",
+            "secondary-fixed-dim": "#ffb4a6",
+            "surface-variant": "#e4e2e1",
+            "on-background": "#1b1c1c",
+            "on-secondary-container": "#71170a",
+            "surface-tint": "#3d6748",
+            "tertiary-container": "#403f38",
+            "on-primary-fixed-variant": "#254f31",
+            "tertiary-fixed-dim": "#c9c6bd",
+            "error-container": "#ffdad6",
+            "surface-container-highest": "#e4e2e1",
+            "secondary-fixed": "#ffdad4",
+            "on-error": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "on-primary-container": "#88b590",
+            "surface-container": "#f0eded",
+            "on-secondary": "#ffffff",
+            "on-secondary-fixed-variant": "#842416",
+            "inverse-on-surface": "#f3f0f0",
+            "primary-container": "#1d472a",
+            "tertiary": "#292923",
+            "on-surface-variant": "#414941",
+            "outline": "#727971",
+            "on-tertiary-container": "#acaaa1",
+            "on-surface": "#1b1c1c",
+            "on-tertiary-fixed": "#1c1c16",
+            "inverse-primary": "#a3d2ab",
+            "outline-variant": "#c1c9bf",
+            "surface-container-low": "#f6f3f2",
+            "tertiary-fixed": "#e5e2d9",
+            "on-tertiary": "#ffffff",
+            "on-error-container": "#93000a",
+            "surface-dim": "#dcd9d9",
+            "inverse-surface": "#303030",
+            "primary-fixed-dim": "#a3d2ab",
+            "secondary-container": "#fd7e67",
+            "surface": "#fcf9f8",
+            "background": "#fcf9f8"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "gutter": "24px",
+            "container-max": "1280px",
+            "xs": "4px",
+            "sm": "12px",
+            "xl": "80px",
+            "base": "8px",
+            "lg": "48px",
+            "md": "24px"
+          },
+          "fontFamily": {
+            "body-md": ["Work Sans"],
+            "headline-lg": ["Domine"],
+            "headline-lg-mobile": ["Domine"],
+            "stats-number": ["Domine"],
+            "body-lg": ["Work Sans"],
+            "headline-md": ["Domine"],
+            "label-md": ["Work Sans"],
+            "display-lg": ["Domine"]
+          },
+          "fontSize": {
+            "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+            "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+            "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+            "stats-number": ["36px", {"lineHeight": "44px", "fontWeight": "700"}],
+            "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+            "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+            "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+            "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .glass-panel {
+      background: rgba(252, 249, 248, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(193, 201, 191, 0.4);
+    }
+    .stadium-glow {
+      box-shadow: 0 0 40px 10px rgba(3, 48, 22, 0.08);
+    }
+    .stadium-glow-sm {
+      box-shadow: 0 0 20px 5px rgba(3, 48, 22, 0.05);
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .profile-hero-gradient {
+      background: linear-gradient(180deg, rgba(3, 48, 22, 0.05) 0%, rgba(252, 249, 248, 0) 100%);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm h-16 flex justify-between items-center px-gutter">
+<div class="flex items-center gap-base">
+<span class="material-symbols-outlined text-primary text-headline-md" data-icon="sports_baseball">sports_baseball</span>
+<h1 class="font-headline-md text-headline-md font-bold tracking-tight text-primary">BALLPARK BINGO</h1>
+</div>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-on-surface-variant text-headline-md cursor-pointer hover:bg-primary/5 p-2 rounded-full transition-colors" data-icon="account_circle">account_circle</span>
+</div>
+</header>
+<main class="pt-16 max-w-container-max mx-auto px-gutter"><div class="bg-primary-fixed text-on-primary-fixed px-gutter py-2 flex items-center justify-center gap-sm mb-sm rounded-lg shadow-sm border border-primary/20"><div class="flex flex-col items-center gap-xs w-full"><div class="flex items-center justify-center gap-sm"><span class="material-symbols-outlined text-[20px]" data-icon="info">info</span><p class="text-label-md font-bold uppercase tracking-widest">Beta Phase: We're still warming up!</p></div><div class="flex gap-md mt-xs"><button class="text-label-md underline hover:text-primary transition-colors">General Feedback</button><button class="text-label-md underline hover:text-primary transition-colors flex items-center gap-xs"><span class="material-symbols-outlined text-[16px]" data-icon="bug_report">bug_report</span>Bug Report</button></div><div class="hidden mt-sm p-2 bg-white/20 rounded text-center italic text-label-md" id="admin-response"><p>"Our scouting team is reviewing your report. Thanks for helping us build a better ballpark!" — The Admins</p></div></div></div>
+<!-- Hero Section -->
+<section class="py-lg profile-hero-gradient">
+<div class="flex flex-col md:flex-row items-center gap-md">
+<div class="relative">
+<div class="w-32 h-32 rounded-full border-4 border-white shadow-xl overflow-hidden glass-panel stadium-glow">
+<img alt="Player Avatar" class="w-full h-full object-cover" data-alt="A sophisticated studio portrait of a confident sports fan with classic aesthetic. The subject is a person in their late 20s, smiling warmly, wearing a vintage-style baseball cap. The background is a soft, out-of-focus stadium field under golden hour light, reflecting the brand's nostalgic yet modern ballpark theme. The color palette emphasizes warm creams, stadium greens, and soft earthy tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDT3iHIh-MKGx-2rzDd4wZ88pFMOtO8beH2E5AaomS6lBu8sgAojJdaVThJk_b0Hw-f8oKNBrmcx8nyxbrVrXapuEe4tbcDkBeP-KYZidW_9hrfYTH8QUkoWZR7GGLeoci2Cdyx2dV_FzK1IOJnueI74EzU2Ag8-CJ8XXjP10xgarwYOGMM5C_udMnlzz7Ip0zFkY8wvdDkrgpXa_Vb0OyFbvtxwsSJ8BQaXS6kmgDZbWKX_97vHmMB6oH_DgVtGdMogwtaQtm75TqS"/>
+</div>
+<div class="absolute -bottom-2 -right-2 bg-secondary text-on-primary px-3 py-1 rounded-full text-label-md font-bold border-2 border-white">
+            PRO
+          </div>
+</div>
+<div class="text-center md:text-left">
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary">Casey 'The Ace' Miller</h2>
+<p class="font-body-lg text-on-surface-variant">Veteran Bingo Strategist • Member since 2021</p>
+<div class="mt-sm flex flex-wrap justify-center md:justify-start gap-xs">
+<span class="px-sm py-1 bg-primary/10 text-primary border border-primary/20 rounded-lg text-label-md">San Francisco Giants Fan</span>
+<span class="px-sm py-1 bg-secondary/10 text-secondary border border-secondary/20 rounded-lg text-label-md">High Roller</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Key Statistics Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-4 gap-md mb-lg">
+<!-- Lifetime Wins -->
+<div class="glass-panel stadium-glow-sm p-md flex flex-col justify-between group hover:border-primary/40 transition-all duration-300">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-secondary" data-icon="military_tech">military_tech</span>
+<span class="text-label-md text-on-surface-variant uppercase tracking-widest">Lifetime Wins</span>
+</div>
+<div class="mt-lg">
+<p class="font-stats-number text-stats-number text-primary">142</p>
+<p class="text-label-md text-primary/60 font-bold">+12 this month</p>
+</div>
+</div>
+<!-- Credit Balance -->
+<div class="glass-panel stadium-glow-sm p-md flex flex-col justify-between group hover:border-primary/40 transition-all duration-300">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-primary" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="text-label-md text-on-surface-variant uppercase tracking-widest">Stadium Credit</span>
+</div>
+<div class="mt-lg">
+<p class="font-stats-number text-stats-number text-primary">4,850</p>
+<p class="text-label-md text-primary/60 font-bold">PTS</p>
+</div>
+</div>
+<!-- Longest Streak -->
+<div class="glass-panel stadium-glow-sm p-md flex flex-col justify-between group hover:border-primary/40 transition-all duration-300">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-secondary" data-icon="local_fire_department">local_fire_department</span>
+<span class="text-label-md text-on-surface-variant uppercase tracking-widest">Longest Streak</span>
+</div>
+<div class="mt-lg">
+<p class="font-stats-number text-stats-number text-primary">8</p>
+<p class="text-label-md text-primary/60 font-bold">Games won in a row</p>
+</div>
+</div>
+<!-- Favorite Team -->
+<div class="glass-panel stadium-glow-sm p-md flex flex-col justify-between group hover:border-primary/40 transition-all duration-300 relative overflow-hidden">
+<div class="flex justify-between items-start z-10 relative">
+<span class="material-symbols-outlined text-primary" data-icon="favorite">favorite</span>
+<span class="text-label-md text-on-surface-variant uppercase tracking-widest">Favorite Team</span>
+</div>
+<div class="mt-lg z-10 relative">
+<p class="font-headline-md text-headline-md text-primary">SF GIANTS</p>
+<p class="text-label-md text-primary/60 font-bold">Since 2021</p>
+</div>
+<!-- Decorative subtle icon -->
+<span class="material-symbols-outlined absolute -bottom-4 -right-4 text-primary/5 text-[120px] select-none" data-icon="sports_baseball">sports_baseball</span>
+</div>
+</section>
+<!-- Performance and Trophies -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-md">
+<!-- Recent Season Performance -->
+<div class="lg:col-span-2 glass-panel p-md shadow-lg">
+<div class="flex items-center justify-between mb-lg">
+<h3 class="font-headline-md text-headline-md text-primary">Recent Season Performance</h3>
+<span class="text-label-md font-bold text-secondary uppercase">Active Season</span>
+</div>
+<div class="space-y-lg">
+<div class="space-y-sm">
+<div class="flex justify-between items-end">
+<div>
+<p class="text-label-md text-on-surface-variant">Current Level: All-Star</p>
+<p class="font-headline-md text-primary">Level 42</p>
+</div>
+<p class="text-label-md text-on-surface-variant font-bold">8,400 / 10,000 XP</p>
+</div>
+<!-- Progress Bar -->
+<div class="w-full h-4 bg-surface-container-highest rounded-full overflow-hidden border border-outline-variant">
+<div class="h-full bg-primary relative overflow-hidden" style="width: 84%">
+<div class="absolute inset-0 bg-white/10 opacity-50 animate-pulse"></div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-sm pt-md border-t border-outline-variant/30">
+<div class="text-center md:text-left">
+<p class="text-label-md text-on-surface-variant">GAMES PLAYED</p>
+<p class="font-headline-md text-primary">24</p>
+</div>
+<div class="text-center md:text-left">
+<p class="text-label-md text-on-surface-variant">BINGOS HIT</p>
+<p class="font-headline-md text-primary">31</p>
+</div>
+<div class="text-center md:text-left">
+<p class="text-label-md text-on-surface-variant">RANK</p>
+<p class="font-headline-md text-secondary">TOP 5%</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Trophy Room -->
+<div class="glass-panel p-md shadow-lg flex flex-col">
+<h3 class="font-headline-md text-headline-md text-primary mb-lg">Trophy Room</h3>
+<div class="grid grid-cols-2 gap-md flex-grow">
+<!-- Badge: Grand Slam Winner -->
+<div class="flex flex-col items-center text-center p-sm glass-panel border-secondary/20 hover:scale-105 transition-transform cursor-pointer">
+<div class="w-16 h-16 rounded-full bg-secondary-fixed flex items-center justify-center mb-sm shadow-inner">
+<span class="material-symbols-outlined text-secondary text-display-lg" data-icon="workspace_premium" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+<p class="text-label-md font-bold text-on-surface">Grand Slam Winner</p>
+<p class="text-[10px] text-on-surface-variant leading-tight">Hit a bingo on 4 runs in one inning</p>
+</div>
+<!-- Badge: Perfect Game -->
+<div class="flex flex-col items-center text-center p-sm glass-panel border-primary/20 hover:scale-105 transition-transform cursor-pointer">
+<div class="w-16 h-16 rounded-full bg-primary-fixed flex items-center justify-center mb-sm shadow-inner">
+<span class="material-symbols-outlined text-primary text-display-lg" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="text-label-md font-bold text-on-surface">Perfect Game</p>
+<p class="text-[10px] text-on-surface-variant leading-tight">Every square called in a match</p>
+</div>
+<!-- Badge: Early Bird -->
+<div class="flex flex-col items-center text-center p-sm glass-panel border-tertiary/20 opacity-60 grayscale hover:grayscale-0 transition-all cursor-pointer">
+<div class="w-16 h-16 rounded-full bg-surface-container-highest flex items-center justify-center mb-sm shadow-inner">
+<span class="material-symbols-outlined text-on-surface-variant text-display-lg" data-icon="schedule">schedule</span>
+</div>
+<p class="text-label-md font-bold text-on-surface">Early Bird</p>
+<p class="text-[10px] text-on-surface-variant leading-tight">First to hit bingo in a room</p>
+</div>
+<!-- Placeholder/Next Badge -->
+<div class="flex flex-col items-center justify-center text-center p-sm border-2 border-dashed border-outline-variant rounded-lg">
+<span class="material-symbols-outlined text-outline-variant" data-icon="lock">lock</span>
+<p class="text-[10px] text-on-surface-variant font-bold mt-xs">Next Badge At Lv. 50</p>
+</div>
+</div>
+<button class="mt-md w-full py-2 bg-secondary text-on-primary font-bold text-label-md rounded shadow-sm hover:opacity-90 active:scale-95 transition-all">
+          VIEW ALL AWARDS
+        </button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface/90 backdrop-blur-xl border-t border-outline-variant/30 shadow-lg h-20 flex justify-around items-center pb-safe">
+<!-- Home -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary/10 transition-colors px-6 h-full active:scale-90 duration-200">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</button>
+<!-- Card -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary/10 transition-colors px-6 h-full active:scale-90 duration-200">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+<span class="font-label-md text-label-md">Card</span>
+</button>
+<!-- Rankings (Active) -->
+<button class="flex flex-col items-center justify-center text-secondary font-bold hover:bg-secondary/10 transition-colors px-6 h-full active:scale-90 duration-200">
+<span class="material-symbols-outlined" data-icon="leaderboard" style="font-variation-settings: 'FILL' 1;">leaderboard</span>
+<span class="font-label-md text-label-md">Rankings</span>
+</button>
+</nav>
+<script>
+    // Micro-interaction for statistic cards hover
+    document.querySelectorAll('.glass-panel').forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        card.style.transform = 'translateY(-4px)';
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'translateY(0)';
+      });
+    });
+
+    // Add a subtle parallax effect to the hero badge
+    window.addEventListener('mousemove', (e) => {
+      const badge = document.querySelector('.stadium-glow');
+      if(badge) {
+        const x = (window.innerWidth / 2 - e.pageX) / 45;
+        const y = (window.innerHeight / 2 - e.pageY) / 45;
+        badge.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+      }
+    });
+  </script>
+<button class="fixed bottom-24 right-6 z-50 bg-secondary text-on-primary flex items-center gap-xs px-6 py-3 rounded-full shadow-xl hover:scale-105 active:scale-95 transition-all duration-200 group" onclick="document.getElementById('admin-response').classList.remove('hidden'); this.innerText='Report Sent!';">
+<span class="material-symbols-outlined" data-icon="rate_review">rate_review</span>
+<span class="font-label-md font-bold">Send Feedback</span>
+</button></body></html>

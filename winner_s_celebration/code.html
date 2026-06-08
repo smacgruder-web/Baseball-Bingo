@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BASEBALL BINGO - WINNER!</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400;700&amp;family=Work+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed-dim": "#ffb3ae",
+                    "surface-container": "#edeee9",
+                    "surface-dim": "#d9dad6",
+                    "secondary-fixed": "#ffdad7",
+                    "inverse-on-surface": "#f0f1ec",
+                    "primary-fixed-dim": "#a3d2ab",
+                    "surface": "#f9faf5",
+                    "on-background": "#1a1c19",
+                    "primary": "#033016",
+                    "on-surface": "#1a1c19",
+                    "inverse-primary": "#a3d2ab",
+                    "surface-container-high": "#e8e9e4",
+                    "outline": "#727971",
+                    "tertiary-fixed-dim": "#eec209",
+                    "on-secondary-container": "#700310",
+                    "on-primary-fixed-variant": "#254f31",
+                    "surface-variant": "#e2e3de",
+                    "on-secondary": "#ffffff",
+                    "outline-variant": "#c1c9bf",
+                    "tertiary-fixed": "#ffe084",
+                    "on-tertiary": "#ffffff",
+                    "surface-tint": "#3d6748",
+                    "secondary": "#ab3334",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-container": "#4e3d00",
+                    "on-tertiary-fixed": "#231b00",
+                    "error-container": "#ffdad6",
+                    "surface-container-low": "#f3f4ef",
+                    "primary-fixed": "#bfeec5",
+                    "on-error-container": "#93000a",
+                    "secondary-container": "#ff716d",
+                    "background": "#f9faf5",
+                    "error": "#ba1a1a",
+                    "on-primary-fixed": "#00210c",
+                    "surface-container-highest": "#e2e3de",
+                    "on-tertiary-fixed-variant": "#574500",
+                    "on-primary-container": "#88b590",
+                    "surface-bright": "#f9faf5",
+                    "on-secondary-fixed-variant": "#8a1a1f",
+                    "on-secondary-fixed": "#410005",
+                    "inverse-surface": "#2f312e",
+                    "primary-container": "#1d472a",
+                    "on-surface-variant": "#414941",
+                    "on-error": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "tertiary": "#735c00",
+                    "tertiary-container": "#cea700"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "grid-gutter": "16px",
+                    "base": "8px",
+                    "lg": "48px",
+                    "sm": "12px",
+                    "md": "24px",
+                    "xs": "4px",
+                    "xl": "64px",
+                    "grid-margin-desktop": "32px",
+                    "grid-margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "label-bold": ["Work Sans"],
+                    "display-lg": ["Domine"],
+                    "headline-sm": ["Domine"],
+                    "caption": ["Work Sans"],
+                    "display-lg-mobile": ["Domine"],
+                    "headline-md": ["Domine"],
+                    "body-lg": ["Work Sans"],
+                    "body-md": ["Work Sans"]
+            },
+            "fontSize": {
+                    "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .stadium-bg {
+            background-image: radial-gradient(circle at 50% 50%, rgba(3, 48, 22, 0.03) 0%, transparent 70%),
+                              repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(163, 210, 171, 0.05) 10px, rgba(163, 210, 171, 0.05) 11px);
+        }
+        .neon-text {
+            text-shadow: 0 0 10px rgba(255, 224, 132, 0.8), 0 0 20px rgba(206, 167, 0, 0.6);
+        }
+        .stitching {
+            background-image: linear-gradient(to right, currentColor 50%, rgba(255,255,255,0) 0%);
+            background-position: bottom;
+            background-size: 8px 2px;
+            background-repeat: repeat-x;
+        }
+        .bingo-cell-pressed {
+            box-shadow: inset 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        @keyframes celebrate {
+            0% { transform: scale(0.9) rotate(-2deg); opacity: 0; }
+            70% { transform: scale(1.1) rotate(1deg); opacity: 1; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        .animate-celebrate {
+            animation: celebrate 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        .confetti {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            pointer-events: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body-md text-on-surface stadium-bg min-h-screen overflow-x-hidden flex flex-col">
+<!-- Top Navigation Suppression: Not shown on success screens per rules -->
+<main class="flex-grow flex flex-col items-center justify-center px-grid-margin-mobile py-lg">
+<!-- Victory Container -->
+<div class="w-full max-w-[600px] flex flex-col items-center animate-celebrate">
+<!-- Vintage Neon Banner -->
+<div class="relative mb-md text-center">
+<div class="absolute -inset-4 bg-tertiary/10 blur-xl rounded-full"></div>
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-secondary neon-text uppercase tracking-widest relative z-10 py-4 px-8 border-4 border-secondary/30 rounded-xl rotate-[-2deg] bg-surface-container-highest shadow-[0_10px_20px_rgba(171,51,52,0.15)]">
+                    BINGO!
+                </h1>
+<div class="flex gap-2 justify-center mt-4">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<!-- Mini Winning Card Section -->
+<div class="bg-surface-container-low border border-outline-variant p-md rounded-xl shadow-lg relative mb-lg w-full max-w-sm">
+<!-- Decorative Pinstripe Pattern Background for Level 1 Card -->
+<div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: repeating-linear-gradient(90deg, #033016, #033016 1px, transparent 1px, transparent 16px);"></div>
+<div class="relative z-10">
+<div class="flex justify-between items-center mb-base border-b border-outline-variant pb-2">
+<span class="font-label-bold text-label-bold text-on-surface-variant uppercase">Final Scorecard</span>
+<span class="font-label-bold text-label-bold text-primary">INNING 9</span>
+</div>
+<!-- 5x5 Grid Miniature -->
+<div class="grid grid-cols-5 gap-1 aspect-square bg-outline-variant/20 p-1 rounded-sm">
+<!-- Simulated Grid with Winning Line -->
+<div class="bg-surface-container-highest aspect-square rounded-sm"></div>
+<div class="bg-primary text-on-primary bingo-cell-pressed aspect-square rounded-sm flex items-center justify-center"><span class="text-[8px] material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check</span></div>
+<div class="bg-surface-container-highest aspect-square rounded-sm"></div>
+<div class="bg-surface-container-highest aspect-square rounded-sm"></div>
+<div class="bg-surface-container-highest aspect-square rounded-sm"></div>
+<div class="bg-surface-container-highest aspect-square rounded-sm"></div>
+<div class="bg-primary text-on-primary bingo-cell-pressed aspect-square rounded-sm flex items-center justify-center"><span class="text-[8px] material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check</span></div>
+<div class="bg-surface-container-highest aspect-square rounded-sm"></div>
+<div class="bg-surface-container-highest aspect-square rounded-sm"></div>
+<div class="bg-surface-container-highest aspect-square rounded-sm"></div>
+<div class="bg-surface-container-highest aspect-square rounded-sm"></div>
+<div class="bg-tertiary-container text-on-tertiary-container bingo-cell-pressed aspect-square rounded-sm flex items-center justify-center"><span class="text-[8px] font-label-bold">FREE</span></div>
+<div class="bg-surface-container-highest aspect-square rounded-sm"></div>
+<div class="bg-surface-container-highest aspect-square rounded-sm"></div>
+<div class="bg-surface-container-highest aspect-square rounded-sm"></div>
+<div class="bg-surface-container-highest aspect-square rounded-sm"></div>
+<div class="bg-primary text-on-primary bingo-cell-pressed aspect-square rounded-sm flex items-center justify-center"><span class="text-[8px] material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check</span></div>
+<div class="bg-surface-container-highest aspect-square rounded-sm"></div>
+<div class="bg-surface-container-highest aspect-square rounded-sm"></div>
+<div class="bg-surface-container-highest aspect-square rounded-sm"></div>
+<div class="bg-surface-container-highest aspect-square rounded-sm"></div>
+<div class="bg-primary text-on-primary bingo-cell-pressed aspect-square rounded-sm flex items-center justify-center"><span class="text-[8px] material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check</span></div>
+<div class="bg-surface-container-highest aspect-square rounded-sm"></div>
+<div class="bg-surface-container-highest aspect-square rounded-sm"></div>
+<div class="bg-surface-container-highest aspect-square rounded-sm"></div>
+</div>
+<p class="font-body-md text-on-surface-variant text-center mt-base text-caption italic">"Double Play Victory!"</p>
+</div>
+</div>
+<!-- Stats & Progress -->
+<div class="w-full mb-lg space-y-4">
+<div class="flex items-center gap-4">
+<span class="font-label-bold text-label-bold text-on-surface-variant uppercase shrink-0">Season Wins</span>
+<div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden flex">
+<!-- Stitching progress bar -->
+<div class="h-full bg-primary flex gap-1 px-1" style="width: 75%;">
+<div class="h-full w-2 border-r border-surface/30"></div>
+<div class="h-full w-2 border-r border-surface/30"></div>
+<div class="h-full w-2 border-r border-surface/30"></div>
+</div>
+</div>
+<span class="font-label-bold text-label-bold text-primary shrink-0">12/16</span>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-col sm:flex-row gap-4 w-full">
+<button class="flex-1 bg-primary text-on-primary font-label-bold text-label-bold py-4 rounded-lg uppercase tracking-wider shadow-lg active:translate-y-0.5 transition-all hover:bg-primary/90 flex items-center justify-center gap-2">
+                    Next Inning
+                    <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<button class="flex-1 bg-transparent border-2 border-primary text-primary font-label-bold text-label-bold py-4 rounded-lg uppercase tracking-wider active:translate-y-0.5 transition-all hover:bg-primary/5 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">share</span>
+                    Share Win
+                </button>
+</div>
+</div>
+</main>
+<!-- Stadium Atmosphere Overlay: Background Scene Image -->
+<div class="fixed inset-0 -z-10 opacity-30 pointer-events-none overflow-hidden">
+<img alt="" class="w-full h-full object-cover" data-alt="A wide-angle, low-angle shot of a majestic baseball stadium at twilight, with massive, glowing stadium floodlights casting long shadows and a brilliant haze over the perfectly manicured green grass and red dirt. The sky is a deep twilight blue with soft clouds. The overall aesthetic is celebratory and nostalgic, reflecting a vintage athletic mood with high-contrast lighting and a rich, traditional color palette of deep greens and earthy reds." src="https://lh3.googleusercontent.com/aida-public/AB6AXuASKi9Nv0v4WxyWZY3hWFIvT7QP5h4kG_Aq_OWwtvPp8iAb-NebI7h_xcwfcpcdJQldv5BQTmjDIhlGIa6ugArCu7ECANgtHnw_K_e3mpqG7NLg-QX51bvHsqgIFtmRo1JQwtanDgfwbeYdoldyEotO-idH4K8-jWa6FSZEsyBkh2C_T5X4sBIW0nEVy5lsOwVd9kaMU-YpsBrBn0QRHJWaEXu9lh7upe726ey176AkCMcnx4cS0qDHlssH8NIjzZatmVEdFQ8Abo9X"/>
+</div>
+<!-- Celebration Particles -->
+<div class="fixed inset-0 pointer-events-none z-0" id="confetti-container"></div>
+<script>
+        // Simple confetti effect
+        function createConfetti() {
+            const container = document.getElementById('confetti-container');
+            const colors = ['#033016', '#ab3334', '#cea700', '#3d6748', '#ff716d'];
+            
+            for(let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-10px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                
+                const duration = 2 + Math.random() * 3;
+                const delay = Math.random() * 2;
+                
+                confetti.animate([
+                    { transform: `translate(0, 0) rotate(0deg)`, opacity: 1 },
+                    { transform: `translate(${(Math.random() - 0.5) * 200}px, 100vh) rotate(${Math.random() * 720}deg)`, opacity: 0 }
+                ], {
+                    duration: duration * 1000,
+                    delay: delay * 1000,
+                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                    iterations: Infinity
+                });
+                
+                container.appendChild(confetti);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', createConfetti);
+    </script>
+</body></html>

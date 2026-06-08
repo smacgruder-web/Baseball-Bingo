@@ -1,0 +1,367 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Baseball Bingo - Stadium Chatter</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400;600;700&amp;family=Work+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .vintage-grain {
+            background-image: url("https://www.transparenttextures.com/patterns/pinstripe-dark.png");
+            background-repeat: repeat;
+            opacity: 0.03;
+            pointer-events: none;
+        }
+        .stamp-texture {
+            mask-image: url("https://www.transparenttextures.com/patterns/asfalt-light.png");
+            -webkit-mask-image: url("https://www.transparenttextures.com/patterns/asfalt-light.png");
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #c1c9bf;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary": "#033016",
+                      "on-primary-container": "#88b590",
+                      "on-background": "#1a1c19",
+                      "surface-bright": "#f9faf5",
+                      "surface-dim": "#d9dad6",
+                      "on-secondary-container": "#700310",
+                      "on-tertiary": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary": "#ffffff",
+                      "inverse-on-surface": "#f0f1ec",
+                      "error": "#ba1a1a",
+                      "tertiary-fixed": "#ffe084",
+                      "outline-variant": "#c1c9bf",
+                      "tertiary-fixed-dim": "#eec209",
+                      "surface-container-low": "#f3f4ef",
+                      "on-primary-fixed-variant": "#254f31",
+                      "surface-tint": "#3d6748",
+                      "outline": "#727971",
+                      "on-secondary-fixed-variant": "#8a1a1f",
+                      "on-primary-fixed": "#00210c",
+                      "on-error-container": "#93000a",
+                      "error-container": "#ffdad6",
+                      "on-error": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "on-surface": "#1a1c19",
+                      "surface-container-highest": "#e2e3de",
+                      "surface": "#f9faf5",
+                      "secondary-fixed": "#ffdad7",
+                      "on-tertiary-fixed": "#231b00",
+                      "primary-container": "#1d472a",
+                      "surface-container-high": "#e8e9e4",
+                      "secondary": "#ab3334",
+                      "secondary-container": "#ff716d",
+                      "on-tertiary-container": "#4e3d00",
+                      "background": "#f9faf5",
+                      "tertiary": "#735c00",
+                      "secondary-fixed-dim": "#ffb3ae",
+                      "primary-fixed-dim": "#a3d2ab",
+                      "surface-variant": "#e2e3de",
+                      "primary-fixed": "#bfeec5",
+                      "on-surface-variant": "#414941",
+                      "surface-container": "#edeee9",
+                      "inverse-surface": "#2f312e",
+                      "tertiary-container": "#cea700",
+                      "on-tertiary-fixed-variant": "#574500",
+                      "on-secondary-fixed": "#410005",
+                      "inverse-primary": "#a3d2ab"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "grid-gutter": "16px",
+                      "sm": "12px",
+                      "md": "24px",
+                      "base": "8px",
+                      "grid-margin-mobile": "16px",
+                      "grid-margin-desktop": "32px",
+                      "xs": "4px",
+                      "lg": "48px",
+                      "xl": "64px"
+              },
+              "fontFamily": {
+                      "body-lg": ["Work Sans"],
+                      "display-lg": ["Domine"],
+                      "label-bold": ["Work Sans"],
+                      "display-lg-mobile": ["Domine"],
+                      "caption": ["Work Sans"],
+                      "headline-md": ["Domine"],
+                      "body-md": ["Work Sans"],
+                      "headline-sm": ["Domine"]
+              },
+              "fontSize": {
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+              }
+            }
+          }
+        }
+    </script>
+</head>
+<body class="bg-background font-body-md text-on-background min-h-screen flex flex-col relative overflow-hidden">
+<!-- Background Texture -->
+<div class="fixed inset-0 vintage-grain"></div>
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-grid-margin-mobile py-2 border-b border-outline-variant bg-surface-variant/5 dark:bg-surface-container">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">sports_baseball</span>
+<h1 class="font-display-lg-mobile text-display-lg-mobile text-primary uppercase tracking-tight">BASEBALL BINGO</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">account_circle</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 mt-[56px] mb-[120px] flex flex-col overflow-hidden">
+<!-- Condensed Scoreboard -->
+<section class="bg-primary text-white p-3 shadow-md z-10">
+<div class="flex justify-between items-center max-w-md mx-auto">
+<div class="flex items-center gap-3">
+<div class="text-center">
+<p class="font-label-bold text-caption opacity-80">LAD</p>
+<p class="font-display-lg-mobile text-headline-md leading-none">4</p>
+</div>
+<div class="h-8 w-px bg-on-primary-container/30 mx-1"></div>
+<div class="text-center">
+<p class="font-label-bold text-caption opacity-80">NYY</p>
+<p class="font-display-lg-mobile text-headline-md leading-none">2</p>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<div class="flex items-center gap-1 bg-primary-container px-2 py-0.5 rounded-full">
+<span class="w-2 h-2 bg-secondary rounded-full animate-pulse"></span>
+<p class="font-label-bold text-caption uppercase">Top 7th</p>
+</div>
+<p class="text-[10px] font-label-bold tracking-widest mt-1 opacity-70">2 OUTS • 1-2 COUNT</p>
+</div>
+</div>
+</section>
+<!-- Live Bingo Tracking (Mini Board) -->
+<section class="bg-surface-container border-b border-outline-variant p-4 shadow-sm z-10">
+<div class="max-w-md mx-auto">
+<div class="flex justify-between items-end mb-2">
+<h2 class="font-label-bold text-label-bold text-primary uppercase">My Card Progress</h2>
+<p class="text-caption font-label-bold text-secondary">2 away from BINGO!</p>
+</div>
+<div class="grid grid-cols-5 gap-1.5 aspect-[5/1] overflow-hidden">
+<!-- Mini Cells -->
+<div class="bg-surface border border-outline-variant rounded flex items-center justify-center relative">
+<span class="text-[8px] font-label-bold text-on-surface-variant text-center px-0.5 leading-tight">Home Run</span>
+<div class="absolute inset-0 flex items-center justify-center opacity-80 stamp-texture rotate-12">
+<span class="material-symbols-outlined text-secondary scale-125" style="font-variation-settings: 'FILL' 1;">close</span>
+</div>
+</div>
+<div class="bg-surface border border-outline-variant rounded flex items-center justify-center">
+<span class="text-[8px] font-label-bold text-on-surface-variant text-center px-0.5 leading-tight">Steal</span>
+</div>
+<div class="bg-tertiary-fixed border border-outline-variant rounded flex items-center justify-center relative">
+<span class="text-[8px] font-label-bold text-primary text-center px-0.5 leading-tight">FREE</span>
+<div class="absolute inset-0 flex items-center justify-center opacity-80 stamp-texture -rotate-6">
+<span class="material-symbols-outlined text-secondary scale-125" style="font-variation-settings: 'FILL' 1;">close</span>
+</div>
+</div>
+<div class="bg-surface border border-outline-variant rounded flex items-center justify-center relative">
+<span class="text-[8px] font-label-bold text-on-surface-variant text-center px-0.5 leading-tight">Double Play</span>
+<div class="absolute inset-0 flex items-center justify-center opacity-80 stamp-texture rotate-3">
+<span class="material-symbols-outlined text-secondary scale-125" style="font-variation-settings: 'FILL' 1;">close</span>
+</div>
+</div>
+<div class="bg-surface border border-outline-variant rounded flex items-center justify-center">
+<span class="text-[8px] font-label-bold text-on-surface-variant text-center px-0.5 leading-tight">Strike Out</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Stadium Chatter Chat Room -->
+<section class="flex-1 overflow-y-auto px-4 py-6 flex flex-col gap-4 custom-scrollbar" id="chat-container">
+<!-- System Message -->
+<div class="flex flex-col items-center gap-1 my-2">
+<div class="bg-outline-variant/20 px-3 py-1 rounded-full border border-outline-variant/30">
+<p class="text-caption font-label-bold text-on-surface-variant uppercase tracking-tighter">
+<span class="text-primary">DODGERBLUE</span> marked <span class="text-secondary">STOLEN BASE</span>
+</p>
+</div>
+</div>
+<!-- Chat Message Left -->
+<div class="flex gap-3 max-w-[85%]">
+<div class="w-10 h-10 rounded-full bg-surface-container-high border border-outline-variant overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A profile headshot of a smiling man in a vintage blue baseball cap with a subtle stadium background. The lighting is bright and warm, reflecting a sunny day at the ballpark. The image has a clean, modern lifestyle aesthetic with high contrast and a slightly grainy, film-like texture consistent with vintage sports photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_CFLMrn4jgAT0c0XX7XgSOWrbcUI9EXHwXwQ2oIwmkxVvzAQefNiULLdTEHHgr_L1KmHgt5fpb70_2_PZIJsTYfQHs_o3v1LKjAQG-QL_vMTq2-1p1JODu4PC3dKEJ7U__CDZpcG5kdQof55bJzDEZbbQNkQtEpWFYeb1w6rg2oqlfSGtE6Axxk7y5Gg7R9QdDKgLGjQfF6Ijm25UMMpTnblw_bYH-pFfjK4IKVpK2w4S96xPjT7-FUxEIuXXGkfI_MwQBFyy9Wty">
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="font-label-bold text-caption text-primary">DODGERBLUE</span>
+<span class="text-[10px] font-bold text-white bg-blue-800 px-1.5 rounded-sm">LAD</span>
+</div>
+<div class="bg-surface border border-outline-variant rounded-xl rounded-tl-none p-3 shadow-sm">
+<p class="text-body-md text-on-surface">Did you see that slide?! Ohtani is built different. 💨</p>
+</div>
+</div>
+</div>
+<!-- Chat Message Right (Self) -->
+<div class="flex flex-row-reverse gap-3 max-w-[85%] self-end">
+<div class="w-10 h-10 rounded-full bg-surface-container-high border border-outline-variant overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A close-up portrait of a cheerful woman with a casual, modern look. She is wearing a soft cream-colored sweater. The background is a softly blurred outdoor scene with natural, airy lighting. The style is minimalist and high-end, focusing on a clean and friendly user identity for a digital social platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuApTt8sx4oNxregitl7QuOVPbxiQw4h7CKjUknSGH1UewtDGZiNQsA5kpbjrkOGbXxxs6eIDBtDYAW-FUDnpwfuvasEohMPIYN2Cc6FDgfkhFmSXJIYq-pMErs5RqHRNYCHxWEkwtVFmWwVc-Tqm5DCB3N_ikTcudN7N75FIP34TRJ7UvmPp4cRhLzs0ODGAVchGbnNSQOdXUHnHy71_5FM0WsfPZxML3_-uvHg_h7InzU_tOIA-aJ2BeNlXa4IuNx1S07i5PIHf60l">
+</div>
+<div class="flex flex-col items-end gap-1">
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-white bg-red-800 px-1.5 rounded-sm">NYY</span>
+<span class="font-label-bold text-caption text-primary">BOMBERFAN_99</span>
+</div>
+<div class="bg-primary text-white rounded-xl rounded-tr-none p-3 shadow-sm">
+<p class="text-body-md">Hard to argue with that. Need Judge to respond with a moonshot here!</p>
+</div>
+</div>
+</div>
+<!-- System Message (Milestone) -->
+<div class="flex flex-col items-center gap-1 my-2">
+<div class="bg-tertiary-container/30 px-3 py-1 rounded-full border border-tertiary-container/50">
+<p class="text-caption font-label-bold text-on-tertiary-container uppercase tracking-tighter">
+                         🌟 <span class="text-primary">STADIUM CHATTER</span> IS HEATIN' UP!
+                    </p>
+</div>
+</div>
+<!-- Chat Message Left -->
+<div class="flex gap-3 max-w-[85%]">
+<div class="w-10 h-10 rounded-full bg-surface-container-high border border-outline-variant overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A portrait of a middle-aged man with a beard, wearing a classic green baseball jersey. He looks focused and passionate. The background suggests the atmosphere of stadium bleachers under evening lights. The visual style is crisp and professional, with a warm color palette and tactile textures." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCm2dJrJden13ZlTuNjWrqf07fZJyupMAMvRZgRoOR9Yb_9-J03ILkzqBKSNWAGtcUvMBVVgFcx2TdKx-AOLPUlFumsD7tbhryHAmgeFqEghmAwLVER9XZrLDGgNaSRFhxvenpg-cX-NRrLsGrenY1LcrZCCt2dwdCJfHGtYictG3MeI6h_8xDcGZKaBoCts5NNSTRUUiJuyx3r7nCAhIqhnesjZhPR_szu14yDaIFj6ESqtaH-5vcXhQa1nuBz9q9z-l7PmQjXnG1">
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="font-label-bold text-caption text-primary">GREEN_MONSTER</span>
+<span class="text-[10px] font-bold text-white bg-green-900 px-1.5 rounded-sm">BOS</span>
+</div>
+<div class="bg-surface border border-outline-variant rounded-xl rounded-tl-none p-3 shadow-sm">
+<p class="text-body-md text-on-surface">Anyone else need a 1-2-3 inning for their middle column? 🤞</p>
+</div>
+</div>
+</div>
+<!-- System Message -->
+<div class="flex flex-col items-center gap-1 my-2">
+<div class="bg-outline-variant/20 px-3 py-1 rounded-full border border-outline-variant/30">
+<p class="text-caption font-label-bold text-on-surface-variant uppercase tracking-tighter">
+<span class="text-primary">BOMBERFAN_99</span> marked <span class="text-secondary">FLY OUT</span>
+</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Fixed Input & Reactions Bar -->
+<div class="fixed bottom-[72px] left-0 w-full z-40 bg-surface-container-lowest border-t border-outline-variant px-4 py-3 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
+<div class="max-w-md mx-auto">
+<!-- Reaction Chips -->
+<div class="flex gap-2 mb-3 overflow-x-auto no-scrollbar pb-1">
+<button class="flex-shrink-0 px-3 py-1 border border-outline rounded-full text-caption font-label-bold text-primary hover:bg-primary/10 transition-colors uppercase">BINGO!</button>
+<button class="flex-shrink-0 px-3 py-1 border border-outline rounded-full text-caption font-label-bold text-primary hover:bg-primary/10 transition-colors uppercase">What a hit!</button>
+<button class="flex-shrink-0 px-3 py-1 border border-outline rounded-full text-caption font-label-bold text-primary hover:bg-primary/10 transition-colors uppercase">Robbery!</button>
+<button class="flex-shrink-0 px-3 py-1 border border-outline rounded-full text-caption font-label-bold text-primary hover:bg-primary/10 transition-colors uppercase">K'd Him!</button>
+</div>
+<!-- Text Input -->
+<div class="flex gap-2 items-center">
+<div class="flex-1 relative">
+<input class="w-full bg-surface-container border-0 border-b-2 border-primary focus:ring-0 text-body-md px-0 py-2 placeholder:text-on-surface-variant/50" placeholder="Type a message..." type="text">
+</div>
+<button class="w-10 h-10 flex items-center justify-center bg-primary text-white rounded-full active:scale-95 transition-transform">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</div>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-surface border-t border-outline-variant shadow-lg rounded-t-xl"><button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95 duration-150 ease-out">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-bold text-caption">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95 duration-150 ease-out">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="font-label-bold text-caption">Bingo</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-secondary text-white rounded-full w-14 h-14 -mt-6 shadow-lg active:scale-95 duration-150 ease-out">
+<span class="material-symbols-outlined scale-125">bolt</span>
+<span class="text-[8px] font-bold uppercase">Quick</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 active:scale-95 duration-150 ease-out">
+<span class="material-symbols-outlined">forum</span>
+<span class="font-label-bold text-caption">Chat</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95 duration-150 ease-out">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-label-bold text-caption">Rankings</span>
+</button></nav>
+<script>
+        // Scroll to bottom of chat on load
+        window.addEventListener('load', () => {
+            const chatContainer = document.getElementById('chat-container');
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        });
+
+        // Simple mock for sending messages
+        const input = document.querySelector('input');
+        const sendBtn = document.querySelector('button .material-symbols-outlined:contains("send")');
+        
+        // Handle enter key
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && input.value.trim() !== '') {
+                addMessage(input.value);
+                input.value = '';
+            }
+        });
+
+        function addMessage(text) {
+            const container = document.getElementById('chat-container');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'flex flex-row-reverse gap-3 max-w-[85%] self-end animate-in fade-in slide-in-from-bottom-2 duration-300';
+            msgDiv.innerHTML = `
+                <div class="w-10 h-10 rounded-full bg-primary-container border border-outline-variant overflow-hidden flex-shrink-0 flex items-center justify-center text-white font-bold">ME</div>
+                <div class="flex flex-col items-end gap-1">
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] font-bold text-white bg-red-800 px-1.5 rounded-sm">NYY</span>
+                        <span class="font-label-bold text-caption text-primary">BOMBERFAN_99</span>
+                    </div>
+                    <div class="bg-primary text-white rounded-xl rounded-tr-none p-3 shadow-sm">
+                        <p class="text-body-md">${text}</p>
+                    </div>
+                </div>
+            `;
+            container.appendChild(msgDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Reaction chips functionality
+        document.querySelectorAll('button.flex-shrink-0').forEach(btn => {
+            btn.addEventListener('click', () => {
+                addMessage(btn.innerText);
+            });
+        });
+    </script>
+
+
+</body></html>

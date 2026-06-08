@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Baseball Bingo Lobby</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400;600;700&amp;family=Work+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .pinstripe-bg {
+            background-color: #f9faf5;
+            background-image: repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(3, 48, 22, 0.05) 40px);
+        }
+        .paper-texture {
+            position: relative;
+        }
+        .paper-texture::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0.03;
+            pointer-events: none;
+            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .pressed-state {
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .stitching-border {
+            border-bottom: 2px dashed #c1c9bf;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#ffb3ae",
+                        "surface-container": "#edeee9",
+                        "surface-dim": "#d9dad6",
+                        "secondary-fixed": "#ffdad7",
+                        "inverse-on-surface": "#f0f1ec",
+                        "primary-fixed-dim": "#a3d2ab",
+                        "surface": "#f9faf5",
+                        "on-background": "#1a1c19",
+                        "primary": "#033016",
+                        "on-surface": "#1a1c19",
+                        "inverse-primary": "#a3d2ab",
+                        "surface-container-high": "#e8e9e4",
+                        "outline": "#727971",
+                        "tertiary-fixed-dim": "#eec209",
+                        "on-secondary-container": "#700310",
+                        "on-primary-fixed-variant": "#254f31",
+                        "surface-variant": "#e2e3de",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#c1c9bf",
+                        "tertiary-fixed": "#ffe084",
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#3d6748",
+                        "secondary": "#ab3334",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-container": "#4e3d00",
+                        "on-tertiary-fixed": "#231b00",
+                        "error-container": "#ffdad6",
+                        "surface-container-low": "#f3f4ef",
+                        "primary-fixed": "#bfeec5",
+                        "on-error-container": "#93000a",
+                        "secondary-container": "#ff716d",
+                        "background": "#f9faf5",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed": "#00210c",
+                        "surface-container-highest": "#e2e3de",
+                        "on-tertiary-fixed-variant": "#574500",
+                        "on-primary-container": "#88b590",
+                        "surface-bright": "#f9faf5",
+                        "on-secondary-fixed-variant": "#8a1a1f",
+                        "on-secondary-fixed": "#410005",
+                        "inverse-surface": "#2f312e",
+                        "primary-container": "#1d472a",
+                        "on-surface-variant": "#414941",
+                        "on-error": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "tertiary": "#735c00",
+                        "tertiary-container": "#cea700"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "grid-gutter": "16px",
+                        "base": "8px",
+                        "lg": "48px",
+                        "sm": "12px",
+                        "md": "24px",
+                        "xs": "4px",
+                        "xl": "64px",
+                        "grid-margin-desktop": "32px",
+                        "grid-margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "label-bold": ["Work Sans"],
+                        "display-lg": ["Domine"],
+                        "headline-sm": ["Domine"],
+                        "caption": ["Work Sans"],
+                        "display-lg-mobile": ["Domine"],
+                        "headline-md": ["Domine"],
+                        "body-lg": ["Work Sans"],
+                        "body-md": ["Work Sans"]
+                    },
+                    "fontSize": {
+                        "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="pinstripe-bg text-on-surface min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-grid-margin-mobile py-2 bg-surface border-b border-outline-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="sports_baseball">sports_baseball</span>
+<h1 class="font-display-lg-mobile text-display-lg-mobile text-primary uppercase tracking-tight">BASEBALL BINGO</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="hover:bg-primary-fixed-dim/20 transition-colors p-2 rounded-full active:translate-y-0.5 duration-100">
+<span class="material-symbols-outlined text-primary" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</header>
+<main class="pt-20 px-grid-margin-mobile md:px-grid-margin-desktop max-w-7xl mx-auto">
+<!-- Hero Section -->
+<section class="mt-8 mb-12">
+<div class="relative overflow-hidden rounded-xl bg-primary-container text-on-primary-container p-8 shadow-lg">
+<div class="absolute inset-0 opacity-10 pointer-events-none">
+<img class="w-full h-full object-cover" data-alt="A wide angle, atmospheric shot of a professional baseball stadium at dusk, with bright stadium lights casting a dramatic glow over the manicured green field and empty stands. The style is vintage-inspired with high contrast and deep greens, reflecting a prestigious and nostalgic sporting atmosphere. The lighting is high-key and cinematic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQRiJsdsJ2wsZociBQdB0AIoK4_ixnMZ4hraccYtVW4Yn5BCk6Yb6yUTH4LnzxG-SympeJitCx-1WCTTrRytYSfdfTlyAXDZ0EpjKQ4BZXG-P3RZBmYPUKrIOgo1DoXux09ZrLDZMutYviUC2GLXZBkRNAQshuC-SxNKjSfoOXkIxZjGxUUXF6VV3U1oSZEKjasbyMc6ycBE61-OoSkqi7wi7VX5hBm759u8YkEY6SQwWLPbk9B0tK4tYKTmFkl_qcRpxwRtzhy3Ui"/>
+</div>
+<div class="relative z-10">
+<span class="inline-block bg-tertiary text-on-tertiary px-3 py-1 rounded-full font-label-bold text-caption uppercase tracking-wider mb-4">Gameday Live</span>
+<h2 class="font-display-lg text-display-lg-mobile md:text-display-lg mb-2">The Ninth Inning awaits.</h2>
+<p class="font-body-lg text-body-lg max-w-md opacity-90">Join thousands of fans in the official ballpark bingo experience. Catch every strike, home run, and foul ball.</p>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-grid-gutter">
+<!-- Live Games Column (Bento Style) -->
+<div class="lg:col-span-2 space-y-grid-gutter">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-headline-md text-primary flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="podium" style="font-variation-settings: 'FILL' 1;">podium</span>
+                        Live Games
+                    </h3>
+<div class="h-px flex-grow mx-4 bg-outline-variant"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-grid-gutter">
+<!-- Game Card 1 -->
+<div class="paper-texture bg-surface border border-outline-variant rounded-xl p-6 transition-all hover:shadow-md hover:-translate-y-1">
+<div class="flex justify-between items-start mb-6">
+<span class="font-label-bold text-caption text-secondary uppercase tracking-widest bg-secondary-fixed px-2 py-0.5 rounded">Bottom 4th</span>
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]" data-icon="group">group</span>
+<span class="font-label-bold text-caption">1.2k Players</span>
+</div>
+</div>
+<div class="flex items-center justify-around mb-8">
+<div class="flex flex-col items-center">
+<div class="w-16 h-16 bg-surface-container rounded-full flex items-center justify-center mb-2 border-2 border-primary/10">
+<span class="material-symbols-outlined text-primary text-4xl" data-icon="sports_baseball">sports_baseball</span>
+</div>
+<span class="font-label-bold text-on-surface">NYY</span>
+</div>
+<span class="font-headline-md text-outline-variant italic">vs</span>
+<div class="flex flex-col items-center">
+<div class="w-16 h-16 bg-surface-container rounded-full flex items-center justify-center mb-2 border-2 border-secondary/10">
+<span class="material-symbols-outlined text-secondary text-4xl" data-icon="sports_baseball">sports_baseball</span>
+</div>
+<span class="font-label-bold text-on-surface">BOS</span>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary font-label-bold py-4 rounded-lg uppercase tracking-widest transition-all hover:bg-primary/90 active:translate-y-0.5 shadow-sm">
+                            Join Game
+                        </button>
+</div>
+<!-- Game Card 2 -->
+<div class="paper-texture bg-surface border border-outline-variant rounded-xl p-6 transition-all hover:shadow-md hover:-translate-y-1">
+<div class="flex justify-between items-start mb-6">
+<span class="font-label-bold text-caption text-on-surface-variant uppercase tracking-widest bg-surface-variant px-2 py-0.5 rounded">Top 2nd</span>
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]" data-icon="group">group</span>
+<span class="font-label-bold text-caption">842 Players</span>
+</div>
+</div>
+<div class="flex items-center justify-around mb-8">
+<div class="flex flex-col items-center">
+<div class="w-16 h-16 bg-surface-container rounded-full flex items-center justify-center mb-2 border-2 border-primary/10">
+<span class="material-symbols-outlined text-primary text-4xl" data-icon="sports_baseball">sports_baseball</span>
+</div>
+<span class="font-label-bold text-on-surface">LAD</span>
+</div>
+<span class="font-headline-md text-outline-variant italic">vs</span>
+<div class="flex flex-col items-center">
+<div class="w-16 h-16 bg-surface-container rounded-full flex items-center justify-center mb-2 border-2 border-secondary/10">
+<span class="material-symbols-outlined text-secondary text-4xl" data-icon="sports_baseball">sports_baseball</span>
+</div>
+<span class="font-label-bold text-on-surface">SFG</span>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary font-label-bold py-4 rounded-lg uppercase tracking-widest transition-all hover:bg-primary/90 active:translate-y-0.5 shadow-sm">
+                            Join Game
+                        </button>
+</div>
+</div>
+</div>
+<!-- Past Wins Sidebar -->
+<aside class="space-y-grid-gutter">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-tertiary" data-icon="workspace_premium" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+<h3 class="font-headline-md text-headline-md text-primary">My Past Wins</h3>
+</div>
+<div class="space-y-4">
+<!-- Win Row 1 -->
+<div class="paper-texture bg-surface border-l-4 border-l-tertiary border border-outline-variant p-4 rounded-r-xl">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-label-bold text-on-surface">Full House Win</p>
+<p class="font-caption text-caption text-on-surface-variant">LAD vs SFG • Oct 12</p>
+</div>
+<div class="bg-tertiary-fixed text-on-tertiary-fixed px-2 py-1 rounded font-label-bold text-caption">
+                                +500 PTS
+                            </div>
+</div>
+</div>
+<!-- Win Row 2 -->
+<div class="paper-texture bg-surface border-l-4 border-l-primary border border-outline-variant p-4 rounded-r-xl opacity-80">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-label-bold text-on-surface">Triple Play Row</p>
+<p class="font-caption text-caption text-on-surface-variant">NYY vs BOS • Oct 09</p>
+</div>
+<div class="bg-primary-fixed text-on-primary-fixed px-2 py-1 rounded font-label-bold text-caption">
+                                +150 PTS
+                            </div>
+</div>
+</div>
+<!-- Win Row 3 -->
+<div class="paper-texture bg-surface border-l-4 border-l-primary border border-outline-variant p-4 rounded-r-xl opacity-60">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-label-bold text-on-surface">First Pitch Bingo</p>
+<p class="font-caption text-caption text-on-surface-variant">ATL vs NYM • Oct 05</p>
+</div>
+<div class="bg-primary-fixed text-on-primary-fixed px-2 py-1 rounded font-label-bold text-caption">
+                                +120 PTS
+                            </div>
+</div>
+</div>
+</div>
+<!-- Stats Summary -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-6 mt-8">
+<p class="font-label-bold text-caption text-on-surface-variant uppercase mb-4">Season Performance</p>
+<div class="flex justify-between items-end mb-2">
+<span class="font-body-md text-on-surface">Games Won</span>
+<span class="font-headline-md text-primary">24</span>
+</div>
+<!-- Stitching Progress Bar -->
+<div class="h-3 w-full bg-surface border border-outline-variant rounded-full overflow-hidden flex">
+<div class="h-full bg-primary w-2/3 border-r-2 border-dashed border-white/30"></div>
+<div class="h-full bg-primary/20 w-1/3"></div>
+</div>
+<p class="mt-2 font-caption text-caption text-on-surface-variant italic">Top 15% of all fans this month</p>
+</div>
+</aside>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-surface border-t border-outline-variant shadow-lg rounded-t-xl">
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-6 py-2 transition-all active:scale-95 duration-150 ease-out">
+<span class="material-symbols-outlined" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-bold text-caption">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95 duration-150 ease-out">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+<span class="font-label-bold text-caption">Card</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95 duration-150 ease-out">
+<span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+<span class="font-label-bold text-caption">Rankings</span>
+</button>
+</nav>
+<script>
+        // Simple micro-interactions
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('touchstart', function() {
+                this.classList.add('pressed-state');
+            });
+            btn.addEventListener('touchend', function() {
+                this.classList.remove('pressed-state');
+            });
+        });
+
+        // Add an "Ink Grain" effect over cards for tactile feel
+        const paperElements = document.querySelectorAll('.paper-texture');
+        paperElements.forEach(el => {
+            el.addEventListener('mousemove', (e) => {
+                const rect = el.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                el.style.setProperty('--mouse-x', `${x}px`);
+                el.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+    </script>
+</body></html>

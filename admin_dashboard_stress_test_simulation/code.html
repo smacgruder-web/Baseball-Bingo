@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>App Health &amp; Moderation - Admin Dashboard</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400;600;700&amp;family=Work+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface": "#1b1c1c",
+                    "inverse-primary": "#a3d2ab",
+                    "surface-container-high": "#eae7e7",
+                    "outline": "#727971",
+                    "on-background": "#1b1c1c",
+                    "primary": "#033016",
+                    "surface-dim": "#dcd9d9",
+                    "secondary-fixed": "#ffdad4",
+                    "inverse-on-surface": "#f3f0f0",
+                    "surface": "#fcf9f8",
+                    "primary-fixed-dim": "#a3d2ab",
+                    "secondary-fixed-dim": "#ffb4a6",
+                    "surface-container": "#f0eded",
+                    "outline-variant": "#c1c9bf",
+                    "tertiary-fixed": "#e5e2d9",
+                    "surface-container-highest": "#e4e2e1",
+                    "on-tertiary-fixed-variant": "#484740",
+                    "surface-bright": "#fcf9f8",
+                    "on-secondary-fixed-variant": "#842416",
+                    "on-primary-container": "#88b590",
+                    "primary-fixed": "#bfeec5",
+                    "on-error-container": "#93000a",
+                    "secondary-container": "#fd7e67",
+                    "background": "#fcf9f8",
+                    "on-primary-fixed": "#00210c",
+                    "error": "#ba1a1a",
+                    "error-container": "#ffdad6",
+                    "surface-container-low": "#f6f3f2",
+                    "on-tertiary": "#ffffff",
+                    "surface-tint": "#3d6748",
+                    "secondary": "#a43c2b",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed": "#1c1c16",
+                    "on-tertiary-container": "#acaaa1",
+                    "tertiary": "#292923",
+                    "tertiary-container": "#403f38",
+                    "on-primary": "#ffffff",
+                    "primary-container": "#1d472a",
+                    "on-surface-variant": "#414941",
+                    "on-error": "#ffffff",
+                    "on-secondary-fixed": "#3f0200",
+                    "inverse-surface": "#303030"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "sm": "12px",
+                    "lg": "48px",
+                    "gutter": "24px",
+                    "base": "8px",
+                    "container-max": "1280px",
+                    "xl": "80px",
+                    "xs": "4px",
+                    "md": "24px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Domine"],
+                    "body-md": ["Work Sans"],
+                    "headline-md": ["Domine"],
+                    "headline-lg-mobile": ["Domine"],
+                    "body-lg": ["Work Sans"],
+                    "stats-number": ["Domine"],
+                    "label-md": ["Work Sans"],
+                    "display-lg": ["Domine"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "stats-number": ["36px", {"lineHeight": "44px", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(252, 249, 248, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(114, 121, 113, 0.1);
+        }
+        .stadium-glow {
+            box-shadow: 0 0 40px rgba(3, 48, 22, 0.1);
+        }
+        .etched-border {
+            border-bottom: 1px solid rgba(114, 121, 113, 0.2);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen pb-24 md:pb-0">
+<!-- TopAppBar -->
+<div class="bg-secondary text-white py-2 px-gutter text-center font-bold text-label-md tracking-widest flex items-center justify-center gap-2 animate-pulse">
+<span class="material-symbols-outlined text-[18px]">warning</span>
+  STRESS TEST IN PROGRESS: SIMULATING 50K CONCURRENT USERS
+  <span class="material-symbols-outlined text-[18px]">warning</span>
+</div><header class="sticky top-0 z-50 bg-surface/90 backdrop-blur-md flex justify-between items-center w-full px-gutter h-16 border-b border-outline-variant/30 shadow-sm">
+<div class="flex items-center gap-base">
+<span class="material-symbols-outlined text-primary text-headline-md">sports_baseball</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Admin Dashboard</h1>
+</div>
+<div class="hidden md:flex items-center gap-lg">
+<nav class="flex gap-md">
+<a class="text-primary font-bold font-label-md text-label-md hover:bg-primary/5 transition-colors px-3 py-2 rounded" href="#">Dashboard</a>
+<a class="text-on-surface-variant font-label-md text-label-md hover:bg-primary/5 transition-colors px-3 py-2 rounded" href="#">Health</a>
+<a class="text-on-surface-variant font-label-md text-label-md hover:bg-primary/5 transition-colors px-3 py-2 rounded" href="#">Users</a>
+</nav>
+<div class="flex items-center gap-sm cursor-pointer active:opacity-80">
+<span class="font-label-md text-label-md text-on-surface">Admin User</span>
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold text-xs">AU</div>
+</div>
+</div>
+<button class="md:hidden text-primary">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</header>
+<main class="max-w-container-max mx-auto px-gutter py-lg">
+<!-- Dashboard Header -->
+<div class="mb-xl flex flex-col md:flex-row md:items-end justify-between gap-md">
+<div>
+<h2 class="font-headline-lg text-headline-lg md:text-display-lg text-on-surface mb-xs">App Health &amp; Moderation</h2>
+<p class="text-on-surface-variant font-body-lg">Real-time oversight of the ballpark digital infrastructure.</p>
+</div>
+<div class="flex items-center gap-sm bg-primary/5 px-4 py-2 rounded-lg border border-primary/10">
+<span class="flex h-3 w-3 relative">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+</span>
+<span class="font-label-md text-label-md text-primary uppercase tracking-widest">Live Monitoring Active</span>
+</div>
+</div>
+<!-- Bento Grid Section: App Health -->
+<section class="mb-xl">
+<div class="flex items-center gap-sm mb-lg">
+<span class="material-symbols-outlined text-primary">settings_suggest</span>
+<h3 class="font-headline-md text-headline-md">System Health</h3>
+<div class="flex items-center gap-xs bg-primary/5 px-2 py-0.5 rounded border border-primary/10">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+<span class="text-[10px] font-label-md text-primary uppercase tracking-tighter">Redis Worker Heartbeat</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="glass-panel stadium-glow p-lg rounded-xl flex flex-col justify-between">
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase mb-base">WebTransport Latency</p>
+<p class="font-stats-number text-stats-number text-secondary">98.5%</p>
+</div>
+<div class="mt-lg pt-base etched-border flex items-center justify-between">
+<span class="text-label-md font-label-md text-on-surface-variant">Real-time Stream</span>
+<span class="material-symbols-outlined text-primary">bolt</span>
+</div>
+</div>
+<div class="glass-panel stadium-glow p-lg rounded-xl flex flex-col justify-between">
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase mb-base">Gemini Token Efficiency</p>
+<p class="font-stats-number text-stats-number text-secondary">210<span class="text-body-md font-body-md ml-1">ms</span></p>
+</div>
+<div class="mt-lg pt-base etched-border flex items-center justify-between">
+<span class="text-label-md font-label-md text-on-surface-variant">Optimized Usage</span>
+<span class="material-symbols-outlined text-secondary">psychology</span>
+</div>
+</div>
+<div class="glass-panel stadium-glow p-lg rounded-xl flex flex-col justify-between">
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase mb-base">MLB Data Sync Status</p>
+<p class="font-stats-number text-stats-number text-primary">42,850</p>
+</div>
+<div class="mt-lg pt-base etched-border flex items-center justify-between">
+<span class="text-label-md font-label-md text-on-surface-variant">Last Sync 450ms ago</span>
+<span class="material-symbols-outlined text-primary">sync</span>
+</div>
+</div>
+</div>
+</section><section class="mb-xl">
+<div class="flex items-center gap-sm mb-lg">
+<span class="material-symbols-outlined text-primary">monitor_heart</span>
+<h3 class="font-headline-md text-headline-md">App Health</h3>
+<span class="bg-primary px-3 py-0.5 rounded-sm text-white font-label-md text-[10px] uppercase tracking-tighter">Healthy</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- System Uptime -->
+<div class="glass-panel stadium-glow p-lg rounded-xl flex flex-col justify-between">
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase mb-base">System Uptime</p>
+<p class="font-stats-number text-stats-number text-primary">99.9%</p>
+</div>
+<div class="mt-lg pt-base etched-border flex items-center justify-between">
+<span class="text-label-md font-label-md text-on-surface-variant">Last 30 Days</span>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+<!-- API Latency -->
+<div class="glass-panel stadium-glow p-lg rounded-xl flex flex-col justify-between">
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase mb-base">API Latency</p>
+<p class="font-stats-number text-stats-number text-secondary">45<span class="text-body-md font-body-md ml-1">ms</span></p>
+</div>
+<div class="mt-lg pt-base etched-border flex items-center justify-between">
+<span class="text-label-md font-label-md text-on-surface-variant">Global Average</span>
+<span class="material-symbols-outlined text-secondary">speed</span>
+</div>
+</div>
+<!-- Live Bingo Feed -->
+<div class="glass-panel stadium-glow p-lg rounded-xl flex flex-col justify-between">
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase mb-base">Active Socket Connections</p>
+<p class="font-stats-number text-stats-number text-primary">1,284</p>
+</div>
+<div class="mt-lg pt-base etched-border flex items-center justify-between">
+<span class="text-label-md font-label-md text-on-surface-variant">Bingo Live Feed</span>
+<span class="material-symbols-outlined text-primary">hub</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Banned Players Section -->
+<section id="banned-players-section">
+<div class="flex items-center justify-between mb-lg">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary">gavel</span>
+<h3 class="font-headline-md text-headline-md">Manage Bans</h3>
+</div>
+<div class="flex items-center gap-sm">
+<div class="relative hidden sm:block">
+<input class="bg-surface-container border-none text-label-md font-label-md px-10 py-2 rounded-lg focus:ring-1 focus:ring-primary w-64" placeholder="Search users..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+</div>
+</div>
+</div>
+<div class="glass-panel rounded-xl overflow-hidden stadium-glow">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse min-w-[600px]">
+<thead>
+<tr class="bg-primary/5">
+<th class="px-gutter py-md font-headline-md text-label-md text-primary uppercase">Player Username</th>
+<th class="px-gutter py-md font-headline-md text-label-md text-primary uppercase">Ban Reason</th>
+<th class="px-gutter py-md font-headline-md text-label-md text-primary uppercase">Date Banned</th>
+<th class="px-gutter py-md font-headline-md text-label-md text-primary uppercase text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/20">
+<!-- User Row 1 -->
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-gutter py-md">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center overflow-hidden border border-outline-variant/30">
+<img alt="User Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUiMWBzr9Bjb-l9hYIr9LKKcuGQ45YNc0xV_BgetCjI8YOZtqDdvsw9UHHulc55t26h_VKPn2fo3qsu9zbg0HCwpwluB2TUC8iQiDYV5I3nsqIr6R0pAHxoF57JTOFKU2QHUexw62FDSSmyjQJTzkr6YlD-03fWU_KYJViSrIY4SByxOlVTp_hci8-rZjqEpgg_9IcP3cb9yLnsvEadtDBGJ8cBs-W4oh05SauDtDt_4iqH8WHuc1lBUcP7fTMVFOySIU61i27aQDc"/>
+</div>
+<div>
+<p class="font-bold text-on-surface">LuckySlugger88</p>
+<p class="text-xs text-on-surface-variant">ID: 88291-BA</p>
+</div>
+</div>
+</td>
+<td class="px-gutter py-md">
+<span class="bg-secondary-container/20 text-secondary px-3 py-1 rounded-sm text-[11px] font-label-md uppercase tracking-tight">Malicious Link Attempt</span>
+</td>
+<td class="px-gutter py-md text-on-surface-variant text-sm">Oct 24, 2023</td>
+<td class="px-gutter py-md text-right">
+<div class="flex justify-end gap-2">
+<button class="unban-btn border border-secondary text-secondary font-bold font-label-md text-label-md px-4 py-1.5 hover:bg-secondary hover:text-white transition-all active:scale-95 flex items-center gap-1" onclick="confirmUnban(this)">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+                                            Restore Access
+                                        </button>
+<div class="hidden confirm-state flex items-center gap-2">
+<span class="text-xs text-secondary font-bold">Sure?</span>
+<button class="bg-secondary text-white px-3 py-1.5 font-label-md text-label-md hover:bg-secondary/90 transition-all active:scale-95" onclick="executeUnban(this)">Yes</button>
+<button class="text-on-surface-variant px-2 py-1.5 hover:text-on-surface transition-all active:scale-95" onclick="cancelUnban(this)"><span class="material-symbols-outlined text-[18px]">close</span></button>
+</div>
+</div>
+</td>
+</tr>
+<!-- User Row 2 -->
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-gutter py-md">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden border border-outline-variant/30">
+<img alt="User Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPqHaYyUmgLusoZZlxX08xpuHU7hTE4a6O65tYm2Egjk2xZDzf0TSCwZF1cCSmrYXKSdAKZJnBJX4B9Zd8ncZQFpJQWSk7m9lUUHwtnr0ZlOgMwD1nuzYgmxGoA7tMYi37eUtABgbBmdjtA_FGaViHtMuqEVF39v2I2e0CaSHzZeltsSLgB5rNdqqC2MLytNEcmJmSFJH3f-b9ntIOg0NpZX00tzEOf8192HWIOqU3FwhkUi5bO7qfT15JD3rHnGcrxOS1--ncO2-t"/>
+</div>
+<div>
+<p class="font-bold text-on-surface">FoulBaller_99</p>
+<p class="text-xs text-on-surface-variant">ID: 11203-CK</p>
+</div>
+</div>
+</td>
+<td class="px-gutter py-md">
+<span class="bg-secondary-container/20 text-secondary px-3 py-1 rounded-sm text-[11px] font-label-md uppercase tracking-tight">Profanity</span>
+</td>
+<td class="px-gutter py-md text-on-surface-variant text-sm">Oct 22, 2023</td>
+<td class="px-gutter py-md text-right">
+<div class="flex justify-end gap-2">
+<button class="unban-btn border border-secondary text-secondary font-bold font-label-md text-label-md px-4 py-1.5 hover:bg-secondary hover:text-white transition-all active:scale-95 flex items-center gap-1" onclick="confirmUnban(this)">
+<span class="material-symbols-outlined text-[18px]">lock_open</span>
+                                            Unban
+                                        </button>
+<div class="hidden confirm-state flex items-center gap-2">
+<span class="text-xs text-secondary font-bold">Sure?</span>
+<button class="bg-secondary text-white px-3 py-1.5 font-label-md text-label-md hover:bg-secondary/90 transition-all active:scale-95" onclick="executeUnban(this)">Yes</button>
+<button class="text-on-surface-variant px-2 py-1.5 hover:text-on-surface transition-all active:scale-95" onclick="cancelUnban(this)"><span class="material-symbols-outlined text-[18px]">close</span></button>
+</div>
+</div>
+</td>
+</tr>
+<!-- User Row 3 -->
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-gutter py-md">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center overflow-hidden border border-outline-variant/30">
+<img alt="User Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxjbN097Bb5nhUGF5gMPcbjOMNSSBTVgJkB5GL57QMezA3CIXf5MZk1PRloATRO-ylOyeQYdEneZQlID-6cslieN6vK7PoOwlVwVXxp35CWFRNxNGuQe3xp4Sk4q1tWz_ZescXaaQF2X8-0dncPUnkQanZLcsAzjTb2aMTKDqQa5tb1artrTZ7iRAOLI5YUv9iqo089AEmWFgrElNVguBD_-UmnixGVIRNsx1Pkq5SeBLEtBBXE5en0k88TY6aRNfJSuTPhHY2lfVF"/>
+</div>
+<div>
+<p class="font-bold text-on-surface">StrikeZoneMaster</p>
+<p class="text-xs text-on-surface-variant">ID: 99401-AA</p>
+</div>
+</div>
+</td>
+<td class="px-gutter py-md">
+<span class="bg-secondary-container/20 text-secondary px-3 py-1 rounded-sm text-[11px] font-label-md uppercase tracking-tight">Game Manipulation</span>
+</td>
+<td class="px-gutter py-md text-on-surface-variant text-sm">Oct 20, 2023</td>
+<td class="px-gutter py-md text-right">
+<div class="flex justify-end gap-2">
+<button class="unban-btn border border-secondary text-secondary font-bold font-label-md text-label-md px-4 py-1.5 hover:bg-secondary hover:text-white transition-all active:scale-95 flex items-center gap-1" onclick="confirmUnban(this)">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+                                            Restore Access
+                                        </button>
+<div class="hidden confirm-state flex items-center gap-2">
+<span class="text-xs text-secondary font-bold">Sure?</span>
+<button class="bg-secondary text-white px-3 py-1.5 font-label-md text-label-md hover:bg-secondary/90 transition-all active:scale-95" onclick="executeUnban(this)">Yes</button>
+<button class="text-on-surface-variant px-2 py-1.5 hover:text-on-surface transition-all active:scale-95" onclick="cancelUnban(this)"><span class="material-symbols-outlined text-[18px]">close</span></button>
+</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-md bg-surface-container/50 flex justify-between items-center border-t border-outline-variant/20 px-gutter">
+<p class="text-label-md font-label-md text-on-surface-variant">Showing 3 of 142 restricted accounts</p>
+<button class="text-primary font-bold text-label-md font-label-md hover:underline decoration-2 underline-offset-4 flex items-center gap-1">
+                        View All Accounts <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface/90 backdrop-blur-md border-t border-outline-variant/30 shadow-lg">
+<button class="flex flex-col items-center justify-center text-on-surface-variant transition-all duration-200 active:scale-95">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-md text-label-md">Users</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 transition-all duration-200 active:scale-95">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">sports_esports</span>
+<span class="font-label-md text-label-md">Games</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant transition-all duration-200 active:scale-95">
+<span class="material-symbols-outlined">rate_review</span>
+<span class="font-label-md text-label-md">Feedback</span>
+</button>
+</nav>
+<script>
+        // Unban Action States
+        function confirmUnban(btn) {
+            const container = btn.closest('div');
+            btn.classList.add('hidden');
+            container.querySelector('.confirm-state').classList.remove('hidden');
+        }
+
+        function cancelUnban(btn) {
+            const container = btn.closest('.flex');
+            const parent = container.closest('div');
+            container.classList.add('hidden');
+            parent.querySelector('.unban-btn').classList.remove('hidden');
+        }
+
+        function executeUnban(btn) {
+            const row = btn.closest('tr');
+            row.classList.add('opacity-50', 'pointer-events-none');
+            const statusCell = row.querySelector('td:nth-child(2)');
+            statusCell.innerHTML = '<span class="text-primary font-bold text-xs uppercase italic flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">check</span> Restoring...</span>';
+            
+            setTimeout(() => {
+                row.classList.add('transition-all', 'duration-500', 'scale-95', 'translate-x-full', 'opacity-0');
+                setTimeout(() => row.remove(), 500);
+            }, 1000);
+        }
+
+        // Micro-interactions
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.classList.add('opacity-70');
+                setTimeout(() => this.classList.remove('opacity-70'), 150);
+            });
+        });
+
+        // Simulating live data update pulse
+        setInterval(() => {
+            const stats = document.querySelectorAll('.font-stats-number');
+            const target = stats[Math.floor(Math.random() * stats.length)];
+            if(target) {
+                target.classList.add('transition-all', 'duration-500', 'scale-105', 'text-primary-fixed-dim');
+                setTimeout(() => {
+                    target.classList.remove('scale-105', 'text-primary-fixed-dim');
+                }, 500);
+            }
+        }, 3000);
+    </script>
+</body></html>

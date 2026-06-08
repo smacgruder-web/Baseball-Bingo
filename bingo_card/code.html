@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BASEBALL BINGO - Live Game</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400;700&amp;family=Work+Sans:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            vertical-align: middle;
+        }
+        .pinstripe-bg {
+            background-color: #f9faf5;
+            background-image: repeating-linear-gradient(90deg, transparent, transparent 31px, rgba(3, 48, 22, 0.05) 31px, rgba(3, 48, 22, 0.05) 32px);
+        }
+        .bingo-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            aspect-ratio: 1 / 1;
+        }
+        .cell-pressed {
+            box-shadow: inset 0 4px 6px -1px rgba(0, 0, 0, 0.2), inset 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+        }
+        .stitching-border {
+            border-style: dashed;
+            border-width: 2px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#ffb3ae",
+                        "surface-container": "#edeee9",
+                        "surface-dim": "#d9dad6",
+                        "secondary-fixed": "#ffdad7",
+                        "inverse-on-surface": "#f0f1ec",
+                        "primary-fixed-dim": "#a3d2ab",
+                        "surface": "#f9faf5",
+                        "on-background": "#1a1c19",
+                        "primary": "#033016",
+                        "on-surface": "#1a1c19",
+                        "inverse-primary": "#a3d2ab",
+                        "surface-container-high": "#e8e9e4",
+                        "outline": "#727971",
+                        "tertiary-fixed-dim": "#eec209",
+                        "on-secondary-container": "#700310",
+                        "on-primary-fixed-variant": "#254f31",
+                        "surface-variant": "#e2e3de",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#c1c9bf",
+                        "tertiary-fixed": "#ffe084",
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#3d6748",
+                        "secondary": "#ab3334",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-container": "#4e3d00",
+                        "on-tertiary-fixed": "#231b00",
+                        "error-container": "#ffdad6",
+                        "surface-container-low": "#f3f4ef",
+                        "primary-fixed": "#bfeec5",
+                        "on-error-container": "#93000a",
+                        "secondary-container": "#ff716d",
+                        "background": "#f9faf5",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed": "#00210c",
+                        "surface-container-highest": "#e2e3de",
+                        "on-tertiary-fixed-variant": "#574500",
+                        "on-primary-container": "#88b590",
+                        "surface-bright": "#f9faf5",
+                        "on-secondary-fixed-variant": "#8a1a1f",
+                        "on-secondary-fixed": "#410005",
+                        "inverse-surface": "#2f312e",
+                        "primary-container": "#1d472a",
+                        "on-surface-variant": "#414941",
+                        "on-error": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "tertiary": "#735c00",
+                        "tertiary-container": "#cea700"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "grid-gutter": "16px",
+                        "base": "8px",
+                        "lg": "48px",
+                        "sm": "12px",
+                        "md": "24px",
+                        "xs": "4px",
+                        "xl": "64px",
+                        "grid-margin-desktop": "32px",
+                        "grid-margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "label-bold": ["Work Sans"],
+                        "display-lg": ["Domine"],
+                        "headline-sm": ["Domine"],
+                        "caption": ["Work Sans"],
+                        "display-lg-mobile": ["Domine"],
+                        "headline-md": ["Domine"],
+                        "body-lg": ["Work Sans"],
+                        "body-md": ["Work Sans"]
+                    },
+                    "fontSize": {
+                        "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="pinstripe-bg text-on-surface min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-grid-margin-mobile py-2 bg-surface border-b border-outline-variant bg-surface-variant/5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="sports_baseball">sports_baseball</span>
+<h1 class="font-display-lg-mobile text-display-lg-mobile text-primary uppercase tracking-tight">BASEBALL BINGO</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="hover:bg-primary-fixed-dim/20 transition-colors p-2 rounded-full active:translate-y-0.5 duration-100">
+<span class="material-symbols-outlined text-primary" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</header>
+<main class="pt-20 px-grid-margin-mobile max-w-[600px] mx-auto">
+<!-- Live Scoreboard -->
+<section class="mb-6 bg-surface-container rounded-xl p-4 border border-outline-variant flex flex-col items-center">
+<div class="flex items-center justify-between w-full mb-2">
+<div class="flex flex-col items-center">
+<span class="font-label-bold text-label-bold text-on-surface-variant">YANKEES</span>
+<span class="font-display-lg-mobile text-display-lg-mobile text-primary">3</span>
+</div>
+<div class="flex flex-col items-center px-4 border-x border-outline-variant">
+<span class="font-label-bold text-label-bold text-secondary uppercase">Top 7th</span>
+<div class="flex gap-1 mt-1">
+<div class="w-3 h-3 rounded-full bg-secondary"></div>
+<div class="w-3 h-3 rounded-full border border-outline"></div>
+<div class="w-3 h-3 rounded-full border border-outline"></div>
+</div>
+<span class="font-caption text-caption mt-1">1 OUT</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="font-label-bold text-label-bold text-on-surface-variant">RED SOX</span>
+<span class="font-display-lg-mobile text-display-lg-mobile text-primary">2</span>
+</div>
+</div>
+<div class="w-full h-1.5 bg-outline-variant rounded-full overflow-hidden mt-2">
+<div class="h-full bg-primary" style="width: 72%"></div>
+</div>
+</section>
+<!-- Bingo Card Container -->
+<div class="relative">
+<div class="absolute -top-3 -left-3 rotate-[-5deg] z-10 bg-secondary px-3 py-1 rounded shadow-md border border-on-secondary/20">
+<span class="font-label-bold text-label-bold text-on-secondary uppercase">Live Game</span>
+</div>
+<!-- The Bingo Grid -->
+<div class="bingo-grid gap-2 p-2 bg-surface-container-high rounded-xl border-2 border-outline-variant shadow-lg mb-8">
+<!-- Row 1 -->
+<div class="flex flex-col items-center justify-center text-center p-1 bg-surface border border-outline-variant rounded-lg cursor-pointer hover:shadow-md transition-all active:scale-95">
+<span class="font-body-md text-[11px] font-bold leading-tight uppercase">Walk</span>
+</div>
+<div class="flex flex-col items-center justify-center text-center p-1 bg-surface border border-outline-variant rounded-lg cursor-pointer hover:shadow-md transition-all active:scale-95">
+<span class="font-body-md text-[11px] font-bold leading-tight uppercase">Double Play</span>
+</div>
+<div class="flex flex-col items-center justify-center text-center p-1 bg-surface border border-outline-variant rounded-lg cursor-pointer hover:shadow-md transition-all active:scale-95">
+<span class="font-body-md text-[11px] font-bold leading-tight uppercase">Stolen Base</span>
+</div>
+<div class="flex flex-col items-center justify-center text-center p-1 bg-surface border border-outline-variant rounded-lg cursor-pointer hover:shadow-md transition-all active:scale-95">
+<span class="font-body-md text-[11px] font-bold leading-tight uppercase">Pitcher Change</span>
+</div>
+<div class="flex flex-col items-center justify-center text-center p-1 bg-surface border border-outline-variant rounded-lg cursor-pointer hover:shadow-md transition-all active:scale-95">
+<span class="font-body-md text-[11px] font-bold leading-tight uppercase">Ground Out</span>
+</div>
+<!-- Row 2 -->
+<div class="flex flex-col items-center justify-center text-center p-1 bg-surface border border-outline-variant rounded-lg cursor-pointer hover:shadow-md transition-all active:scale-95">
+<span class="font-body-md text-[11px] font-bold leading-tight uppercase">Base Hit</span>
+</div>
+<div class="flex flex-col items-center justify-center text-center p-1 bg-surface border border-outline-variant rounded-lg cursor-pointer hover:shadow-md transition-all active:scale-95">
+<span class="font-body-md text-[11px] font-bold leading-tight uppercase">Bunt</span>
+</div>
+<div class="flex flex-col items-center justify-center text-center p-1 bg-surface border border-outline-variant rounded-lg cursor-pointer hover:shadow-md transition-all active:scale-95">
+<span class="font-body-md text-[11px] font-bold leading-tight uppercase">Strikeout Looking</span>
+</div>
+<div class="flex flex-col items-center justify-center text-center p-1 bg-surface border border-outline-variant rounded-lg cursor-pointer hover:shadow-md transition-all active:scale-95">
+<span class="font-body-md text-[11px] font-bold leading-tight uppercase">Error</span>
+</div>
+<div class="flex flex-col items-center justify-center text-center p-1 bg-surface border border-outline-variant rounded-lg cursor-pointer hover:shadow-md transition-all active:scale-95">
+<span class="font-body-md text-[11px] font-bold leading-tight uppercase">Fly Out</span>
+</div>
+<!-- Row 3 (Selected Row) -->
+<div class="flex flex-col items-center justify-center text-center p-1 bg-primary text-on-primary border border-primary cell-pressed rounded-lg transition-all">
+<span class="font-body-md text-[11px] font-bold leading-tight uppercase">Home Run</span>
+</div>
+<div class="flex flex-col items-center justify-center text-center p-1 bg-primary text-on-primary border border-primary cell-pressed rounded-lg transition-all">
+<span class="font-body-md text-[11px] font-bold leading-tight uppercase">Pop Out</span>
+</div>
+<!-- FREE SPACE -->
+<div class="flex flex-col items-center justify-center text-center p-1 bg-tertiary-container text-on-tertiary-container border-2 stitching-border border-primary rounded-lg transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="sports_baseball" style="font-variation-settings: 'FILL' 1;">sports_baseball</span>
+<span class="font-label-bold text-[9px] uppercase tracking-widest mt-0.5">Free</span>
+</div>
+<div class="flex flex-col items-center justify-center text-center p-1 bg-primary text-on-primary border border-primary cell-pressed rounded-lg transition-all">
+<span class="font-body-md text-[11px] font-bold leading-tight uppercase">Strikeout Swinging</span>
+</div>
+<div class="flex flex-col items-center justify-center text-center p-1 bg-surface border border-outline-variant rounded-lg cursor-pointer hover:shadow-md transition-all active:scale-95">
+<span class="font-body-md text-[11px] font-bold leading-tight uppercase">Wild Pitch</span>
+</div>
+<!-- Row 4 -->
+<div class="flex flex-col items-center justify-center text-center p-1 bg-surface border border-outline-variant rounded-lg cursor-pointer hover:shadow-md transition-all active:scale-95">
+<span class="font-body-md text-[11px] font-bold leading-tight uppercase">Foul Ball</span>
+</div>
+<div class="flex flex-col items-center justify-center text-center p-1 bg-surface border border-outline-variant rounded-lg cursor-pointer hover:shadow-md transition-all active:scale-95">
+<span class="font-body-md text-[11px] font-bold leading-tight uppercase">Full Count</span>
+</div>
+<div class="flex flex-col items-center justify-center text-center p-1 bg-surface border border-outline-variant rounded-lg cursor-pointer hover:shadow-md transition-all active:scale-95">
+<span class="font-body-md text-[11px] font-bold leading-tight uppercase">Double</span>
+</div>
+<div class="flex flex-col items-center justify-center text-center p-1 bg-surface border border-outline-variant rounded-lg cursor-pointer hover:shadow-md transition-all active:scale-95">
+<span class="font-body-md text-[11px] font-bold leading-tight uppercase">Triple</span>
+</div>
+<div class="flex flex-col items-center justify-center text-center p-1 bg-surface border border-outline-variant rounded-lg cursor-pointer hover:shadow-md transition-all active:scale-95">
+<span class="font-body-md text-[11px] font-bold leading-tight uppercase">RBI</span>
+</div>
+<!-- Row 5 -->
+<div class="flex flex-col items-center justify-center text-center p-1 bg-surface border border-outline-variant rounded-lg cursor-pointer hover:shadow-md transition-all active:scale-95">
+<span class="font-body-md text-[11px] font-bold leading-tight uppercase">Sacrifice Fly</span>
+</div>
+<div class="flex flex-col items-center justify-center text-center p-1 bg-surface border border-outline-variant rounded-lg cursor-pointer hover:shadow-md transition-all active:scale-95">
+<span class="font-body-md text-[11px] font-bold leading-tight uppercase">HBP</span>
+</div>
+<div class="flex flex-col items-center justify-center text-center p-1 bg-surface border border-outline-variant rounded-lg cursor-pointer hover:shadow-md transition-all active:scale-95">
+<span class="font-body-md text-[11px] font-bold leading-tight uppercase">Caught Stealing</span>
+</div>
+<div class="flex flex-col items-center justify-center text-center p-1 bg-surface border border-outline-variant rounded-lg cursor-pointer hover:shadow-md transition-all active:scale-95">
+<span class="font-body-md text-[11px] font-bold leading-tight uppercase">Pickoff</span>
+</div>
+<div class="flex flex-col items-center justify-center text-center p-1 bg-surface border border-outline-variant rounded-lg cursor-pointer hover:shadow-md transition-all active:scale-95">
+<span class="font-body-md text-[11px] font-bold leading-tight uppercase">Checked Swing</span>
+</div>
+</div>
+</div>
+<!-- Action Section -->
+<div class="space-y-4">
+<button class="w-full bg-primary text-on-primary py-4 rounded-xl font-label-bold text-label-bold uppercase tracking-widest shadow-md hover:bg-primary-container hover:text-on-primary-container transition-all active:translate-y-1">
+                MARK SELECTED SQUARE
+            </button>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-white/80 p-4 rounded-xl border border-outline-variant">
+<h3 class="font-label-bold text-caption text-on-surface-variant uppercase mb-2">Recently Called</h3>
+<ul class="space-y-1">
+<li class="flex items-center gap-2 font-body-md text-caption">
+<span class="w-2 h-2 rounded-full bg-secondary"></span> Strikeout swinging
+                        </li>
+<li class="flex items-center gap-2 font-body-md text-caption">
+<span class="w-2 h-2 rounded-full bg-secondary"></span> Pop out
+                        </li>
+</ul>
+</div>
+<div class="bg-white/80 p-4 rounded-xl border border-outline-variant flex flex-col justify-center items-center text-center">
+<span class="font-label-bold text-caption text-on-surface-variant uppercase">Potential Prize</span>
+<span class="font-headline-md text-headline-md text-primary">$50 Stadium Credit</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button - Supressed as per Shell Visibility rules for detailed focus -->
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-surface border-t border-outline-variant shadow-lg rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95 duration-150 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-bold text-caption">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 hover:text-primary transition-all active:scale-95 duration-150 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="grid_view" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+<span class="font-label-bold text-caption">Card</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95 duration-150 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+<span class="font-label-bold text-caption">Rankings</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for bingo cells
+        document.querySelectorAll('.bingo-grid > div').forEach(cell => {
+            cell.addEventListener('click', function() {
+                if (!this.classList.contains('bg-tertiary-container')) {
+                    this.classList.toggle('bg-primary');
+                    this.classList.toggle('text-on-primary');
+                    this.classList.toggle('bg-surface');
+                    this.classList.toggle('cell-pressed');
+                    this.classList.toggle('scale-95');
+                    setTimeout(() => this.classList.remove('scale-95'), 150);
+                }
+            });
+        });
+    </script>
+</body></html>

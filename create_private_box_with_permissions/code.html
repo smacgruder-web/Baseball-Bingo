@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Create Private Box | Ballpark Bingo</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400;600;700&amp;family=Work+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#1b1c1c",
+                        "surface-tint": "#3d6748",
+                        "primary": "#033016",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#e4e2e1",
+                        "on-tertiary-container": "#acaaa1",
+                        "inverse-primary": "#a3d2ab",
+                        "secondary": "#a43c2b",
+                        "secondary-fixed-dim": "#ffb4a6",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed-dim": "#a3d2ab",
+                        "background": "#fcf9f8",
+                        "inverse-surface": "#303030",
+                        "tertiary-fixed": "#e5e2d9",
+                        "surface-container-high": "#eae7e7",
+                        "on-tertiary-fixed": "#1c1c16",
+                        "on-secondary-container": "#71170a",
+                        "surface-container-low": "#f6f3f2",
+                        "surface-bright": "#fcf9f8",
+                        "on-surface-variant": "#414941",
+                        "on-background": "#1b1c1c",
+                        "tertiary-fixed-dim": "#c9c6bd",
+                        "tertiary": "#292923",
+                        "tertiary-container": "#403f38",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed": "#bfeec5",
+                        "on-secondary-fixed": "#3f0200",
+                        "on-error-container": "#93000a",
+                        "inverse-on-surface": "#f3f0f0",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#f0eded",
+                        "on-tertiary-fixed-variant": "#484740",
+                        "on-primary-fixed": "#00210c",
+                        "surface-dim": "#dcd9d9",
+                        "on-primary-container": "#88b590",
+                        "on-primary-fixed-variant": "#254f31",
+                        "surface-variant": "#e4e2e1",
+                        "on-secondary-fixed-variant": "#842416",
+                        "error-container": "#ffdad6",
+                        "surface": "#fcf9f8",
+                        "primary-container": "#1d472a",
+                        "secondary-container": "#fd7e67",
+                        "outline-variant": "#c1c9bf",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "secondary-fixed": "#ffdad4",
+                        "outline": "#727971"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sm": "12px",
+                        "md": "24px",
+                        "lg": "48px",
+                        "gutter": "24px",
+                        "xl": "80px",
+                        "container-max": "1280px",
+                        "base": "8px",
+                        "xs": "4px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Domine"],
+                        "headline-lg-mobile": ["Domine"],
+                        "body-md": ["Work Sans"],
+                        "stats-number": ["Domine"],
+                        "display-lg": ["Domine"],
+                        "label-md": ["Work Sans"],
+                        "body-lg": ["Work Sans"],
+                        "headline-lg": ["Domine"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "stats-number": ["36px", { "lineHeight": "44px", "fontWeight": "700" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .stadium-glow {
+            box-shadow: 0 0 60px -15px rgba(3, 48, 22, 0.15);
+        }
+        .glass-panel {
+            background: rgba(252, 249, 248, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(114, 121, 113, 0.2);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky border-b border-outline-variant/30 backdrop-blur-xl bg-surface z-50">
+<div class="flex items-center justify-between px-md py-base h-16 w-full max-w-container-max mx-auto">
+<div class="flex items-center gap-4">
+<button class="transition-colors duration-200 active:opacity-70 p-2 rounded-full hover:bg-primary/5 text-primary">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold tracking-tight text-primary">BALLPARK BINGO</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="transition-colors duration-200 active:opacity-70 p-2 rounded-full hover:bg-primary/5 text-primary">
+<span class="material-symbols-outlined">group_add</span>
+</button>
+</div>
+</div>
+</header>
+<main class="max-w-4xl mx-auto px-4 py-lg pb-32">
+<div class="mb-lg">
+<h2 class="font-headline-lg text-headline-lg text-primary mb-2">Create Private Box</h2>
+<p class="font-body-md text-on-surface-variant">Host a custom bingo session for your crew. Set the stakes, pick the game, and lock the doors.</p>
+</div>
+<form class="space-y-md">
+<!-- Room Identity & Matchup -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<section class="glass-panel p-md rounded-xl stadium-glow">
+<label class="block font-label-md text-label-md text-secondary uppercase tracking-widest mb-2">Box Identity</label>
+<div class="space-y-4">
+<div>
+<span class="text-xs font-semibold text-on-surface-variant uppercase">Room Name</span>
+<input class="w-full bg-transparent border-0 border-b border-outline focus:border-primary focus:ring-0 px-0 py-2 font-headline-md text-headline-md text-primary placeholder:text-outline-variant/50" placeholder="e.g., Friday Night Lights" type="text"/>
+</div>
+<div class="relative">
+<span class="text-xs font-semibold text-on-surface-variant uppercase">Live Matchup</span>
+<div class="flex items-center gap-2 border-b border-outline py-2 group cursor-pointer">
+<span class="material-symbols-outlined text-outline">search</span>
+<input class="w-full bg-transparent border-0 focus:ring-0 p-0 font-body-md text-on-surface placeholder:text-outline-variant/50" placeholder="Search MLB Games..." type="text"/>
+</div>
+</div>
+</div>
+</section>
+<section class="glass-panel p-md rounded-xl stadium-glow">
+<label class="block font-label-md text-label-md text-secondary uppercase tracking-widest mb-2">Privacy &amp; Access</label>
+<div class="space-y-6">
+<div class="flex items-center justify-between">
+<div>
+<p class="font-bold text-primary">Privacy Mode</p>
+<p class="text-xs text-on-surface-variant">Only invited scouts can enter</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+<span class="ml-3 font-label-md text-label-md text-primary">Private</span>
+</label>
+</div>
+<div class="p-4 bg-surface-container-low rounded-lg border border-outline-variant/30 text-center">
+<span class="text-xs font-semibold text-on-surface-variant uppercase block mb-2">Entry Code</span>
+<div class="flex items-center justify-center gap-4">
+<span class="font-stats-number text-stats-number text-primary tracking-widest" id="entry-code">BINGO-7</span>
+<button class="p-2 text-secondary hover:bg-secondary/5 rounded-full transition-colors" onclick="generateCode()" type="button">
+<span class="material-symbols-outlined">refresh</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Rules & Presets -->
+<section class="glass-panel p-md rounded-xl stadium-glow">
+<label class="block font-label-md text-label-md text-secondary uppercase tracking-widest mb-4">Game Rules Preset</label>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<label class="relative cursor-pointer">
+<input checked="" class="peer sr-only" name="rule-preset" type="radio" value="classic"/>
+<div class="p-4 rounded-lg border border-outline-variant peer-checked:border-primary peer-checked:bg-primary/5 hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-primary mb-2">grid_on</span>
+<p class="font-bold text-primary">Classic 5x5</p>
+<p class="text-xs text-on-surface-variant">Standard ballpark patterns. Great for casual fans.</p>
+</div>
+</label>
+<label class="relative cursor-pointer">
+<input class="peer sr-only" name="rule-preset" type="radio" value="blackout"/>
+<div class="p-4 rounded-lg border border-outline-variant peer-checked:border-primary peer-checked:bg-primary/5 hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-primary mb-2">brightness_low</span>
+<p class="font-bold text-primary">Blackout</p>
+<p class="text-xs text-on-surface-variant">Fill the entire card to win. High intensity.</p>
+</div>
+</label>
+<label class="relative cursor-pointer">
+<input class="peer sr-only" name="rule-preset" type="radio" value="speed"/>
+<div class="p-4 rounded-lg border border-outline-variant peer-checked:border-primary peer-checked:bg-primary/5 hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-primary mb-2">bolt</span>
+<p class="font-bold text-primary">Speed Ball</p>
+<p class="text-xs text-on-surface-variant">Fast tracking. Squares expire after 3 innings.</p>
+</div>
+</label>
+</div>
+</section>
+<!-- Gatekeepers -->
+<section class="glass-panel p-md rounded-xl stadium-glow">
+<div class="flex items-center justify-between mb-4">
+<label class="font-label-md text-label-md text-secondary uppercase tracking-widest">Gatekeeper Selection</label>
+<button class="text-primary font-label-md flex items-center gap-1 hover:underline" type="button">
+<span class="material-symbols-outlined text-sm">person_add</span> Add Admin
+                    </button>
+</div>
+<div class="flex flex-wrap gap-3">
+<div class="flex items-center gap-2 bg-surface-container-high px-3 py-2 rounded-full border border-outline-variant"><div class="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-[10px] text-white font-bold">JD</div><span class="font-label-md text-on-surface">Johnny Diamond (You)</span><div class="flex items-center gap-1 ml-auto"><span class="text-[10px] bg-primary text-white px-2 py-0.5 rounded-full">HOST</span><span class="material-symbols-outlined text-sm text-outline cursor-pointer hover:text-primary">settings</span></div></div>
+<div class="flex items-center gap-2 bg-surface-container px-3 py-2 rounded-full border border-outline-variant hover:border-secondary transition-colors cursor-pointer group">
+<img class="w-6 h-6 rounded-full" data-alt="A close-up portrait of a friendly man with a warm smile, wearing a vintage-style baseball cap. The lighting is soft and golden, characteristic of late afternoon sun at a stadium. The background is slightly blurred, suggesting the texture of a concrete ballpark wall, maintaining a sophisticated and nostalgic athletic aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAacIgufJu-SeTJjeNknT1P8m9wcGb_X0FQWpFUgGba0PXFbfB1FN4xQW0YVAgvUGKbZU0H5QXNcqM6h6yr6IFU4dEPcW1WIpSQrWEEX4ZRIHVd-hYdX6m3oaB8q0kGSXnZsI8y_6nPqf5rWGLXzUGVCJpsSPryhnBihJtMuDLA5vt_y9jNT7-45QUBq7ebb2EHgj9qrTXpjV9_xRnG8DsSMkrEVA6irKKAXyHMuvtkTJlpcAnSEHqSIUAgAdg7Biv1mjckNHJuIrVR"/>
+<span class="font-label-md text-on-surface">Alex "Curve" Smith</span>
+<span class="material-symbols-outlined text-sm text-outline group-hover:text-secondary">cancel</span>
+</div>
+<div class="flex items-center gap-2 bg-surface-container px-3 py-2 rounded-full border border-outline-variant hover:border-secondary transition-colors cursor-pointer group">
+<img class="w-6 h-6 rounded-full" data-alt="A professional headshot of a woman with an energetic expression, set against a background of lush stadium green. She wears a minimal, modern athletic polo shirt. The lighting is high-key and crisp, emphasizing a clean, light-mode interface style. Her look is authoritative yet welcoming, fitting for a sports moderator role." src="https://lh3.googleusercontent.com/aida-public/AB6AXuADp35eUGhZOXwG9U7hioXITOvLdx6vpNJJZ-g9TtE_5rwuOo2DYDvQUXDn6Q75vWEGwRssyZwjaH_dqNZZTFxmugovdCg4IiLSn7SgkinoG6HJliECawn7IDRFKvq_YBKUKGoB1mZ0pvW4BWN2LFUGFdnWOK6WrLNs8kRr3cwlOoDm0xZCldywVM5ScZ0i-lR7Sj0jM4blzlBQfBNlDhW4EyUd3hnNA9wBQae5D242JbUiOYr-qP6-B9IApx51wzVqKKXiT411pGUt"/>
+<span class="font-label-md text-on-surface">Sara Bases</span>
+<span class="material-symbols-outlined text-sm text-outline group-hover:text-secondary">cancel</span>
+</div>
+</div>
+</section>
+<!-- Submit -->
+<div class="pt-lg flex flex-col items-center gap-4">
+<button class="w-full md:w-auto min-w-[320px] bg-primary text-white font-headline-md text-headline-md py-4 rounded-lg stadium-glow transform hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3" type="submit">
+                    Open My Box <span class="material-symbols-outlined">stadium</span>
+</button>
+<p class="font-label-md text-label-md text-on-surface-variant italic">Note: Live matchup sync starts 15 minutes before first pitch.</p>
+</div>
+</form>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-surface/90 backdrop-blur-xl border-t border-outline-variant/30">
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors duration-150">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 transition-transform duration-150 scale-105">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="font-label-md text-label-md">Bingo</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors duration-150">
+<span class="material-symbols-outlined">forum</span>
+<span class="font-label-md text-label-md">Chat</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors duration-150">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-label-md text-label-md">Rankings</span>
+</div>
+</nav>
+<script>
+        function generateCode() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let result = '';
+            for (let i = 0; i < 5; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            document.getElementById('entry-code').textContent = 'BINGO-' + result;
+        }
+
+        // Form submission prevent default for demo
+        document.querySelector('form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Your Private Box is being prepared for first pitch!');
+        });
+    </script>
+</body></html>

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>League Standings - Baseball Bingo</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400;600;700&amp;family=Work+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-container": "#ff716d",
+                    "surface-container-high": "#e8e9e4",
+                    "secondary": "#ab3334",
+                    "primary-container": "#1d472a",
+                    "surface-container-highest": "#e2e3de",
+                    "surface": "#f9faf5",
+                    "secondary-fixed": "#ffdad7",
+                    "on-tertiary-fixed": "#231b00",
+                    "on-surface": "#1a1c19",
+                    "on-primary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "tertiary-container": "#cea700",
+                    "on-tertiary-fixed-variant": "#574500",
+                    "on-secondary-fixed": "#410005",
+                    "inverse-primary": "#a3d2ab",
+                    "inverse-surface": "#2f312e",
+                    "surface-container": "#edeee9",
+                    "surface-variant": "#e2e3de",
+                    "primary-fixed": "#bfeec5",
+                    "on-surface-variant": "#414941",
+                    "secondary-fixed-dim": "#ffb3ae",
+                    "primary-fixed-dim": "#a3d2ab",
+                    "tertiary": "#735c00",
+                    "background": "#f9faf5",
+                    "on-tertiary-container": "#4e3d00",
+                    "tertiary-fixed": "#ffe084",
+                    "outline-variant": "#c1c9bf",
+                    "error": "#ba1a1a",
+                    "inverse-on-surface": "#f0f1ec",
+                    "on-secondary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-container": "#700310",
+                    "surface-dim": "#d9dad6",
+                    "surface-bright": "#f9faf5",
+                    "on-primary-container": "#88b590",
+                    "on-background": "#1a1c19",
+                    "primary": "#033016",
+                    "on-primary-fixed": "#00210c",
+                    "on-error-container": "#93000a",
+                    "outline": "#727971",
+                    "on-secondary-fixed-variant": "#8a1a1f",
+                    "surface-tint": "#3d6748",
+                    "surface-container-low": "#f3f4ef",
+                    "on-primary-fixed-variant": "#254f31",
+                    "tertiary-fixed-dim": "#eec209"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "grid-gutter": "16px",
+                    "sm": "12px",
+                    "md": "24px",
+                    "grid-margin-mobile": "16px",
+                    "base": "8px",
+                    "grid-margin-desktop": "32px",
+                    "lg": "48px",
+                    "xs": "4px",
+                    "xl": "64px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Work Sans"],
+                    "display-lg": ["Domine"],
+                    "label-bold": ["Work Sans"],
+                    "display-lg-mobile": ["Domine"],
+                    "caption": ["Work Sans"],
+                    "headline-sm": ["Domine"],
+                    "headline-md": ["Domine"],
+                    "body-md": ["Work Sans"]
+            },
+            "fontSize": {
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .pinstripe-bg {
+            background-image: repeating-linear-gradient(90deg, transparent, transparent 15px, rgba(29, 71, 42, 0.05) 15px, rgba(29, 71, 42, 0.05) 16px);
+        }
+        .pressed-paper {
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .stitching-border {
+            border-bottom: 2px dashed #727971;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md pinstripe-bg min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-outline-variant px-grid-margin-mobile md:px-grid-margin-desktop py-4 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center hover:bg-surface-container rounded-full transition-transform active:translate-y-0.5">
+<span class="material-symbols-outlined text-primary">menu</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-primary">League Standings</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 flex items-center justify-center hover:bg-surface-container rounded-full transition-transform active:translate-y-0.5">
+<span class="material-symbols-outlined text-primary">history</span>
+</button>
+</div>
+</header>
+<main class="max-w-2xl mx-auto px-grid-margin-mobile md:px-0 py-6 space-y-6">
+<!-- Segmented Control (Tabs) -->
+<nav aria-label="Leaderboard Period" class="flex p-1 bg-surface-container-high rounded-xl">
+<button class="flex-1 py-2 px-4 rounded-lg font-label-bold text-label-bold transition-all bg-primary-container text-on-primary-container shadow-sm" data-tab="live">Live Game</button>
+<button class="flex-1 py-2 px-4 rounded-lg font-label-bold text-label-bold transition-all text-on-surface-variant hover:bg-surface-container-highest" data-tab="week">This Week</button>
+<button class="flex-1 py-2 px-4 rounded-lg font-label-bold text-label-bold transition-all text-on-surface-variant hover:bg-surface-container-highest" data-tab="all">All-Time</button>
+</nav>
+<!-- Your Standing Card -->
+<section class="bg-primary text-on-primary p-6 rounded-xl shadow-lg relative overflow-hidden">
+<!-- Decorative Baseball Stitch Pattern -->
+<div class="absolute -right-4 -top-4 opacity-10 pointer-events-none">
+<svg height="120" viewbox="0 0 100 100" width="120">
+<path d="M10 10 Q 50 10 90 90" fill="none" stroke="white" stroke-dasharray="8 4" stroke-width="4"></path>
+<path d="M90 10 Q 50 90 10 90" fill="none" stroke="white" stroke-dasharray="8 4" stroke-width="4"></path>
+</svg>
+</div>
+<div class="flex justify-between items-start mb-4">
+<div>
+<p class="font-label-bold text-label-bold text-on-primary-container opacity-80 uppercase tracking-widest">Your Ranking</p>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg-mobile md:text-display-lg">#42</span>
+<span class="font-headline-sm text-headline-sm opacity-90">/ 1,240</span>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-bold text-label-bold text-on-primary-container opacity-80 uppercase">Total Points</p>
+<p class="font-headline-md text-headline-md">24,580</p>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between font-caption text-caption">
+<span>Pro Slugger III</span>
+<span>1,420 pts to Hall of Fame</span>
+</div>
+<div class="h-3 w-full bg-primary-container rounded-full overflow-hidden border border-on-primary/10">
+<div class="h-full bg-secondary-container w-[72%] relative">
+<!-- Stitching effect on progress bar -->
+<div class="absolute inset-0 opacity-20" style="background-image: linear-gradient(90deg, transparent 50%, #fff 50%); background-size: 8px 100%;"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Main Leaderboard List -->
+<section class="bg-surface rounded-xl border border-outline-variant overflow-hidden shadow-sm">
+<div class="px-6 py-4 border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
+<h2 class="font-headline-sm text-headline-sm text-primary">Top Performers</h2>
+<span class="font-label-bold text-label-bold text-on-surface-variant uppercase">Stadium Credits</span>
+</div>
+<!-- Rank 1 -->
+<div class="flex items-center gap-4 px-6 py-5 hover:bg-surface-container transition-colors group">
+<div class="w-10 flex flex-col items-center">
+<span class="material-symbols-outlined text-tertiary text-3xl" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+<span class="font-label-bold text-label-bold text-tertiary">1</span>
+</div>
+<div class="relative">
+<img alt="" class="w-14 h-14 rounded-full border-2 border-tertiary p-0.5" data-alt="A professional headshot of a smiling sports player wearing a vintage-style baseball cap. The lighting is warm and golden, reminiscent of a late afternoon sun at the ballpark. The background is softly blurred showing green stadium grass and cream-colored pinstripe textures. Elegant and high-contrast." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7oKmYjgcC-8oQC9jBeaPQEQBPYzallOjaR6-584IgDB8EkAp7nOlmz1xTSrgbsnkM6P06dvpFX3D_dbdVbTINfRVlgX-Or6Ra7MwsOSvovh2fcTxU5w4r8C2eV6o-c0ZFEbI6KvKDyBTkwpr-vusAtChXgwn5EFAtzxaIhmv4sD3hvgZYwtysT7Q0Dd3tbgsPrE8-5kwSwo9XOJachGlPYKS_aFpspgzACQ1ccjorpfdlz9CDiJ1VwjlceOToy_W7srFtlq0EV17b"/>
+<div class="absolute -bottom-1 -right-1 bg-white rounded-full p-1 shadow-sm border border-outline-variant">
+<img alt="NYY" class="w-5 h-5 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBf3eO09WRmubT1KaTnO3rTf674DdnG4HDhpycXZM2pfrodBpwwOlTAy00A3g34AxlDmAyeS16q-BACHSkzpxRKkX3zsQjgpat-wNYFX5LiLrOr85mjUkxzvtSPAqTq9teRiugucvq3tZ3TPz62zRO4ist5dj0a9iePlfUWoqxDgUifZHQ7FViIlL5a84wf5F-pmhUzm55uFu128gUg7HMmOZsEGTf7RP28NEK1KAgJ9sPf6IdnnyURrh8fjZAqm21sRWuodC6ip0cs"/>
+</div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<p class="font-body-lg text-body-lg font-bold text-on-surface truncate">DiamondKing_99</p>
+<span class="px-2 py-0.5 bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold rounded uppercase tracking-tighter">Legend</span>
+</div>
+<p class="font-caption text-caption text-on-surface-variant">Level 84 • NY Yankees</p>
+</div>
+<div class="text-right">
+<p class="font-headline-sm text-headline-sm text-primary">82,400</p>
+<p class="font-caption text-caption text-secondary">+1,200 today</p>
+</div>
+</div>
+<div class="mx-6 border-b border-outline-variant/30"></div>
+<!-- Rank 2 -->
+<div class="flex items-center gap-4 px-6 py-5 hover:bg-surface-container transition-colors">
+<div class="w-10 flex flex-col items-center">
+<span class="material-symbols-outlined text-outline text-3xl" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+<span class="font-label-bold text-label-bold text-on-surface-variant">2</span>
+</div>
+<div class="relative">
+<img alt="" class="w-14 h-14 rounded-full border-2 border-outline-variant p-0.5" data-alt="A detailed portrait of a focused baseball enthusiast in a modern team jersey. The scene is bright and airy with high-key lighting. The color palette features deep forest greens and off-whites. Professional sports photography style with a shallow depth of field." src="https://lh3.googleusercontent.com/aida-public/AB6AXuALyufRKOaQ8qnJWeE25z6-ypJoiXXrHu9JqQx1DV2vlbYXuJWSJEqCqdtooLrRDlRT70o0IJUbog4Eb9sYIchTEw4DboZLMkgTh8Uoa633eqYKmrXTI7ZRTk8JqNdHojkMfajy9KxjZStW8hNX3ITczT7paAVfd65aGRbv7d2HHvoWed67hJ4lddZ0q-GsEIIG5lAU543nUABtdcuJ8USuRldTfTo8ap0B-nkL9pMSfWSalwgNoBNw8XLG6hQ6C9y4Ioc20KmAO4W2"/>
+<div class="absolute -bottom-1 -right-1 bg-white rounded-full p-1 shadow-sm border border-outline-variant">
+<img alt="BOS" class="w-5 h-5 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLPOOxiW5Rz-0QoVX_s9XqG4ZeaGnSF6mh4C416iIqxSyDn-T-dm-_AiuF43K4cV66O5QpfQjFKRNIznCuxacihvmaUy970G9IgWIpDTJ2ODwlDA_s2jc5tqumRw7OEQK7h9Ddj86zhF95uRmsxRDjL3ZsK7aDmPgsih4-vyHtUligOKI4LSTbRN_Mf3uvLcc_0-1xLsx3foAr4bKbcbyDADjhIwyKh34dpQVBufsFk7tglXR2sFXIeGkjSix6jmbFn8be3fV9hByW"/>
+</div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<p class="font-body-lg text-body-lg font-bold text-on-surface truncate">FenwayFaithful</p>
+<span class="px-2 py-0.5 bg-surface-variant text-on-surface-variant text-[10px] font-bold rounded uppercase tracking-tighter">Elite</span>
+</div>
+<p class="font-caption text-caption text-on-surface-variant">Level 72 • Boston RS</p>
+</div>
+<div class="text-right">
+<p class="font-headline-sm text-headline-sm text-primary">79,150</p>
+<p class="font-caption text-caption text-on-surface-variant">+850 today</p>
+</div>
+</div>
+<div class="mx-6 border-b border-outline-variant/30"></div>
+<!-- Rank 3 -->
+<div class="flex items-center gap-4 px-6 py-5 hover:bg-surface-container transition-colors">
+<div class="w-10 flex flex-col items-center">
+<span class="material-symbols-outlined text-secondary text-3xl" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+<span class="font-label-bold text-label-bold text-secondary">3</span>
+</div>
+<div class="relative">
+<img alt="" class="w-14 h-14 rounded-full border-2 border-secondary/30 p-0.5" data-alt="A vibrant digital portrait of a young baseball fan against a background of a classic stadium scoreboard. The lighting is crisp and detailed. The aesthetic is tactile and clean, using the brand's secondary clay red and primary green accents. Heritage meets playfulness." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0pHAigBogMLrOJVYA5tdAYtIXlMs3yXIEibTXlJ4Eaujvhkyev1ZG_0bLlzCerc_bWMUCJKt7tHq6r5y-JaaiyUyv4lRuogHE6z4I4tYecOqy1OA25BHPoGmHDZmIsnp2lJcbjOHQKoHJwy0ZM1tgZOWKdA_cO6hrz49r1AL2P2mC-9kBDYzqvcuQDI4w7_arSVC5uEzjuk33_ZYBuEXm3G600nCnHkEq13hEGu-kEa5y1Ei7hg_D0UJ5OB4226f2uniH8hhMBqc5"/>
+<div class="absolute -bottom-1 -right-1 bg-white rounded-full p-1 shadow-sm border border-outline-variant">
+<img alt="SFG" class="w-5 h-5 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYVn9sm0_yyH-QkpDsJ7wZ6-cRk2f2hJBJBP4I_vkHGVHmj5s5wlfhIWjO1f_9w_32syog0ma4F1uinap7KbmfrMI7-GIiX7t5soq1ud-k7c6U43oWYETofmvoGqPX-UEc5RvFiZ3FA6yn-f2wDZodkh_vY_7jTxPdK6RDLkEjuGQLCwebA2sZUk8J41oorikmNr18lOuKtcnsLSGZYtnim-iD9WQ4CGApFY85XwsWLtLcekT2UDH14l2V3RkoXfQqJMoV68xjRkcz"/>
+</div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<p class="font-body-lg text-body-lg font-bold text-on-surface truncate">BayBridgeBomber</p>
+<span class="px-2 py-0.5 bg-surface-variant text-on-surface-variant text-[10px] font-bold rounded uppercase tracking-tighter">Elite</span>
+</div>
+<p class="font-caption text-caption text-on-surface-variant">Level 68 • SF Giants</p>
+</div>
+<div class="text-right">
+<p class="font-headline-sm text-headline-sm text-primary">75,000</p>
+<p class="font-caption text-caption text-on-surface-variant">+2,100 today</p>
+</div>
+</div>
+<!-- Generic Rows (Repeatable Pattern) -->
+<div class="bg-surface-container-lowest">
+<div class="mx-6 border-b border-outline-variant/50"></div>
+<!-- Rank 4 -->
+<div class="flex items-center gap-4 px-6 py-4 hover:bg-surface-container transition-colors">
+<div class="w-10 text-center font-label-bold text-label-bold text-on-surface-variant">4</div>
+<div class="relative">
+<img alt="" class="w-12 h-12 rounded-full border border-outline-variant bg-surface-container-high" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0IVoM-JRpskAeiLnGi5FJ3amtDxF_AQAFU8ITu5AOe_qlhYV3zWvdHuli9dWJ_4f5e8blqYkvg8hGPwLRZmb2bK2euiZxW7fh86VKxaoKHlsv6xlfxkbt_gHBCOCTwnxa4v75wT2BoF3un9kNEsCh7nvZG7DSol9g5yOoonVMD1eRY9BwRrJa4GwkuB_iPsT4ToYe9GtjEUAewAu5IfH3SdkpIa3uD0s-esyleO6uk-yGZj07wIvl2MA3svu9mFDDxYhThJunyH0t"/>
+</div>
+<div class="flex-1 min-w-0">
+<p class="font-body-md text-body-md font-semibold text-on-surface truncate">CurveballCaleb</p>
+<p class="font-caption text-caption text-on-surface-variant">Level 54</p>
+</div>
+<div class="text-right">
+<p class="font-body-lg text-body-lg font-bold text-primary">62,300</p>
+</div>
+</div>
+<div class="mx-6 border-b border-outline-variant/30"></div>
+<!-- Rank 5 -->
+<div class="flex items-center gap-4 px-6 py-4 hover:bg-surface-container transition-colors">
+<div class="w-10 text-center font-label-bold text-label-bold text-on-surface-variant">5</div>
+<div class="relative">
+<img alt="" class="w-12 h-12 rounded-full border border-outline-variant bg-surface-container-high" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIfQs5YY_iN5hQUMKrOdczO1d4kAGAYof0r46YABpUCETsZjLBwvgfQpiB0-gQboU1WwFMKGDd--1sHEZdtnKqdgXDxYR7D7tQBeI8NP1BVtvElekCm2ppnjR9K5NPA0nfSVSuLzLrwHjY5hD8RAeE9sIQoTKhrvfa-yXMMFds9y-WGEy9gt52sKGYVhhfdxFCf-kQYoYW6ypOG4migPDYi_8tvivrBttaG4fsCb29f_Eyc1UTxh75kiDbbDG9pSUV9hP1SJwmb-AP"/>
+</div>
+<div class="flex-1 min-w-0">
+<p class="font-body-md text-body-md font-semibold text-on-surface truncate">HomeRunHunter</p>
+<p class="font-caption text-caption text-on-surface-variant">Level 49</p>
+</div>
+<div class="text-right">
+<p class="font-body-lg text-body-lg font-bold text-primary">58,900</p>
+</div>
+</div>
+</div>
+<!-- List Footer / Expand Button -->
+<button class="w-full py-4 text-center bg-surface-container-low font-label-bold text-label-bold text-primary hover:bg-surface-container-high transition-colors active:translate-y-0.5">
+                VIEW ALL STANDINGS
+            </button>
+</section>
+<!-- CTA / Promo Card -->
+<div class="bg-secondary-fixed text-on-secondary-container p-6 rounded-xl flex items-center justify-between shadow-sm border border-secondary/20">
+<div class="flex-1 pr-4">
+<h3 class="font-headline-sm text-headline-sm">Season 4 Rewards</h3>
+<p class="font-body-md text-body-md">Top 10 players this month win authentic customized team jerseys.</p>
+</div>
+<span class="material-symbols-outlined text-4xl text-secondary opacity-40">apparel</span>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-3 bg-surface dark:bg-surface border-t border-outline-variant dark:border-outline">
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary transition-transform active:translate-y-0.5" href="#">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+<span class="font-label-bold text-[10px] mt-1">Bingo</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1 transition-transform active:translate-y-0.5" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard" style="font-variation-settings: 'FILL' 1;">leaderboard</span>
+<span class="font-label-bold text-[10px] mt-1">Leagues</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary transition-transform active:translate-y-0.5" href="#">
+<span class="material-symbols-outlined" data-icon="sports_baseball">sports_baseball</span>
+<span class="font-label-bold text-[10px] mt-1">Draft</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary transition-transform active:translate-y-0.5" href="#">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+<span class="font-label-bold text-[10px] mt-1">Profile</span>
+</a>
+</nav>
+<script>
+        // Simple tab switching interaction
+        const tabs = document.querySelectorAll('[data-tab]');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => {
+                    t.classList.remove('bg-primary-container', 'text-on-primary-container', 'shadow-sm');
+                    t.classList.add('text-on-surface-variant', 'hover:bg-surface-container-highest');
+                });
+                tab.classList.add('bg-primary-container', 'text-on-primary-container', 'shadow-sm');
+                tab.classList.remove('text-on-surface-variant', 'hover:bg-surface-container-highest');
+            });
+        });
+    </script>
+</body></html>

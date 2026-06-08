@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Victory Reel | Ballpark Bingo</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400;600;700&amp;family=Work+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .paper-texture {
+            background-color: #f9faf5;
+            background-image: radial-gradient(#d1d5db 0.5px, transparent 0.5px);
+            background-size: 12px 12px;
+            background-repeat: repeat;
+        }
+        .pinstripe-overlay {
+            background-image: repeating-linear-gradient(90deg, transparent, transparent 15px, rgba(0, 33, 12, 0.03) 15px, rgba(0, 33, 12, 0.03) 16px);
+        }
+        .stadium-gradient {
+            background: radial-gradient(circle at top, #1d472a 0%, #033016 100%);
+        }
+        .gold-glow {
+            text-shadow: 0 0 12px rgba(238, 194, 9, 0.4);
+        }
+        .bingo-cell-inset {
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .victory-card-shadow {
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-surface": "#1a1c19",
+                      "on-primary": "#ffffff",
+                      "surface-container-high": "#e8e9e4",
+                      "surface-variant": "#e2e3de",
+                      "on-secondary-container": "#700310",
+                      "on-primary-fixed-variant": "#254f31",
+                      "on-error-container": "#93000a",
+                      "on-tertiary-container": "#4e3d00",
+                      "error": "#ba1a1a",
+                      "surface-tint": "#3d6748",
+                      "primary-fixed-dim": "#a3d2ab",
+                      "on-secondary-fixed": "#410005",
+                      "tertiary-fixed": "#ffe084",
+                      "surface-dim": "#d9dad6",
+                      "on-secondary": "#ffffff",
+                      "on-error": "#ffffff",
+                      "surface-bright": "#f9faf5",
+                      "surface-container-highest": "#e2e3de",
+                      "surface-container-low": "#f3f4ef",
+                      "inverse-surface": "#2f312e",
+                      "secondary-container": "#ff716d",
+                      "surface-container": "#edeee9",
+                      "on-tertiary-fixed": "#231b00",
+                      "background": "#f9faf5",
+                      "error-container": "#ffdad6",
+                      "on-primary-fixed": "#00210c",
+                      "on-surface-variant": "#414941",
+                      "on-tertiary": "#ffffff",
+                      "on-secondary-fixed-variant": "#8a1a1f",
+                      "inverse-on-surface": "#f0f1ec",
+                      "outline-variant": "#c1c9bf",
+                      "surface": "#f9faf5",
+                      "primary-container": "#1d472a",
+                      "tertiary-fixed-dim": "#eec209",
+                      "primary": "#033016",
+                      "secondary-fixed": "#ffdad7",
+                      "on-primary-container": "#88b590",
+                      "secondary": "#ab3334",
+                      "outline": "#727971",
+                      "on-tertiary-fixed-variant": "#574500",
+                      "tertiary-container": "#cea700",
+                      "primary-fixed": "#bfeec5",
+                      "surface-container-lowest": "#ffffff",
+                      "tertiary": "#735c00",
+                      "inverse-primary": "#a3d2ab",
+                      "secondary-fixed-dim": "#ffb3ae",
+                      "on-background": "#1a1c19"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "grid-margin-mobile": "16px",
+                      "md": "24px",
+                      "xl": "64px",
+                      "lg": "48px",
+                      "grid-gutter": "16px",
+                      "base": "8px",
+                      "sm": "12px",
+                      "xs": "4px",
+                      "grid-margin-desktop": "32px"
+              },
+              "fontFamily": {
+                      "body-md": ["Work Sans"],
+                      "body-lg": ["Work Sans"],
+                      "display-lg-mobile": ["Domine"],
+                      "headline-sm": ["Domine"],
+                      "label-bold": ["Work Sans"],
+                      "headline-md": ["Domine"],
+                      "display-lg": ["Domine"],
+                      "caption": ["Work Sans"]
+              },
+              "fontSize": {
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-on-surface bg-background antialiased overflow-x-hidden">
+<!-- Top AppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/90 dark:bg-surface-dim/90 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm flex justify-between items-center px-grid-margin-mobile md:px-grid-margin-desktop h-16 w-full">
+<div class="flex items-center gap-base">
+<span class="material-symbols-outlined text-primary text-headline-md" data-icon="sports_baseball">sports_baseball</span>
+<h1 class="font-headline-md text-headline-md font-bold tracking-tight text-primary">BALLPARK BINGO</h1>
+</div>
+<button class="flex items-center text-on-surface-variant hover:bg-primary/5 transition-colors p-2 rounded-full active:scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</header>
+<main class="pt-16 pb-24 min-h-screen stadium-gradient relative overflow-hidden">
+<!-- Stadium Lights Effect Overlay -->
+<div class="absolute inset-0 opacity-20 pointer-events-none pinstripe-overlay"></div>
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-tertiary-fixed/20 blur-[120px] rounded-full"></div>
+<section class="max-w-6xl mx-auto px-grid-margin-mobile md:px-grid-margin-desktop mt-lg relative z-10">
+<!-- Header Title -->
+<div class="text-center mb-xl">
+<div class="inline-flex items-center gap-xs px-sm py-1 bg-tertiary-fixed/20 border border-tertiary-fixed-dim/30 rounded-full mb-base">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-sm" data-icon="stars" style="font-variation-settings: 'FILL' 1;">stars</span>
+<span class="font-label-bold text-caption text-tertiary-fixed uppercase tracking-widest">League Champions</span>
+</div>
+<h2 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-surface-bright gold-glow mb-xs">Victory Reel</h2>
+<p class="text-on-primary-container font-body-lg text-body-lg max-w-lg mx-auto">Relive the greatest plays from the top of the standings this week.</p>
+</div>
+<!-- Cinematic Reel Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-grid-gutter">
+<!-- Main Feature: Current MVP -->
+<div class="md:col-span-8 group relative overflow-hidden bg-primary-container rounded-xl border border-outline-variant/20 victory-card-shadow aspect-[16/10] md:aspect-auto h-[400px] md:h-auto">
+<img alt="MVP Celebration" class="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-multiply transition-transform duration-700 group-hover:scale-105" data-alt="A cinematic low-angle photograph of a professional baseball player sliding into home plate amidst a cloud of sunlit dust. The scene is illuminated by dramatic stadium floodlights casting long shadows, with a deep green turf and warm golden highlights. The mood is triumphant and athletic, utilizing the Ballpark Bingo palette of deep forest greens and trophy gold. Vintage grainy texture adds a nostalgic, high-stakes feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDB4bEr8Z0BQRT_TixJDdjXEqblKlBYackLXH4p8DpWiVJuTj7LppxsNe1BIbVgmPRIamtTg0G1YUJbyST0P8BPvUqAtNn6nJRkJlivC49Fblrl1gWTpuB_HHhj9WpMGkq5fEn9FS33gC43s6oJHTcXWM0fAFRDFJdWFwWHCdZ6fH93SypswRZkAOuzlN5S19WN3qhYDoTvHWV6hfdrQZ5C2h8CccEwreuWVx5eXgS5vYqOfbVcm0r9N07aFJEecAouWpi1spt90Zq-"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary via-transparent to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-lg w-full">
+<div class="flex items-end justify-between gap-md">
+<div class="flex gap-md items-center">
+<div class="w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-tertiary-fixed p-1 bg-surface shadow-lg">
+<img alt="Player Avatar" class="w-full h-full rounded-full object-cover" data-alt="Close-up portrait of a determined, smiling young athlete with eye-black, wearing a classic baseball cap. The lighting is bright and warm, suggesting a sunny day at the ballpark. High-end photography with a shallow depth of field, blurring the stadium background into a wash of deep greens and white-cream tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3IB1q4WZMm47FanoMqGb1F2RwA0pFINddbL4CvFmqljZBevOVQRVece7QCzU9c7K1_qVN0Z3uDoWuGELUuzwcDExMwfZOiZh_O_fcJA8pRy-yN1xjUdPB1dOKz8Gb8pZSG8EDUpUUaTemcUv8QC0-JjekZ5Tg8wwdqyiIB70UgsSZRLDbbN0cYqPfz37ZEqy9u2n-jw3a9YbuC20GhSflmHJe0ibVBrlvD0s9UQarYy2kT87_MysSnDRT_gydejE3joRksVaL1yvd"/>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-surface-bright mb-xs">JAKE "THE JET" REED</h3>
+<div class="flex gap-xs">
+<span class="px-sm py-1 bg-secondary rounded-full text-caption font-label-bold text-white uppercase">Grand Slam Bingo!</span>
+<span class="px-sm py-1 bg-surface/10 rounded-full text-caption font-label-bold text-tertiary-fixed uppercase border border-tertiary-fixed/30">Inning 7</span>
+</div>
+</div>
+</div>
+<div class="hidden md:flex flex-col items-end">
+<span class="text-caption font-label-bold text-on-primary-container uppercase tracking-widest">Total Points</span>
+<span class="text-display-lg text-tertiary-fixed-dim gold-glow">4,280</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Winning Mini Card Sidebar -->
+<div class="md:col-span-4 flex flex-col gap-grid-gutter">
+<!-- The Winning Card Mockup -->
+<div class="bg-surface-container-lowest p-md rounded-xl border border-outline-variant/30 paper-texture relative overflow-hidden victory-card-shadow">
+<div class="absolute top-0 right-0 p-xs">
+<span class="material-symbols-outlined text-tertiary text-headline-sm" data-icon="workspace_premium" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+<h4 class="font-label-bold text-caption text-primary uppercase mb-md tracking-tighter">Winning Scorecard</h4>
+<!-- Miniature Bingo Card -->
+<div class="grid grid-cols-3 gap-xs">
+<div class="aspect-square bg-primary text-on-primary text-[10px] font-bold flex items-center justify-center rounded-xs bingo-cell-inset">HR</div>
+<div class="aspect-square bg-surface-variant/50 text-on-surface-variant text-[10px] flex items-center justify-center rounded-xs border border-outline-variant/10">K</div>
+<div class="aspect-square bg-primary text-on-primary text-[10px] font-bold flex items-center justify-center rounded-xs bingo-cell-inset">2B</div>
+<div class="aspect-square bg-surface-variant/50 text-on-surface-variant text-[10px] flex items-center justify-center rounded-xs border border-outline-variant/10">DP</div>
+<div class="aspect-square bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold flex items-center justify-center rounded-xs bingo-cell-inset">FREE</div>
+<div class="aspect-square bg-surface-variant/50 text-on-surface-variant text-[10px] flex items-center justify-center rounded-xs border border-outline-variant/10">1B</div>
+<div class="aspect-square bg-primary text-on-primary text-[10px] font-bold flex items-center justify-center rounded-xs bingo-cell-inset">BB</div>
+<div class="aspect-square bg-surface-variant/50 text-on-surface-variant text-[10px] flex items-center justify-center rounded-xs border border-outline-variant/10">FO</div>
+<div class="aspect-square bg-primary text-on-primary text-[10px] font-bold flex items-center justify-center rounded-xs bingo-cell-inset">RBI</div>
+</div>
+<div class="mt-md pt-sm border-t border-outline-variant/20">
+<div class="flex justify-between items-center text-caption">
+<span class="text-on-surface-variant">Completion Time</span>
+<span class="font-bold text-primary">12:44 PM</span>
+</div>
+</div>
+</div>
+<!-- Milestone Achievement Card -->
+<div class="bg-secondary p-md rounded-xl border border-on-secondary/20 shadow-xl flex items-center gap-md relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 opacity-10 group-hover:rotate-12 transition-transform duration-500">
+<span class="material-symbols-outlined text-display-lg" data-icon="trophy" style="font-size: 80px;">trophy</span>
+</div>
+<div class="w-12 h-12 bg-on-secondary/10 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary" data-icon="military_tech">military_tech</span>
+</div>
+<div>
+<h4 class="text-white font-label-bold text-caption uppercase tracking-wider">Milestone Unlocked</h4>
+<p class="text-on-secondary font-headline-sm text-headline-sm leading-tight">Iron Slugger Club</p>
+</div>
+</div>
+</div>
+<!-- Secondary Top Players List -->
+<div class="md:col-span-12 grid grid-cols-1 md:grid-cols-3 gap-grid-gutter mt-base">
+<!-- Runner Up 1 -->
+<div class="bg-surface/5 backdrop-blur-md border border-surface-bright/10 p-md rounded-xl flex items-center gap-md hover:bg-surface/10 transition-all cursor-pointer">
+<div class="relative">
+<img alt="Runner Up" class="w-14 h-14 rounded-full border border-outline-variant/30 object-cover" data-alt="Portrait of a young male sports fan in a professional camera setup, wearing a classic baseball jersey and a cap. The lighting is soft and focused, set against a dark stadium-colored background with subtle bokeh highlights of stadium lights. Minimalist, premium, and clean aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4V8uBeMFtl3Q0WBSZCrTxKsHZWQtG7seMniI84mPBF540bc4duhcUavtycbd-bt3RMzTPDoBe3JC3BpCfh_4UKrK1-6iytBGQYbnLqOchXuvE8LfFR6q3CWLY17fXjVyFLgHb1Gzc7zL6X3kd3DcjwQoOjIpyVqHwEcfJ6qvOsJJ4Y0KG_uPC-NAsfkYUHXOF3IW2n7PdWQF9hxBRXvWQ_pm5sZQumvJNspd17t0v0YKTGRo3fwpQ_ph62Na0YkykGcMHlbB4G_81"/>
+<span class="absolute -bottom-1 -right-1 w-6 h-6 bg-surface-dim rounded-full border-2 border-primary flex items-center justify-center text-[10px] font-bold">2</span>
+</div>
+<div>
+<p class="text-surface-bright font-label-bold">M. Thompson</p>
+<p class="text-on-primary-container text-caption uppercase tracking-tighter">Full House Bingo</p>
+</div>
+<div class="ml-auto text-tertiary-fixed text-headline-sm font-bold">3,905</div>
+</div>
+<!-- Runner Up 2 -->
+<div class="bg-surface/5 backdrop-blur-md border border-surface-bright/10 p-md rounded-xl flex items-center gap-md hover:bg-surface/10 transition-all cursor-pointer">
+<div class="relative">
+<img alt="Runner Up" class="w-14 h-14 rounded-full border border-outline-variant/30 object-cover" data-alt="Close up photography of a smiling woman athlete with hair tied back, wearing sporty apparel. Bright outdoor daylight with a soft blue sky and stadium green blurred background. The style is modern, cinematic, and emphasizes a high-achievement athletic lifestyle." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmyYjhckN8zGciOQLjc5RPGgnFf9-mE77IihOCFgsaxZd77iLFDZS_NcrWXr-j-2iP4EykcV790dS_IjmdtnqRy8g3Xb8jB6MT096cmdfcbFLF1Z4x3_74Cz7UJYc3JrtZ-MqoKFmW3d-9VEQISpDCNKRdTVSCykNQBA9p5CdbErNz5sbOYaRX-GWVk_6Vt1OrtbMPU74PqjerDhlydAWXqPAR96zA26DkjBtR0xqQuAUqK-JGjyeS-hk4131ApNvuS-txUfcwQdPk"/>
+<span class="absolute -bottom-1 -right-1 w-6 h-6 bg-surface-dim rounded-full border-2 border-primary flex items-center justify-center text-[10px] font-bold">3</span>
+</div>
+<div>
+<p class="text-surface-bright font-label-bold">S. Martinez</p>
+<p class="text-on-primary-container text-caption uppercase tracking-tighter">Triple Threat</p>
+</div>
+<div class="ml-auto text-tertiary-fixed text-headline-sm font-bold">3,720</div>
+</div>
+<!-- Runner Up 3 -->
+<div class="bg-surface/5 backdrop-blur-md border border-surface-bright/10 p-md rounded-xl flex items-center gap-md hover:bg-surface/10 transition-all cursor-pointer">
+<div class="relative">
+<img alt="Runner Up" class="w-14 h-14 rounded-full border border-outline-variant/30 object-cover" data-alt="Portrait of a mature baseball fan with a friendly smile, wearing a team-colored polo shirt. High-end lighting creating a warm, approachable atmosphere. Background has soft stadium green tones and clean whitespace consistent with the brand's premium minimalism." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBpzomTSvv6Ciwfd0ntD3Z6NaU9i4zOXh_1nSwLELKQ8g09MYsnmWPAD72Kmo28BDJULxcbWeNPDjB8K6WBKyXKTrdRw4ampWfn9gw1LkpiaJEbenxRgMEQvujobORtG3g8VFlAwlZr6xLdzsWEyTMEaCyrxVqRS-IMCSJLgvdZP5ee3d56pHaAnKZEH0fEKsTW87Y3nIQ7m6Sl8-BeB7OvM9OjQVJc4V0jZhjYK3rKbgtx2K70Yzkr6_9_co3c_U2lji31N8bZAbb"/>
+<span class="absolute -bottom-1 -right-1 w-6 h-6 bg-surface-dim rounded-full border-2 border-primary flex items-center justify-center text-[10px] font-bold">4</span>
+</div>
+<div>
+<p class="text-surface-bright font-label-bold">David Chen</p>
+<p class="text-on-primary-container text-caption uppercase tracking-tighter">Fastest Frame</p>
+</div>
+<div class="ml-auto text-tertiary-fixed text-headline-sm font-bold">3,650</div>
+</div>
+</div>
+</div>
+<!-- Social Share Bar -->
+<div class="mt-xl flex flex-col md:flex-row items-center justify-between gap-md p-lg bg-surface/5 border-t border-surface-bright/20 rounded-t-3xl">
+<div class="flex items-center gap-base">
+<span class="text-on-primary-container font-label-bold uppercase tracking-widest text-caption">Share this victory</span>
+<div class="h-px w-12 bg-on-primary-container/30"></div>
+</div>
+<div class="flex gap-md">
+<button class="w-12 h-12 rounded-full bg-white flex items-center justify-center text-primary active:scale-90 transition-transform shadow-lg">
+<svg class="w-6 h-6 fill-current" viewbox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path></svg>
+</button>
+<button class="w-12 h-12 rounded-full bg-white flex items-center justify-center text-primary active:scale-90 transition-transform shadow-lg">
+<svg class="w-6 h-6 fill-current" viewbox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path></svg>
+</button>
+<button class="px-lg bg-tertiary-fixed text-on-tertiary-fixed font-label-bold uppercase rounded-full h-12 flex items-center justify-center hover:bg-tertiary-fixed-dim transition-colors active:scale-95">
+                        Download Reel
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface/90 dark:bg-surface-dim/90 backdrop-blur-xl border-t border-outline-variant/30 shadow-lg flex justify-around items-center h-20 w-full pb-safe">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary/10 transition-colors px-md h-full transition-transform duration-200 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary/10 transition-colors px-md h-full transition-transform duration-200 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+<span class="font-label-md text-label-md">Card</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary font-bold hover:bg-secondary/10 transition-colors px-md h-full transition-transform duration-200 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard" style="font-variation-settings: 'FILL' 1;">leaderboard</span>
+<span class="font-label-md text-label-md">Rankings</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for hover effects on runner-up cards
+        document.querySelectorAll('.bg-surface\\/5').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-4px)';
+                card.style.transition = 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Simple sparkle effect generation for victory
+        function createSparkle() {
+            const container = document.querySelector('.stadium-gradient');
+            const sparkle = document.createElement('div');
+            const size = Math.random() * 4 + 2;
+            sparkle.style.width = size + 'px';
+            sparkle.style.height = size + 'px';
+            sparkle.style.backgroundColor = '#ffe084';
+            sparkle.style.position = 'absolute';
+            sparkle.style.top = Math.random() * 40 + '%';
+            sparkle.style.left = Math.random() * 100 + '%';
+            sparkle.style.borderRadius = '50%';
+            sparkle.style.opacity = '0';
+            sparkle.style.pointerEvents = 'none';
+            sparkle.style.zIndex = '5';
+            sparkle.classList.add('animate-ping');
+            container.appendChild(sparkle);
+            
+            setTimeout(() => {
+                sparkle.style.opacity = '0.6';
+                setTimeout(() => {
+                    sparkle.remove();
+                }, 1000);
+            }, 100);
+        }
+
+        setInterval(createSparkle, 800);
+    </script>
+</body></html>

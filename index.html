@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Ballpark Bingo • MLB Live</title>
+
+  <!-- PWA + iOS Home Screen Web App -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#033016">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Ballpark Bingo">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <!-- Prevent double-tap zoom / callout on iOS -->
+  <meta name="format-detection" content="telephone=no">
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Domine:wght@400;600;700&amp;family=Work+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      line-height: 1;
+      vertical-align: middle;
+    }
+    body {
+      font-family: 'Work Sans', system_ui, sans-serif;
+    }
+    .font-display { font-family: 'Domine', Georgia, serif; }
+
+    /* Heritage Ballpark Paper + Pinstripe */
+    .paper-bg {
+      background-color: #f9faf5;
+      background-image: 
+        radial-gradient(#d9dad6 0.6px, transparent 0.6px),
+        repeating-linear-gradient(90deg, transparent, transparent 38px, rgba(3,48,22,0.045) 39px, rgba(3,48,22,0.045) 40px);
+      background-size: 15px 15px, 100% 100%;
+    }
+    .surface-glass {
+      background: rgba(252, 249, 248, 0.92);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(114, 121, 113, 0.12);
+    }
+    .stadium-glow {
+      box-shadow: 0 0 0 1px rgba(3,48,22,0.06), 0 10px 40px -10px rgba(3,48,22,0.12);
+    }
+
+    /* Bingo Grid & Cells */
+    .bingo-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      aspect-ratio: 1 / 1;
+    }
+    .bingo-cell {
+      position: relative;
+      border-radius: 10px;
+      background: #fff;
+      border: 1px solid #c1c9bf;
+      padding: 8px 6px;
+      display: flex;
+      flex-direction: column;
+      font-size: 10px;
+      line-height: 1.15;
+      transition: all 0.15s cubic-bezier(0.2, 0, 0, 1);
+      overflow: hidden;
+      cursor: pointer;
+      user-select: none;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+    }
+    .bingo-cell:hover { border-color: #88b590; transform: translateY(-1px); }
+    .bingo-cell.marked {
+      background: #1d472a;
+      color: #f9faf5;
+      border-color: #033016;
+      box-shadow: inset 3px 3px 6px rgba(0,0,0,0.35), inset -1px -1px 0 rgba(255,255,255,0.15);
+    }
+    .bingo-cell.free {
+      background: linear-gradient(145deg, #ffe084, #cea700);
+      color: #231b00;
+      border-color: #735c00;
+      font-weight: 700;
+    }
+    .ink-stamp {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Domine', serif;
+      font-size: 2.65rem;
+      font-weight: 900;
+      color: rgba(171,51,52,0.82);
+      transform: rotate(-14deg) scale(1.05);
+      pointer-events: none;
+      mix-blend-mode: multiply;
+      opacity: 0.9;
+      text-shadow: 1px 1px 0 rgba(255,255,255,0.25);
+    }
+    .cell-label {
+      font-size: 9px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-weight: 600;
+      opacity: 0.65;
+    }
+    .cell-text {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-weight: 600;
+      line-height: 1.2;
+      padding: 2px;
+    }
+
+    /* Live elements */
+    .live-dot { animation: pulse-soft 2s cubic-bezier(0.4,0,0.6,1) infinite; }
+    @keyframes pulse-soft { 0%,100%{opacity:1} 50%{opacity:.55} }
+
+    .ticker {
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .ticker-inner {
+      display: inline-block;
+      animation: ticker 22s linear infinite;
+    }
+    @keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+    .nav-active { color: #033016; background: rgba(3,48,22,0.08); border-radius: 9999px; }
+
+    .section-title { font-family: 'Domine', serif; letter-spacing: -0.015em; }
+
+    .room-card { transition: transform .15s ease, box-shadow .15s ease; }
+    .room-card:hover { transform: translateY(-2px); box-shadow: 0 10px 30px -12px rgb(0 0 0 / 0.12); }
+
+    .stat-num { font-family: 'Domine', serif; font-weight: 700; line-height: 1; }
+
+    .trophy { transition: transform .2s cubic-bezier(0.34,1.56,.64,1), box-shadow .2s; }
+    .trophy:hover { transform: scale(1.08) rotate(2deg); }
+
+    .chat-scroll { scrollbar-width: thin; scrollbar-color: #c1c9bf #f3f4ef; }
+
+    /* Double-tap zoom protection + instant tap on bingo squares */
+    #bingo-grid,
+    .bingo-cell {
+      touch-action: manipulation;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    /* Subtle active state for tactile feedback */
+    .bingo-cell:active {
+      transform: scale(0.985);
+      transition-duration: 60ms;
+    }
+
+    /* Wake lock status pill */
+    .wake-pill {
+      font-size: 10px;
+      padding: 1px 8px;
+      border-radius: 9999px;
+      background: #e8e9e4;
+      color: #414941;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .wake-pill.active {
+      background: #1d472a;
+      color: #f9faf5;
+    }
+  </style>
+</head>
+<body class="paper-bg text-[#1a1c19] min-h-screen pb-20 md:pb-0">
+
+  <!-- Top Navigation -->
+  <nav class="sticky top-0 z-50 bg-[#f9faf5]/95 backdrop-blur-xl border-b border-[#c1c9bf]/60">
+    <div class="max-w-6xl mx-auto px-4 md:px-6">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo -->
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-[#033016] flex items-center justify-center text-white shadow-inner">
+            <span class="material-symbols-outlined text-[22px]">sports_baseball</span>
+          </div>
+          <div>
+            <div class="font-display text-2xl tracking-[-1.5px] font-bold text-[#033016]">BALLPARK</div>
+            <div class="text-[10px] text-[#414941] -mt-1.5 font-semibold tracking-[1.5px]">BINGO</div>
+          </div>
+          <div class="hidden md:block ml-1.5 px-2 py-px text-[10px] font-bold tracking-widest bg-[#ab3334] text-white rounded">BETA</div>
+        </div>
+
+        <!-- Desktop Nav -->
+        <div class="hidden md:flex items-center gap-1 text-sm font-semibold">
+          <button onclick="showView('lobby')" class="nav-btn px-5 py-1.5 flex items-center gap-1.5 hover:bg-[#e8e9e4] rounded-full transition" data-view="lobby">
+            <span class="material-symbols-outlined text-base">stadium</span>
+            <span>Lobby</span>
+          </button>
+          <button onclick="showView('play')" class="nav-btn px-5 py-1.5 flex items-center gap-1.5 hover:bg-[#e8e9e4] rounded-full transition" data-view="play">
+            <span class="material-symbols-outlined text-base">grid_on</span>
+            <span>Play</span>
+          </button>
+          <button onclick="showView('chatter')" class="nav-btn px-5 py-1.5 flex items-center gap-1.5 hover:bg-[#e8e9e4] rounded-full transition" data-view="chatter">
+            <span class="material-symbols-outlined text-base">forum</span>
+            <span>Chatter</span>
+          </button>
+          <button onclick="showView('league')" class="nav-btn px-5 py-1.5 flex items-center gap-1.5 hover:bg-[#e8e9e4] rounded-full transition" data-view="league">
+            <span class="material-symbols-outlined text-base">leaderboard</span>
+            <span>League</span>
+          </button>
+        </div>
+
+        <!-- Right side: User + Live indicator -->
+        <div class="flex items-center gap-3">
+          <div onclick="showView('profile')" class="flex items-center gap-2 cursor-pointer">
+            <div id="nav-user-pill" 
+                 class="hidden md:flex items-center gap-2 bg-white border border-[#c1c9bf] rounded-full pl-1.5 pr-4 py-1 text-sm">
+              <div class="w-6 h-6 rounded-full bg-[#1d472a] text-white flex items-center justify-center text-xs font-bold" id="nav-avatar">JD</div>
+              <div class="font-semibold text-[#1a1c19]" id="nav-username">Guest</div>
+            </div>
+          </div>
+          <button onclick="quickJoin()" 
+                  class="flex items-center gap-2 px-3.5 py-1.5 text-xs font-bold rounded-full bg-[#033016] text-white active:scale-[0.985] transition">
+            <span class="material-symbols-outlined text-base">bolt</span>
+            <span class="hidden sm:inline">Quick Join</span>
+          </button>
+
+          <!-- PWA Install Button (shown by JS when beforeinstallprompt fires) -->
+          <button id="install-btn"
+                  onclick="triggerPWAInstall()"
+                  class="hidden items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-full border border-[#033016] text-[#033016] hover:bg-[#033016] hover:text-white active:scale-[0.985] transition">
+            <span class="material-symbols-outlined text-base">install_mobile</span>
+            <span class="hidden sm:inline">Install</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Global Live Game Bar -->
+  <div class="border-b border-[#c1c9bf]/50 bg-white/70 backdrop-blur">
+    <div class="max-w-6xl mx-auto px-4 md:px-6 py-2.5 flex flex-wrap md:flex-nowrap items-center gap-x-6 gap-y-1 text-sm">
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center gap-1.5 text-[#ab3334] font-bold text-xs tracking-[1px]">
+          <span class="w-1.5 h-1.5 bg-[#ab3334] rounded-full live-dot"></span> LIVE
+        </span>
+        <span id="live-matchup" class="font-semibold text-[#033016]">SF GIANTS @ CHICAGO CUBS</span>
+      </div>
+
+      <div class="flex items-center gap-3 text-[#1a1c19]">
+        <div class="flex items-baseline gap-1.5">
+          <span id="away-score" class="font-display text-2xl font-bold tabular-nums">3</span>
+          <span id="away-team-short" class="text-xs font-bold text-[#414941] tracking-wider">SF</span>
+        </div>
+        <div class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#e8e9e4] text-[#414941]">TOP <span id="inning">5</span></div>
+        <div class="flex items-baseline gap-1.5">
+          <span id="home-score" class="font-display text-2xl font-bold tabular-nums">4</span>
+          <span id="home-team-short" class="text-xs font-bold text-[#414941] tracking-wider">CHC</span>
+        </div>
+      </div>
+
+      <div class="flex-1 hidden md:block">
+        <div id="live-ticker" class="ticker text-xs text-[#414941] font-medium bg-[#f3f4ef] rounded px-3 py-1 border border-[#c1c9bf]/40">
+          <div class="ticker-inner">Schmitt lines a single to left • Happ walks on 4 pitches • Suzuki flies out to deep center • Taillon strikes out the side • </div>
+        </div>
+      </div>
+
+      <button onclick="simulateLivePlay()" 
+              class="ml-auto flex items-center gap-1.5 text-xs font-bold px-4 py-1.5 rounded-full bg-[#ab3334] hover:bg-[#8a1a1f] active:scale-[0.985] text-white transition">
+        <span class="material-symbols-outlined text-base">play_arrow</span>
+        <span>SIM PLAY</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Offline / PWA Status Bar (shows when relevant) -->
+  <div id="offline-banner" class="hidden bg-[#ab3334] text-white text-center text-xs py-1 font-semibold tracking-wide">
+    You're offline — your board is saved locally. Reconnect to sync live plays.
+  </div>
+
+  <!-- Main Content -->
+  <main class="max-w-6xl mx-auto px-4 md:px-6 pt-6 pb-8">
+
+    <!-- ============ LOBBY VIEW ============ -->
+    <div id="view-lobby" class="view">
+      <div class="flex items-end justify-between mb-4">
+        <div>
+          <h1 class="section-title text-4xl font-bold text-[#033016]">Stadium Lobby</h1>
+          <p class="text-[#414941] text-sm mt-0.5">Find a room or start your own game day experience.</p>
+        </div>
+        <button onclick="showCreateRoomModal()" 
+                class="hidden md:flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#033016] text-white text-sm font-bold active:scale-[0.985]">
+          <span class="material-symbols-outlined">add_circle</span>
+          <span>NEW PRIVATE BOX</span>
+        </button>
+      </div>
+
+      <!-- Active Rooms -->
+      <div class="mb-8">
+        <div class="flex items-center justify-between mb-3 px-1">
+          <div class="font-bold text-sm tracking-widest text-[#414941]">ACTIVE ROOMS — LIVE GAMES</div>
+          <button onclick="quickJoin()" class="text-xs font-semibold text-[#ab3334] flex items-center gap-1 hover:underline">JOIN RANDOM →</button>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <!-- Room cards populated by JS -->
+          <div onclick="joinRoom(0)" class="room-card surface-glass rounded-2xl p-4 cursor-pointer border border-[#c1c9bf]/60">
+            <div class="flex justify-between">
+              <div>
+                <div class="text-xs font-semibold text-[#ab3334]">LIVE • Wrigley Field</div>
+                <div class="font-display text-xl font-bold text-[#033016] leading-none mt-0.5">Wrigley Faithful</div>
+              </div>
+              <div class="text-right">
+                <div class="inline-flex items-center text-[10px] font-bold px-2 py-px rounded bg-[#ab3334] text-white">TOP 5TH</div>
+              </div>
+            </div>
+            <div class="mt-4 flex items-center justify-between">
+              <div class="flex -space-x-1.5">
+                <div class="w-6 h-6 rounded-full ring-2 ring-[#f9faf5] bg-[#1d472a] text-white text-[9px] flex items-center justify-center font-bold">JD</div>
+                <div class="w-6 h-6 rounded-full ring-2 ring-[#f9faf5] bg-[#ab3334] text-white text-[9px] flex items-center justify-center font-bold">MK</div>
+                <div class="w-6 h-6 rounded-full ring-2 ring-[#f9faf5] bg-[#735c00] text-white text-[9px] flex items-center justify-center font-bold">+9</div>
+              </div>
+              <div class="text-xs text-[#414941]">12 players • 4 bingos</div>
+            </div>
+          </div>
+
+          <div onclick="joinRoom(1)" class="room-card surface-glass rounded-2xl p-4 cursor-pointer border border-[#c1c9bf]/60">
+            <div class="flex justify-between">
+              <div>
+                <div class="text-xs font-semibold text-[#ab3334]">LIVE • Oracle Park</div>
+                <div class="font-display text-xl font-bold text-[#033016] leading-none mt-0.5">Bay City Ballers</div>
+              </div>
+              <div class="text-right">
+                <div class="inline-flex items-center text-[10px] font-bold px-2 py-px rounded bg-emerald-700 text-white">BOT 7TH</div>
+              </div>
+            </div>
+            <div class="mt-4 flex items-center justify-between">
+              <div class="flex -space-x-1.5">
+                <div class="w-6 h-6 rounded-full ring-2 ring-[#f9faf5] bg-[#1d472a] text-white text-[9px] flex items-center justify-center font-bold">AL</div>
+                <div class="w-6 h-6 rounded-full ring-2 ring-[#f9faf5] bg-[#ab3334] text-white text-[9px] flex items-center justify-center font-bold">TK</div>
+                <div class="w-6 h-6 rounded-full ring-2 ring-[#f9faf5] bg-[#735c00] text-white text-[9px] flex items-center justify-center font-bold">+17</div>
+              </div>
+              <div class="text-xs text-[#414941]">29 players • 11 bingos</div>
+            </div>
+          </div>
+
+          <div onclick="joinRoom(2)" class="room-card surface-glass rounded-2xl p-4 cursor-pointer border border-[#c1c9bf]/60">
+            <div class="flex justify-between">
+              <div>
+                <div class="text-xs font-semibold text-[#414941]">PRIVATE • Fenway</div>
+                <div class="font-display text-xl font-bold text-[#033016] leading-none mt-0.5">Red Sox Royalty</div>
+              </div>
+              <div class="text-right">
+                <div class="inline-flex items-center text-[10px] font-bold px-2 py-px rounded bg-[#735c00] text-white">FINAL</div>
+              </div>
+            </div>
+            <div class="mt-4 flex items-center justify-between">
+              <div class="flex -space-x-1.5">
+                <div class="w-6 h-6 rounded-full ring-2 ring-[#f9faf5] bg-[#1d472a] text-white text-[9px] flex items-center justify-center font-bold">RS</div>
+                <div class="w-6 h-6 rounded-full ring-2 ring-[#f9faf5] bg-[#ab3334] text-white text-[9px] flex items-center justify-center font-bold">+4</div>
+              </div>
+              <div class="text-xs text-[#414941]">8 players • 3 bingos</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Start + Onboarding -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        <div class="lg:col-span-7 surface-glass rounded-3xl p-6 border border-[#c1c9bf]/60">
+          <div class="uppercase tracking-[1.5px] text-xs font-bold text-[#414941] mb-1">NEW TO THE PARK?</div>
+          <div class="font-display text-2xl font-bold">Rookie Orientation</div>
+          <p class="mt-2 text-sm text-[#414941]">Stamp squares as real MLB plays happen. First to complete a line wins. Free space is always live.</p>
+          <div class="mt-4 flex gap-3">
+            <button onclick="showView('play')" class="px-6 py-2.5 bg-[#033016] text-white rounded-full text-sm font-bold">START PLAYING</button>
+            <button onclick="startTutorial()" class="px-5 py-2.5 border border-[#033016] text-[#033016] rounded-full text-sm font-semibold">WATCH 45s TUTORIAL</button>
+          </div>
+        </div>
+        <div onclick="showView('profile')" class="lg:col-span-5 surface-glass rounded-3xl p-6 border border-[#c1c9bf]/60 cursor-pointer flex flex-col justify-between">
+          <div>
+            <div class="text-xs uppercase tracking-widest font-bold text-[#414941]">YOUR SEASON</div>
+            <div class="font-display text-3xl font-bold mt-1">14 BINGOS</div>
+          </div>
+          <div class="flex gap-2 text-xs mt-3">
+            <div class="bg-[#e8e9e4] px-3 py-1 rounded-full font-semibold">Rookie Division</div>
+            <div class="bg-[#ffe084]/70 px-3 py-1 rounded-full font-semibold">3 Trophies</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ PLAY / BINGO VIEW ============ -->
+    <div id="view-play" class="view hidden">
+      <div class="flex flex-col lg:flex-row gap-6">
+        
+        <!-- Bingo Card -->
+        <div class="flex-1">
+          <div class="flex items-center justify-between mb-3 px-1">
+            <div>
+              <div class="uppercase text-[10px] font-extrabold tracking-[1.5px] text-[#ab3334]">YOUR CARD — SEED <span id="board-seed" class="font-mono text-[#033016]"></span></div>
+              <div class="font-display text-3xl font-bold text-[#033016] tracking-[-1px]">Today's Bingo Card</div>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="reshuffleBoard()" class="flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-full border border-[#c1c9bf] hover:bg-white">
+                <span class="material-symbols-outlined text-base">refresh</span>
+                <span>RESHUFFLE</span>
+              </button>
+              <button onclick="shareBoard()" class="flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-full bg-[#033016] text-white">
+                <span class="material-symbols-outlined text-base">share</span>
+                <span>SHARE</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- The Grid -->
+          <div class="surface-glass rounded-3xl p-4 md:p-5 border border-[#c1c9bf]/70 shadow-inner" style="box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);">
+            <div id="bingo-grid" class="bingo-grid"></div>
+          </div>
+
+          <div id="bingo-status" class="mt-3 text-center text-sm font-semibold hidden">
+            <span class="inline-flex items-center gap-2 px-4 py-1 bg-[#ffe084] text-[#231b00] rounded-full">
+              <span class="material-symbols-outlined text-lg">emoji_events</span> 
+              BINGO DETECTED — CHECK YOUR LINES
+            </span>
+          </div>
+        </div>
+
+        <!-- Side Controls -->
+        <div class="w-full lg:w-80 space-y-4">
+          <div class="surface-glass rounded-3xl p-5 border border-[#c1c9bf]/70">
+            <div class="uppercase text-xs font-extrabold tracking-widest text-[#414941] mb-2">LIVE MATCHUP</div>
+            <div class="flex justify-between items-center">
+              <div>
+                <div class="font-semibold" id="side-away">SF Giants</div>
+                <div class="text-xs text-[#414941]">Trevor McDonald <span class="font-mono">RHP</span></div>
+              </div>
+              <div class="text-center px-3">
+                <div class="text-[10px] text-[#414941]">5TH</div>
+                <div class="font-display text-xl font-bold tabular-nums"><span id="side-away-score">3</span>–<span id="side-home-score">4</span></div>
+              </div>
+              <div class="text-right">
+                <div class="font-semibold" id="side-home">Chicago Cubs</div>
+                <div class="text-xs text-[#414941]">Jameson Taillon <span class="font-mono">RHP</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="surface-glass rounded-3xl p-5 border border-[#c1c9bf]/70">
+            <div class="flex items-center justify-between mb-3">
+              <div class="font-bold">Game Sounds</div>
+              <button onclick="toggleSound()" class="text-xs px-3 py-1 rounded-full bg-[#e8e9e4]">🔊 <span id="sound-label">ON</span></button>
+            </div>
+            <div class="grid grid-cols-3 gap-2 text-xs">
+              <button onclick="playSynthSound('bat')" class="py-2 rounded-xl border border-[#c1c9bf] active:bg-white">⚾ Bat</button>
+              <button onclick="playSynthSound('organ')" class="py-2 rounded-xl border border-[#c1c9bf] active:bg-white">🎹 Organ</button>
+              <button onclick="playSynthSound('cheer')" class="py-2 rounded-xl border border-[#c1c9bf] active:bg-white col-span-1">📣 Cheer</button>
+            </div>
+          </div>
+
+          <div class="surface-glass rounded-3xl p-5 border border-[#c1c9bf]/70 text-sm">
+            <div class="font-bold mb-1">How to Play</div>
+            <ul class="text-xs space-y-1 text-[#414941]">
+              <li>• Tap any square when that play happens live</li>
+              <li>• Center FREE SPACE is always stamped</li>
+              <li>• First full row, column or diagonal = BINGO</li>
+              <li>• Use SIM PLAY to drive the live game</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ CHATTER VIEW ============ -->
+    <div id="view-chatter" class="view hidden">
+      <div class="max-w-3xl mx-auto">
+        <div class="mb-4">
+          <h1 class="section-title text-3xl font-bold">Stadium Chatter</h1>
+          <p class="text-[#414941]">Live with <span class="font-semibold text-[#033016]">Bleacher Bill</span> — your AI color commentator</p>
+        </div>
+
+        <div class="surface-glass rounded-3xl border border-[#c1c9bf]/70 overflow-hidden h-[520px] flex flex-col">
+          <!-- Chat header -->
+          <div class="px-5 py-3 border-b flex items-center gap-3 bg-white/50">
+            <div class="w-9 h-9 rounded-full bg-[#1d472a] text-white flex items-center justify-center">
+              <span class="material-symbols-outlined">smart_toy</span>
+            </div>
+            <div>
+              <div class="font-semibold">Bleacher Bill</div>
+              <div class="text-[10px] text-emerald-600 -mt-0.5">● LIVE FROM THE PRESS BOX</div>
+            </div>
+            <div class="ml-auto text-xs px-3 py-1 rounded bg-[#ffe084] text-[#231b00] font-bold">AI POWERED</div>
+          </div>
+
+          <!-- Messages -->
+          <div id="chat-log" class="flex-1 p-5 space-y-4 overflow-y-auto chat-scroll bg-[#f9faf5]"></div>
+
+          <!-- Input -->
+          <div class="p-3 border-t bg-white">
+            <form onsubmit="sendChatMessage(event)" class="flex gap-2">
+              <input id="chat-input" type="text" placeholder="Ask about a play or cheer on the team..." 
+                     class="flex-1 bg-[#f3f4ef] border border-[#c1c9bf] rounded-2xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#033016]">
+              <button type="submit" class="px-5 rounded-2xl bg-[#033016] text-white font-bold">SEND</button>
+            </form>
+            <div class="flex gap-2 mt-2 text-[10px]">
+              <button onclick="quickChat('Was that a sacrifice fly or a deep out?')" class="px-3 py-0.5 bg-[#e8e9e4] rounded-full">Sacrifice fly?</button>
+              <button onclick="quickChat('Explain the infield fly rule')" class="px-3 py-0.5 bg-[#e8e9e4] rounded-full">Infield fly?</button>
+              <button onclick="quickChat('Best call of the night so far?')" class="px-3 py-0.5 bg-[#e8e9e4] rounded-full">Best call?</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ LEAGUE STANDINGS VIEW ============ -->
+    <div id="view-league" class="view hidden">
+      <h1 class="section-title text-3xl font-bold mb-1">League Standings</h1>
+      <p class="text-sm text-[#414941] mb-5">2026 Season — Rookie &amp; Pro Divisions</p>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <!-- Rookie Division -->
+        <div class="surface-glass rounded-3xl p-5 border border-[#c1c9bf]/70">
+          <div class="flex justify-between items-center mb-3">
+            <div class="font-bold">Rookie Division</div>
+            <div class="text-xs px-3 py-1 rounded bg-[#1d472a] text-white">TOP 10</div>
+          </div>
+          <table class="w-full text-sm">
+            <tbody id="rookie-standings" class="divide-y"></tbody>
+          </table>
+        </div>
+
+        <!-- Pro Division -->
+        <div class="surface-glass rounded-3xl p-5 border border-[#c1c9bf]/70">
+          <div class="flex justify-between items-center mb-3">
+            <div class="font-bold">Pro Division</div>
+            <div class="text-xs px-3 py-1 rounded bg-[#ab3334] text-white">TOP 10</div>
+          </div>
+          <table class="w-full text-sm">
+            <tbody id="pro-standings" class="divide-y"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ PROFILE VIEW ============ -->
+    <div id="view-profile" class="view hidden max-w-2xl mx-auto">
+      <div class="surface-glass rounded-3xl p-6 border border-[#c1c9bf]/70">
+        <div class="flex gap-5 items-start">
+          <div class="w-16 h-16 rounded-2xl bg-[#033016] text-white flex items-center justify-center text-3xl font-bold flex-shrink-0" id="profile-avatar">JD</div>
+          <div class="flex-1">
+            <div class="flex items-center gap-3">
+              <input id="profile-name" class="font-display text-3xl font-bold bg-transparent border-b border-transparent focus:border-[#c1c9bf] outline-none" value="Guest Player">
+              <button onclick="saveProfileName()" class="text-xs px-3 py-1 bg-[#e8e9e4] rounded">SAVE</button>
+            </div>
+            <div class="text-[#414941] text-sm">Member since March 2026 • Rookie Division</div>
+          </div>
+          <div class="text-right">
+            <div class="text-xs text-[#414941]">BINGOS THIS SEASON</div>
+            <div class="font-display text-5xl font-bold text-[#033016]" id="profile-bingos">14</div>
+          </div>
+        </div>
+
+        <div class="my-6 h-px bg-[#c1c9bf]/40"></div>
+
+        <div class="grid grid-cols-3 gap-4 text-center">
+          <div>
+            <div class="text-xs uppercase tracking-widest text-[#414941]">GAMES PLAYED</div>
+            <div class="stat-num text-4xl text-[#033016]">47</div>
+          </div>
+          <div>
+            <div class="text-xs uppercase tracking-widest text-[#414941]">WIN RATE</div>
+            <div class="stat-num text-4xl text-[#033016]">38%</div>
+          </div>
+          <div>
+            <div class="text-xs uppercase tracking-widest text-[#414941]">LONGEST STREAK</div>
+            <div class="stat-num text-4xl text-[#ab3334]">6</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trophies -->
+      <div class="mt-6">
+        <div class="font-bold mb-3 px-1">Trophy Case</div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div class="surface-glass border border-[#c1c9bf]/60 rounded-2xl p-4 text-center trophy">
+            <div class="text-4xl mb-1">🏆</div>
+            <div class="font-semibold text-sm">First Bingo</div>
+            <div class="text-[10px] text-[#414941]">Mar 12</div>
+          </div>
+          <div class="surface-glass border border-[#c1c9bf]/60 rounded-2xl p-4 text-center trophy">
+            <div class="text-4xl mb-1">🌟</div>
+            <div class="font-semibold text-sm">Grand Slam</div>
+            <div class="text-[10px] text-[#414941]">Apr 2</div>
+          </div>
+          <div class="surface-glass border border-[#c1c9bf]/60 rounded-2xl p-4 text-center trophy">
+            <div class="text-4xl mb-1">🔥</div>
+            <div class="font-semibold text-sm">Hot Streak</div>
+            <div class="text-[10px] text-[#414941]">Apr 18</div>
+          </div>
+          <div onclick="unlockTrophyDemo()" class="surface-glass border border-dashed border-[#c1c9bf]/70 rounded-2xl p-4 text-center cursor-pointer hover:border-[#735c00]">
+            <div class="text-4xl mb-1 opacity-40">🏅</div>
+            <div class="font-semibold text-sm text-[#735c00]">No-Hitter Bingo</div>
+            <div class="text-[10px] text-[#735c00]">Complete in a shutout</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Bottom mobile nav -->
+  <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t z-50">
+    <div class="flex justify-around text-xs font-semibold py-2">
+      <button onclick="showView('lobby')" class="flex flex-col items-center px-3 py-1"><span class="material-symbols-outlined">stadium</span><span class="mt-0.5">Lobby</span></button>
+      <button onclick="showView('play')" class="flex flex-col items-center px-3 py-1"><span class="material-symbols-outlined">grid_on</span><span class="mt-0.5">Play</span></button>
+      <button onclick="showView('chatter')" class="flex flex-col items-center px-3 py-1"><span class="material-symbols-outlined">forum</span><span class="mt-0.5">Chatter</span></button>
+      <button onclick="showView('league')" class="flex flex-col items-center px-3 py-1"><span class="material-symbols-outlined">leaderboard</span><span class="mt-0.5">League</span></button>
+      <button onclick="showView('profile')" class="flex flex-col items-center px-3 py-1"><span class="material-symbols-outlined">person</span><span class="mt-0.5">Me</span></button>
+    </div>
+  </div>
+
+  <!-- Win Celebration Modal -->
+  <div id="win-modal" onclick="if (event.target.id === 'win-modal') closeWinModal()" class="hidden fixed inset-0 bg-black/70 z-[70] flex items-center justify-center p-4">
+    <div onclick="event.stopImmediatePropagation()" class="surface-glass max-w-md w-full rounded-3xl p-8 text-center border-4 border-[#735c00]">
+      <div class="text-6xl mb-3">🏆</div>
+      <div class="font-display text-4xl font-bold tracking-tighter text-[#033016]">BINGO!</div>
+      <p class="mt-1 text-[#414941]">You completed a line on the live card. Great eye for the game!</p>
+      
+      <div id="win-line" class="my-4 text-sm font-mono bg-[#f3f4ef] rounded py-2 border border-[#c1c9bf]"></div>
+      
+      <div class="flex gap-3">
+        <button onclick="closeWinModal()" class="flex-1 py-3 rounded-2xl border border-[#c1c9bf] font-semibold">KEEP PLAYING</button>
+        <button onclick="newBoardFromWin()" class="flex-1 py-3 rounded-2xl bg-[#ab3334] text-white font-bold">NEW CARD</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Room Modal -->
+  <div id="create-room-modal" onclick="if (event.target.id === 'create-room-modal') hideCreateRoomModal()" class="hidden fixed inset-0 bg-black/60 z-[80] flex items-end md:items-center justify-center">
+    <div onclick="event.stopImmediatePropagation()" class="bg-white w-full md:w-[420px] md:rounded-3xl md:m-4 rounded-t-3xl p-6 border border-[#c1c9bf]">
+      <div class="font-display text-2xl font-bold mb-4">Create Private Box</div>
+      
+      <div class="space-y-4">
+        <div>
+          <label class="text-xs font-bold text-[#414941]">ROOM NAME</label>
+          <input id="room-name" value="My Private Game" class="w-full mt-1 border border-[#c1c9bf] rounded-xl px-4 py-2.5">
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="text-xs font-bold text-[#414941]">VISIBILITY</label>
+            <select id="room-visibility" class="w-full mt-1 border border-[#c1c9bf] rounded-xl px-4 py-2.5">
+              <option>Invite Only</option>
+              <option>Friends</option>
+              <option>Public</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-xs font-bold text-[#414941]">MAX PLAYERS</label>
+            <input id="room-max" type="number" value="20" class="w-full mt-1 border border-[#c1c9bf] rounded-xl px-4 py-2.5">
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-3 mt-6">
+        <button onclick="hideCreateRoomModal()" class="flex-1 py-3 rounded-2xl border">CANCEL</button>
+        <button onclick="createRoom()" class="flex-1 py-3 rounded-2xl bg-[#033016] text-white font-bold">CREATE &amp; ENTER</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-[#033016] text-white text-sm px-5 py-2 rounded-2xl shadow-lg"></div>
+
+  <script>
+    // Tailwind config — Heritage Ballpark palette
+    function initTailwind() {
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: '#033016',
+              'primary-container': '#1d472a',
+              secondary: '#ab3334',
+              'on-primary': '#ffffff',
+              'on-surface': '#1a1c19',
+              surface: '#f9faf5',
+              'surface-container': '#edeee9',
+              background: '#f9faf5',
+              outline: '#727971',
+            }
+          }
+        }
+      };
+    }
+
+    // ========== STATE ==========
+    let currentView = 'lobby';
+    let soundEnabled = true;
+    let audioCtx = null;
+
+    let gameState = {
+      away: "SF Giants", home: "Chicago Cubs",
+      awayScore: 3, homeScore: 4, inning: 5, top: true,
+      awayPitcher: "Trevor McDonald", homePitcher: "Jameson Taillon"
+    };
+
+    let bingoState = {
+      seed: 1847,
+      events: [],
+      marked: Array(25).fill(false),
+    };
+
+    let user = {
+      name: "Guest Player",
+      avatar: "JD",
+      bingos: 14
+    };
+
+    let chatMessages = [];
+
+    // === PWA / Game Persistence / Wake Lock State ===
+    let wakeLock = null;
+    let wakeLockSupported = 'wakeLock' in navigator;
+    let autoSaveTimer = null;
+
+    // PWA install prompt
+    let deferredInstallPrompt = null;
+
+    const defaultEvents = [
+      "Strikeout swinging", "Base hit to left", "Double to the gap", "Sacrifice fly RBI",
+      "Walk on 4 pitches", "Stolen base", "Diving catch", "Groundout to short",
+      "Home run to left", "Foul out to catcher", "Line drive single", "Strikeout looking",
+      "Double play 6-4-3", "Wild pitch advance", "Hit by pitch", "Fly out to center"
+    ];
+
+    // ========== AUDIO (Web Audio API) ==========
+    function initAudio() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    function playSynthSound(type) {
+      if (!soundEnabled) return;
+      initAudio();
+      if (!audioCtx) return;
+
+      if (type === 'bat') {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.value = 320;
+        osc.frequency.exponentialRampToValueAtTime(70, audioCtx.currentTime + 0.1);
+        gain.gain.value = 1.1;
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.14);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.16);
+      } else if (type === 'organ') {
+        const notes = [261.6, 329.6, 392, 523.2];
+        notes.forEach((f, i) => {
+          setTimeout(() => {
+            const o = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            o.type = 'sawtooth'; o.frequency.value = f;
+            g.gain.value = 0.22; g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.28);
+            o.connect(g); g.connect(audioCtx.destination);
+            o.start(); o.stop(audioCtx.currentTime + 0.32);
+          }, i * 85);
+        });
+      } else if (type === 'cheer') {
+        const bufferSize = audioCtx.sampleRate * 1.6;
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+
+        const noise = audioCtx.createBufferSource(); noise.buffer = buffer;
+        const filter = audioCtx.createBiquadFilter(); filter.type = 'bandpass'; filter.frequency.value = 480; filter.Q.value = 0.9;
+        const g = audioCtx.createGain();
+        g.gain.value = 0.01; g.gain.linearRampToValueAtTime(0.36, audioCtx.currentTime + 0.35);
+        g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.55);
+
+        noise.connect(filter); filter.connect(g); g.connect(audioCtx.destination);
+        noise.start(); noise.stop(audioCtx.currentTime + 1.6);
+      }
+    }
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      document.getElementById('sound-label').textContent = soundEnabled ? 'ON' : 'OFF';
+      scheduleAutoSave();
+    }
+
+    // ========== UTILITIES ==========
+    function seededRandom(seed) {
+      let x = Math.sin(seed++) * 10000;
+      return x - Math.floor(x);
+    }
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.remove('hidden');
+      t.classList.add('flex', 'items-center');
+      setTimeout(() => { t.classList.add('hidden'); t.classList.remove('flex'); }, 2400);
+    }
+    function updateNavUser() {
+      document.getElementById('nav-username').textContent = user.name.split(' ')[0];
+      document.getElementById('nav-avatar').textContent = user.avatar;
+      document.getElementById('profile-avatar').textContent = user.avatar;
+      document.getElementById('profile-name').value = user.name;
+      document.getElementById('profile-bingos').textContent = user.bingos;
+    }
+
+    // ========== SCREEN WAKE LOCK ==========
+    async function requestWakeLock() {
+      if (!wakeLockSupported) return false;
+      try {
+        if (wakeLock) return true; // already active
+        wakeLock = await navigator.wakeLock.request('screen');
+        wakeLock.addEventListener('release', () => {
+          wakeLock = null;
+          updateWakeLockUI(false);
+        });
+        updateWakeLockUI(true);
+        return true;
+      } catch (err) {
+        console.warn('Wake Lock request failed:', err);
+        updateWakeLockUI(false);
+        return false;
+      }
+    }
+
+    async function releaseWakeLock() {
+      if (wakeLock) {
+        try { await wakeLock.release(); } catch (e) {}
+        wakeLock = null;
+      }
+      updateWakeLockUI(false);
+    }
+
+    function updateWakeLockUI(active) {
+      // Show a small indicator in the Play view if present
+      const pill = document.getElementById('wake-pill');
+      if (!pill) return;
+      if (active) {
+        pill.classList.add('active');
+        pill.innerHTML = `<span class="material-symbols-outlined" style="font-size:13px">visibility</span><span>Screen awake</span>`;
+      } else {
+        pill.classList.remove('active');
+        pill.innerHTML = `<span class="material-symbols-outlined" style="font-size:13px">visibility_off</span><span>Screen may sleep</span>`;
+      }
+    }
+
+    // Re-acquire wake lock when page becomes visible again (phone call ended, tab switched back, etc.)
+    function setupWakeLockListeners() {
+      if (!wakeLockSupported) return;
+
+      document.addEventListener('visibilitychange', async () => {
+        if (document.visibilityState === 'visible' && currentView === 'play') {
+          // Re-request if we previously had one or user is actively playing
+          if (wakeLock || document.getElementById('bingo-grid')) {
+            await requestWakeLock();
+          }
+        }
+      });
+
+      // Also try to release cleanly on page hide
+      window.addEventListener('pagehide', () => {
+        if (wakeLock) releaseWakeLock();
+      });
+    }
+
+    // ========== LOCALSTORAGE AUTO-SAVE / RESTORE ==========
+    const STORAGE_KEY = 'bpb_game_state_v1';
+
+    function saveGameState() {
+      try {
+        const payload = {
+          gameState: { ...gameState },
+          bingoState: {
+            seed: bingoState.seed,
+            events: [...bingoState.events],
+            marked: [...bingoState.marked]
+          },
+          soundEnabled,
+          ts: Date.now()
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+      } catch (e) {
+        console.warn('Auto-save failed', e);
+      }
+    }
+
+    function loadGameState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return false;
+
+        const data = JSON.parse(raw);
+        if (!data || !data.bingoState) return false;
+
+        // Restore game state (scores, inning, teams)
+        if (data.gameState) {
+          Object.assign(gameState, data.gameState);
+        }
+
+        // Restore bingo board
+        if (data.bingoState) {
+          bingoState.seed = data.bingoState.seed || bingoState.seed;
+          if (Array.isArray(data.bingoState.events) && data.bingoState.events.length === 25) {
+            bingoState.events = [...data.bingoState.events];
+          }
+          if (Array.isArray(data.bingoState.marked) && data.bingoState.marked.length === 25) {
+            bingoState.marked = [...data.bingoState.marked];
+          }
+        }
+
+        if (typeof data.soundEnabled === 'boolean') {
+          soundEnabled = data.soundEnabled;
+        }
+
+        return true;
+      } catch (e) {
+        console.warn('Failed to load saved state', e);
+        return false;
+      }
+    }
+
+    function scheduleAutoSave() {
+      if (autoSaveTimer) clearTimeout(autoSaveTimer);
+      autoSaveTimer = setTimeout(() => {
+        saveGameState();
+      }, 180); // debounce rapid taps
+    }
+
+    // ========== PWA INSTALL PROMPT ==========
+    function setupPWAInstall() {
+      const installBtn = document.getElementById('install-btn');
+
+      // Capture the install prompt when available
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredInstallPrompt = e;
+        if (installBtn) {
+          installBtn.classList.remove('hidden');
+          installBtn.classList.add('flex');
+        }
+      });
+
+      // Hide install button if already running as installed PWA (standalone / fullscreen)
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+                           window.navigator.standalone === true;
+      if (isStandalone && installBtn) {
+        installBtn.style.display = 'none';
+      }
+
+      // When app is successfully installed, clean up
+      window.addEventListener('appinstalled', () => {
+        deferredInstallPrompt = null;
+        if (installBtn) installBtn.style.display = 'none';
+        showToast('Ballpark Bingo added to your Home Screen!');
+      });
+    }
+
+    function triggerPWAInstall() {
+      const installBtn = document.getElementById('install-btn');
+      if (!deferredInstallPrompt) {
+        showToast('Use your browser menu: Share → "Add to Home Screen"');
+        return;
+      }
+      deferredInstallPrompt.prompt();
+      deferredInstallPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          showToast('Great choice! Launching from Home Screen next time.');
+        } else {
+          showToast('Install cancelled. You can add it anytime from the browser menu.');
+        }
+        deferredInstallPrompt = null;
+        if (installBtn) installBtn.classList.add('hidden');
+      }).catch(() => {
+        showToast('Install prompt unavailable — try browser Share menu.');
+      });
+    }
+    function saveProfileName() {
+      const val = document.getElementById('profile-name').value.trim();
+      if (val) {
+        user.name = val;
+        user.avatar = val.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+        localStorage.setItem('bpb_user', JSON.stringify(user));
+        updateNavUser();
+        showToast('Profile updated');
+      }
+    }
+
+    // ========== GLOBAL LIVE GAME ==========
+    function updateLiveBar() {
+      document.getElementById('live-matchup').textContent = `${gameState.away} @ ${gameState.home}`.toUpperCase();
+      document.getElementById('away-score').textContent = gameState.awayScore;
+      document.getElementById('home-score').textContent = gameState.homeScore;
+      document.getElementById('inning').textContent = gameState.inning + (gameState.top ? ' TOP' : ' BOT');
+      document.getElementById('away-team-short').textContent = gameState.away.split(' ').pop().slice(0,3).toUpperCase();
+      document.getElementById('home-team-short').textContent = gameState.home.split(' ').pop().slice(0,3).toUpperCase();
+
+      // side panel sync
+      const sa = document.getElementById('side-away'); if (sa) sa.textContent = gameState.away;
+      const sh = document.getElementById('side-home'); if (sh) sh.textContent = gameState.home;
+      const sas = document.getElementById('side-away-score'); if (sas) sas.textContent = gameState.awayScore;
+      const shs = document.getElementById('side-home-score'); if (shs) shs.textContent = gameState.homeScore;
+    }
+
+    function simulateLivePlay() {
+      const plays = [
+        { text: `${gameState.homePitcher} gets a swinging K`, score: false, match: 'Strikeout' },
+        { text: `${gameState.away} singles up the middle`, score: Math.random() > 0.6, match: 'Base hit' },
+        { text: `Deep fly ball to the warning track — caught`, score: false, match: 'Fly out' },
+        { text: `${gameState.home} walks on four pitches`, score: false, match: 'Walk' },
+        { text: `Huge double to left-center!`, score: Math.random() > 0.3, match: 'Double' },
+        { text: `Sacrifice fly — runner scores!`, score: true, match: 'Sacrifice fly' },
+        { text: `Sharp line drive caught at third`, score: false, match: 'Line drive' },
+      ];
+      const p = plays[Math.floor(Math.random() * plays.length)];
+
+      // Advance inning occasionally
+      if (Math.random() < 0.18) {
+        gameState.inning += gameState.top ? 0 : 1;
+        gameState.top = !gameState.top;
+      }
+      if (p.score) {
+        if (gameState.top) gameState.awayScore++; else gameState.homeScore++;
+      }
+
+      // Update ticker
+      const ticker = document.getElementById('live-ticker');
+      if (ticker) ticker.innerHTML = `<div class="ticker-inner">${p.text} • ${ticker.textContent.replace(/<[^>]+>/g,'')} </div>`;
+
+      updateLiveBar();
+
+      // Try to auto-highlight a square on the bingo card
+      if (currentView === 'play' && bingoState.events.length) {
+        autoHighlightFromPlay(p.match);
+        // Occasionally auto-stamp a matching square for "live game assist" feel (user can still override)
+        if (Math.random() < 0.35) {
+          tryAutoStampFromPlay(p.match, p.text);
+        }
+      }
+
+      playSynthSound('cheer');
+      showToast(p.text);
+
+      // Save scores + state so user doesn't lose progress on reload
+      scheduleAutoSave();
+    }
+
+    function tryAutoStampFromPlay(keyword, playText) {
+      const grid = document.getElementById('bingo-grid');
+      if (!grid) return;
+      const cells = Array.from(grid.children);
+
+      for (let i = 0; i < cells.length; i++) {
+        if (i === 12 || bingoState.marked[i]) continue;
+        const txt = (bingoState.events[i] || '').toLowerCase();
+        const key = keyword.toLowerCase();
+        if (txt.includes(key.slice(0, 8)) || key.includes(txt.slice(0, 6)) || txt.includes('strike') && key.includes('k')) {
+          // Auto stamp with nice feedback
+          bingoState.marked[i] = true;
+          renderBingoGrid();
+          playSynthSound('bat');
+          showToast(`Live assist: "${playText}" matched a square!`);
+          checkBingo();
+          scheduleAutoSave();
+          break;
+        }
+      }
+    }
+
+    function autoHighlightFromPlay(keyword) {
+      const grid = document.getElementById('bingo-grid');
+      if (!grid) return;
+      const cells = grid.children;
+      for (let i = 0; i < cells.length; i++) {
+        if (bingoState.marked[i]) continue;
+        const txt = bingoState.events[i] || '';
+        if (txt.toLowerCase().includes(keyword.toLowerCase()) || keyword.toLowerCase().includes(txt.toLowerCase().slice(0,6))) {
+          // flash suggestion
+          cells[i].style.transitionDuration = '60ms';
+          cells[i].style.boxShadow = '0 0 0 3px #ffe084';
+          setTimeout(() => {
+            if (cells[i]) cells[i].style.boxShadow = '';
+            cells[i].style.transitionDuration = '';
+          }, 1100);
+          return;
+        }
+      }
+    }
+
+    // ========== BINGO ENGINE ==========
+    function buildEventPool() {
+      const pool = [...defaultEvents];
+      pool.push(`${gameState.homePitcher} strikes out the side`);
+      pool.push(`${gameState.awayPitcher} issues a walk`);
+      pool.push(`RBI single by lineup star`);
+      pool.push(`Spectacular diving catch`);
+      return pool;
+    }
+
+    function generateBoard(newSeed = false) {
+      if (newSeed) {
+        bingoState.seed = Math.floor(Math.random() * 8900) + 420;
+        bingoState.marked = Array(25).fill(false);
+        bingoState.marked[12] = true; // free space
+      }
+
+      const pool = buildEventPool();
+      let temp = [...pool];
+      let selected = [];
+      let s = bingoState.seed;
+
+      for (let i = 0; i < 24; i++) {
+        const r = seededRandom(s++);
+        const idx = Math.floor(r * temp.length);
+        selected.push(temp.splice(idx, 1)[0]);
+      }
+
+      bingoState.events = [];
+      for (let i = 0; i < 25; i++) {
+        bingoState.events[i] = (i === 12) ? "FREE SPACE" : selected.shift();
+      }
+      renderBingoGrid();
+      updateBoardSeed();
+      checkBingo(true);
+      scheduleAutoSave();
+    }
+
+    function updateBoardSeed() {
+      const el = document.getElementById('board-seed');
+      if (el) el.textContent = bingoState.seed;
+    }
+
+    function renderBingoGrid() {
+      const container = document.getElementById('bingo-grid');
+      if (!container) return;
+      container.innerHTML = '';
+
+      for (let i = 0; i < 25; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'bingo-cell';
+        if (i === 12) {
+          cell.classList.add('free');
+          cell.innerHTML = `
+            <div class="cell-label text-center w-full">CENTER</div>
+            <div class="cell-text text-[13px] font-black tracking-wider">FREE<br>SPACE</div>
+            <div class="absolute bottom-1 right-1 text-xs opacity-60">⚾</div>
+          `;
+        } else {
+          const marked = bingoState.marked[i];
+          if (marked) cell.classList.add('marked');
+
+          cell.innerHTML = `
+            <div class="cell-label">SQUARE ${i + 1}</div>
+            <div class="cell-text text-[10.5px]">${bingoState.events[i] || ''}</div>
+            ${marked ? '<div class="ink-stamp">X</div>' : ''}
+          `;
+        }
+
+        cell.onclick = () => toggleSquare(i);
+        container.appendChild(cell);
+      }
+
+      // Attach double-tap zoom protection + instant response
+      attachBingoTouchProtection(container);
+    }
+
+    // Double-tap zoom protection + fast tap handling on the bingo grid
+    function attachBingoTouchProtection(gridEl) {
+      if (!gridEl || gridEl._protectionAttached) return;
+      gridEl._protectionAttached = true;
+
+      let lastTapTime = 0;
+
+      // Prevent double-tap zoom gesture
+      gridEl.addEventListener('touchend', (e) => {
+        const now = Date.now();
+        if (now - lastTapTime < 320) {
+          e.preventDefault();
+        }
+        lastTapTime = now;
+      }, { passive: false });
+
+      // Also neutralize dblclick (desktop + some iOS simulators)
+      gridEl.addEventListener('dblclick', (e) => {
+        e.preventDefault();
+      });
+
+      // Make sure we request wake lock on first real interaction with the board
+      gridEl.addEventListener('pointerdown', () => {
+        if (currentView === 'play') {
+          requestWakeLock();
+        }
+      }, { once: true });
+    }
+
+    function toggleSquare(idx) {
+      if (idx === 12) return; // free always on
+      bingoState.marked[idx] = !bingoState.marked[idx];
+      playSynthSound('bat');
+      renderBingoGrid();
+      checkBingo();
+      // Persist a tiny bit of state in hash for share
+      updateShareHash();
+      // Auto-save to localStorage so a phone call or accidental close doesn't lose progress
+      scheduleAutoSave();
+    }
+
+    function checkBingo(suppress = false) {
+      const lines = [
+        [0,1,2,3,4],[5,6,7,8,9],[10,11,12,13,14],[15,16,17,18,19],[20,21,22,23,24],
+        [0,5,10,15,20],[1,6,11,16,21],[2,7,12,17,22],[3,8,13,18,23],[4,9,14,19,24],
+        [0,6,12,18,24],[4,8,12,16,20]
+      ];
+      let found = false, lineDesc = '';
+      for (let ln of lines) {
+        if (ln.every(i => bingoState.marked[i])) {
+          found = true;
+          lineDesc = ln.map(i => i+1).join('–');
+          break;
+        }
+      }
+      const status = document.getElementById('bingo-status');
+      if (status) status.classList.toggle('hidden', !found);
+
+      if (found && !suppress) {
+        playSynthSound('organ');
+        setTimeout(() => playSynthSound('cheer'), 380);
+        document.getElementById('win-line').textContent = `LINE: ${lineDesc}`;
+        document.getElementById('win-modal').classList.remove('hidden');
+        document.getElementById('win-modal').classList.add('flex');
+        user.bingos++;
+        localStorage.setItem('bpb_user', JSON.stringify(user));
+        updateNavUser();
+      }
+    }
+
+    function closeWinModal() {
+      const m = document.getElementById('win-modal');
+      m.classList.remove('flex');
+      m.classList.add('hidden');
+    }
+    function newBoardFromWin() {
+      closeWinModal();
+      generateBoard(true);
+    }
+
+    function reshuffleBoard() {
+      generateBoard(true);
+      showToast('Fresh board generated');
+    }
+
+    function updateShareHash() {
+      const marks = bingoState.marked.map((v,i) => v ? i : null).filter(v => v !== null).join(',');
+      const params = new URLSearchParams();
+      params.set('s', bingoState.seed);
+      if (marks) params.set('m', marks);
+      window.location.hash = params.toString();
+    }
+
+    function shareBoard() {
+      updateShareHash();
+      const url = location.href;
+      navigator.clipboard.writeText(url).then(() => {
+        showToast('Link copied — anyone with it sees the same board');
+      }).catch(() => {
+        prompt('Copy this link:', url);
+      });
+    }
+
+    function loadFromHash() {
+      const h = location.hash.substring(1);
+      if (!h) return false;
+      try {
+        const p = new URLSearchParams(h);
+        if (p.has('s')) bingoState.seed = parseInt(p.get('s'));
+        if (p.has('m')) {
+          bingoState.marked = Array(25).fill(false);
+          bingoState.marked[12] = true;
+          p.get('m').split(',').forEach(n => {
+            const i = parseInt(n);
+            if (!isNaN(i) && i >= 0 && i < 25) bingoState.marked[i] = true;
+          });
+        }
+        return true;
+      } catch(e) { return false; }
+    }
+
+    // ========== CHAT ==========
+    function appendChat(who, text, isUser = false) {
+      const log = document.getElementById('chat-log');
+      const div = document.createElement('div');
+      div.className = `flex ${isUser ? 'justify-end' : ''}`;
+      div.innerHTML = isUser ? `
+        <div class="max-w-[80%] bg-[#033016] text-white rounded-2xl rounded-tr-sm px-4 py-2 text-sm">
+          <span class="font-semibold opacity-75 text-xs block mb-0.5">YOU</span>
+          ${text}
+        </div>` : `
+        <div class="max-w-[82%]">
+          <div class="text-xs font-bold text-[#1d472a] mb-0.5 flex items-center gap-1">
+            <span class="material-symbols-outlined text-base">smart_toy</span> BLEACHER BILL
+          </div>
+          <div class="surface-glass border border-[#c1c9bf]/70 px-4 py-2.5 rounded-2xl rounded-tl-sm text-sm">${text}</div>
+        </div>`;
+      log.appendChild(div);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function sendChatMessage(e) {
+      e.preventDefault();
+      const input = document.getElementById('chat-input');
+      const val = input.value.trim();
+      if (!val) return;
+      appendChat('user', val, true);
+      input.value = '';
+
+      setTimeout(() => {
+        let reply = "That's a great baseball question. In my book that play stands as-is — stamp it if it matches your square.";
+        const lower = val.toLowerCase();
+        if (lower.includes('sacrifice') || lower.includes('sac fly')) reply = "Sacrifice fly is an RBI play but does not count as an at-bat. It will not break a hitting streak. Stamp the square if your card says 'Sacrifice fly RBI'.";
+        else if (lower.includes('infield fly')) reply = "Infield fly rule protects the offense from cheap double plays. Umpire calls it while the ball is in the air — runners advance at their own risk.";
+        else if (lower.includes('strike') || lower.includes('looking')) reply = "Strike looking = batter didn't swing at a pitch in the zone. Swinging K requires the swing and miss on the third strike.";
+        else if (lower.includes('best call')) reply = "The 3-2 count strike three looking in the 4th was a masterpiece of framing. Crowd loved it.";
+        appendChat('bill', reply);
+      }, 620);
+    }
+
+    function quickChat(q) {
+      const input = document.getElementById('chat-input');
+      input.value = q;
+      document.querySelector('#view-chatter form').dispatchEvent(new Event('submit', {cancelable:true}));
+    }
+
+    function seedChat() {
+      const log = document.getElementById('chat-log');
+      log.innerHTML = '';
+      appendChat('bill', "Welcome to the press box. I’m Bill — here to call the weird ones and celebrate the big ones with you.");
+      appendChat('bill', "Giants just stranded two in the 4th. Keep your eyes on the middle infield squares tonight.");
+    }
+
+    // ========== VIEWS ==========
+    function showView(view) {
+      document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+      const target = document.getElementById('view-' + view);
+      if (target) target.classList.remove('hidden');
+      currentView = view;
+
+      // Highlight active nav
+      document.querySelectorAll('.nav-btn').forEach(b => {
+        b.classList.toggle('nav-active', b.dataset.view === view);
+      });
+
+      if (view === 'play') {
+        // Request screen wake lock so the phone doesn't sleep on the coffee table
+        requestWakeLock();
+
+        // Make sure we have a board (either from share link or restored autosave)
+        if (!bingoState.events.length) {
+          const fromHash = loadFromHash();
+          if (!fromHash) {
+            // Try localStorage restore first for "reopen the link" resilience
+            const restored = loadGameState();
+            generateBoard(!restored);
+          } else {
+            generateBoard(false);
+          }
+        } else {
+          // Re-render in case we just switched views
+          renderBingoGrid();
+        }
+        updateLiveBar();
+
+        // Inject a small wake lock status pill if not already present
+        ensureWakeLockPill();
+      } else {
+        // When leaving the Play view we can release the lock (saves battery)
+        // but many users want it to stay while the whole app is open — we keep it simple and release here
+        releaseWakeLock();
+      }
+
+      if (view === 'chatter' && document.getElementById('chat-log').children.length === 0) {
+        seedChat();
+      }
+      if (view === 'league') {
+        renderStandings();
+      }
+      if (view === 'profile') {
+        updateNavUser();
+      }
+    }
+
+    function ensureWakeLockPill() {
+      const playView = document.getElementById('view-play');
+      if (!playView) return;
+
+      // Only add once
+      if (document.getElementById('wake-pill')) return;
+
+      // Try several possible header containers for resilience
+      let headerArea = playView.querySelector('.flex.items-center.justify-between.mb-3');
+      if (!headerArea) headerArea = playView.querySelector('#view-play .flex');
+      if (!headerArea) headerArea = playView.querySelector('h1, .font-display')?.parentElement;
+      if (!headerArea) return;
+
+      const pill = document.createElement('div');
+      pill.id = 'wake-pill';
+      pill.className = 'wake-pill ml-2 text-[10px]';
+      pill.innerHTML = `<span class="material-symbols-outlined" style="font-size:13px">visibility_off</span><span>Screen may sleep</span>`;
+      headerArea.appendChild(pill);
+
+      // Initial state
+      if (wakeLock) {
+        pill.classList.add('active');
+        pill.innerHTML = `<span class="material-symbols-outlined" style="font-size:13px">visibility</span><span>Screen awake</span>`;
+      }
+    }
+
+    function renderStandings() {
+      const rookie = [
+        ["Casey 'The Ace' M.", 27], ["J. Delgado", 22], ["Rivera23", 19], ["M. Soto", 18], ["B. Chen", 17],
+        ["SluggerSam", 15], ["D. Kim", 14], ["L. Patel", 13], ["T. Brooks", 12], ["Guest Player", user.bingos]
+      ];
+      const pro = [
+        ["Big League Lou", 41], ["Fastball Fran", 39], ["M. Ramirez", 36], ["The Oracle", 34], ["K. Tanaka", 31],
+        ["GrandSlamGail", 29], ["C. Vega", 27], ["R. O’Neill", 25], ["P. Ruiz", 24], ["E. Park", 22]
+      ];
+
+      const rBody = document.getElementById('rookie-standings');
+      const pBody = document.getElementById('pro-standings');
+      rBody.innerHTML = rookie.map((row,i) => `
+        <tr><td class="py-1.5 font-semibold">${i+1}. ${row[0]}</td><td class="py-1.5 text-right font-display font-bold tabular-nums">${row[1]}</td></tr>
+      `).join('');
+      pBody.innerHTML = pro.map((row,i) => `
+        <tr><td class="py-1.5 font-semibold">${i+1}. ${row[0]}</td><td class="py-1.5 text-right font-display font-bold tabular-nums">${row[1]}</td></tr>
+      `).join('');
+    }
+
+    // ========== ROOMS / LOBBY ==========
+    function joinRoom(roomIdx) {
+      const names = ["Wrigley Faithful", "Bay City Ballers", "Red Sox Royalty"];
+      showToast(`Joined ${names[roomIdx] || 'Room'}`);
+      // Sync a new seed for variety
+      bingoState.seed = 1200 + roomIdx * 300 + Math.floor(Math.random()*70);
+      showView('play');
+      setTimeout(() => generateBoard(false), 60);
+    }
+
+    function quickJoin() {
+      showToast('Matching you to a live room...');
+      setTimeout(() => {
+        showView('play');
+        bingoState.seed = Math.floor(Math.random() * 8000) + 900;
+        generateBoard(false);
+      }, 380);
+    }
+
+    function showCreateRoomModal() {
+      document.getElementById('create-room-modal').classList.remove('hidden');
+      document.getElementById('create-room-modal').classList.add('flex');
+    }
+    function hideCreateRoomModal() {
+      const m = document.getElementById('create-room-modal');
+      m.classList.remove('flex');
+      m.classList.add('hidden');
+    }
+    function createRoom() {
+      hideCreateRoomModal();
+      const name = document.getElementById('room-name').value || 'Private Box';
+      showToast(`Created ${name}`);
+      showView('play');
+      setTimeout(() => {
+        bingoState.seed = Math.floor(Math.random()*7000)+500;
+        generateBoard(true);
+      }, 90);
+    }
+
+    // ========== ONBOARDING / TUTORIAL ==========
+    function startTutorial() {
+      showView('play');
+      setTimeout(() => {
+        const grid = document.getElementById('bingo-grid');
+        if (!grid) return;
+        grid.style.transitionDuration = '180ms';
+        grid.style.boxShadow = '0 0 0 6px rgba(206,167,0,0.45)';
+        setTimeout(() => {
+          if (grid) grid.style.boxShadow = 'inset 0 2px 4px rgba(0,0,0,0.03)';
+        }, 1400);
+        showToast('Tap any square that matches a live play. Try the SIM PLAY button!');
+      }, 420);
+    }
+
+    // ========== PROFILE DEMO ==========
+    function unlockTrophyDemo() {
+      showToast('No-Hitter Bingo unlocked! (demo)');
+      const t = document.createElement('div');
+      t.className = 'surface-glass border border-[#c1c9bf]/60 rounded-2xl p-4 text-center mt-3';
+      t.innerHTML = `<div class="text-4xl mb-1">🧊</div><div class="font-semibold text-sm">No-Hitter Bingo</div><div class="text-[10px] text-[#414941]">Just now</div>`;
+      const container = document.querySelector('#view-profile .grid');
+      if (container) container.appendChild(t);
+    }
+
+    // ========== INIT ==========
+    function loadPersisted() {
+      try {
+        const savedUser = localStorage.getItem('bpb_user');
+        if (savedUser) user = { ...user, ...JSON.parse(savedUser) };
+      } catch(e){}
+      updateNavUser();
+    }
+
+    function initBingoFromHashOrDefault() {
+      // Priority:
+      // 1. URL hash (someone explicitly shared a specific board state)
+      // 2. LocalStorage auto-saved state (phone call / close / reopen resilience)
+      // 3. Fresh board
+      const hadHash = loadFromHash();
+      if (hadHash) {
+        generateBoard(false);
+        return;
+      }
+      const restored = loadGameState();
+      generateBoard(!restored);
+    }
+
+    function initStandingsDemoData() {
+      // nothing extra — renderStandings populates live
+    }
+
+    function initNav() {
+      // Desktop active state bootstrap
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active'));
+          btn.classList.add('nav-active');
+        });
+      });
+    }
+
+    function initLiveSimulation() {
+      // Gentle auto-ticker movement + occasional sim
+      setInterval(() => {
+        if (Math.random() < 0.22 && currentView !== 'lobby') {
+          // light background advance without full toast spam
+          if (Math.random() > 0.5) {
+            gameState.awayScore += (Math.random() > 0.82 ? 1 : 0);
+          } else {
+            gameState.homeScore += (Math.random() > 0.82 ? 1 : 0);
+          }
+          updateLiveBar();
+        }
+      }, 24000);
+    }
+
+    function bootstrap() {
+      initTailwind();
+      loadPersisted();
+      initNav();
+      initLiveSimulation();
+      initStandingsDemoData();
+      setupWakeLockListeners();
+      setupPWAInstall();
+
+      // Basic offline detection for PWA resilience
+      const offlineBanner = document.getElementById('offline-banner');
+      function updateOnlineStatus() {
+        if (offlineBanner) {
+          if (navigator.onLine) {
+            offlineBanner.classList.add('hidden');
+          } else {
+            offlineBanner.classList.remove('hidden');
+          }
+        }
+      }
+      window.addEventListener('online', updateOnlineStatus);
+      window.addEventListener('offline', updateOnlineStatus);
+      // Initial check
+      setTimeout(updateOnlineStatus, 300);
+
+      // Register Service Worker for PWA (installable + offline shell)
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').catch(() => {});
+        });
+      }
+
+      // Start on lobby
+      showView('lobby');
+
+      // If URL has bingo state, jump straight to play
+      if (location.hash.includes('s=')) {
+        showView('play');
+        setTimeout(initBingoFromHashOrDefault, 30);
+      } else {
+        // Pre-generate a board for fast play access (will use autosave if available)
+        setTimeout(() => {
+          initBingoFromHashOrDefault();
+        }, 180);
+      }
+
+      updateLiveBar();
+
+      // Keyboard niceties
+      document.addEventListener('keydown', (e) => {
+        if (e.key === '/' && document.activeElement.tagName === 'BODY') {
+          e.preventDefault();
+          showView('chatter');
+          setTimeout(() => document.getElementById('chat-input')?.focus(), 80);
+        }
+        if (e.key.toLowerCase() === 'p' && e.metaKey) {
+          e.preventDefault();
+          showView('play');
+        }
+      });
+
+      // First time greeting
+      setTimeout(() => {
+        if (currentView === 'lobby' && user.name === 'Guest Player') {
+          // subtle nudge
+        }
+      }, 6500);
+
+      // Initialize sound label from possibly restored state
+      const soundLabel = document.getElementById('sound-label');
+      if (soundLabel) soundLabel.textContent = soundEnabled ? 'ON' : 'OFF';
+
+      // Make sure live bar numbers are interactive too
+      ['away-score','home-score'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.onclick = () => {
+          if (id.includes('away')) gameState.awayScore++; else gameState.homeScore++;
+          updateLiveBar();
+          scheduleAutoSave();
+        };
+      });
+
+      // Ensure we have at least one save after initial board is ready
+      setTimeout(saveGameState, 1200);
+
+      console.log('%c[Ballpark Bingo] Stitched PWA ready. Add to Home Screen on iOS/Android for best experience.', 'color:#88b590');
+    }
+
+    window.onload = bootstrap;
+    // Expose a couple helpers for easy debugging / demos
+    window.BPB = { showView, simulateLivePlay, generateBoard: () => generateBoard(true) };
+  </script>
+</body>
+</html>

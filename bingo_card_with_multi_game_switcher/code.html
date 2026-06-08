@@ -1,0 +1,493 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>BASEBALL BINGO - Live Game</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400;700&amp;family=Work+Sans:wght@400;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            vertical-align: middle;
+        }
+        .pinstripe-bg {
+            background-color: #f9faf5;
+            background-image: repeating-linear-gradient(90deg, transparent, transparent 31px, rgba(3, 48, 22, 0.05) 31px, rgba(3, 48, 22, 0.05) 32px);
+        }
+        .bingo-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            aspect-ratio: 1 / 1;
+        }
+        .ink-stamp {
+            position: relative;
+            overflow: hidden;
+        }
+        .ink-stamp::after {
+            content: 'X';
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Domine', serif;
+            font-size: 3.5rem;
+            color: rgba(171, 51, 52, 0.7);
+            transform: rotate(-12deg) scale(1.2);
+            pointer-events: none;
+            mix-blend-mode: multiply;
+            filter: contrast(120%) brightness(90%) blur(0.3px);
+            opacity: 0.85;
+            mask-image: radial-gradient(circle, black 50%, rgba(0,0,0,0.4) 100%), 
+                        url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+        .stitching-border {
+            border-style: dashed;
+            border-width: 2px;
+        }
+        @keyframes pulse-soft {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .animate-pulse-soft {
+            animation: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#ffb3ae",
+                        "surface-container": "#edeee9",
+                        "surface-dim": "#d9dad6",
+                        "secondary-fixed": "#ffdad7",
+                        "inverse-on-surface": "#f0f1ec",
+                        "primary-fixed-dim": "#a3d2ab",
+                        "surface": "#f9faf5",
+                        "on-background": "#1a1c19",
+                        "primary": "#033016",
+                        "on-surface": "#1a1c19",
+                        "inverse-primary": "#a3d2ab",
+                        "surface-container-high": "#e8e9e4",
+                        "outline": "#727971",
+                        "tertiary-fixed-dim": "#eec209",
+                        "on-secondary-container": "#700310",
+                        "on-primary-fixed-variant": "#254f31",
+                        "surface-variant": "#e2e3de",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#c1c9bf",
+                        "tertiary-fixed": "#ffe084",
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#3d6748",
+                        "secondary": "#ab3334",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-container": "#4e3d00",
+                        "on-tertiary-fixed": "#231b00",
+                        "error-container": "#ffdad6",
+                        "surface-container-low": "#f3f4ef",
+                        "primary-fixed": "#bfeec5",
+                        "on-error-container": "#93000a",
+                        "secondary-container": "#ff716d",
+                        "background": "#f9faf5",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed": "#00210c",
+                        "surface-container-highest": "#e2e3de",
+                        "on-tertiary-fixed-variant": "#574500",
+                        "on-primary-container": "#88b590",
+                        "surface-bright": "#f9faf5",
+                        "on-secondary-fixed-variant": "#8a1a1f",
+                        "on-secondary-fixed": "#410005",
+                        "inverse-surface": "#2f312e",
+                        "primary-container": "#1d472a",
+                        "on-surface-variant": "#414941",
+                        "on-error": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "tertiary": "#735c00",
+                        "tertiary-container": "#cea700"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "grid-gutter": "16px",
+                        "base": "8px",
+                        "lg": "48px",
+                        "sm": "12px",
+                        "md": "24px",
+                        "xs": "4px",
+                        "xl": "64px",
+                        "grid-margin-desktop": "32px",
+                        "grid-margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "label-bold": ["Work Sans"],
+                        "display-lg": ["Domine"],
+                        "headline-sm": ["Domine"],
+                        "caption": ["Work Sans"],
+                        "display-lg-mobile": ["Domine"],
+                        "headline-md": ["Domine"],
+                        "body-lg": ["Work Sans"],
+                        "body-md": ["Work Sans"]
+                    },
+                    "fontSize": {
+                        "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="pinstripe-bg text-on-surface min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-grid-margin-mobile py-2 bg-surface border-b border-outline-variant bg-surface-variant/5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="sports_baseball">sports_baseball</span>
+<h1 class="font-display-lg-mobile text-display-lg-mobile text-primary uppercase tracking-tight">BASEBALL BINGO</h1><div class="flex items-center gap-1 ml-2 px-2 py-0.5 bg-primary-container/10 border border-primary/20 rounded-full"><span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse-soft"></span><span class="font-label-bold text-[10px] text-primary uppercase tracking-tighter">NYY @ BOS</span><span class="material-symbols-outlined text-[14px] text-primary">arrow_drop_down</span></div>
+</div>
+<div class="flex items-center gap-4">
+<button class="hover:bg-primary-fixed-dim/20 transition-colors p-2 rounded-full active:translate-y-0.5 duration-100">
+<span class="material-symbols-outlined text-primary" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</header>
+<main class="pt-16 px-grid-margin-mobile max-w-[600px] mx-auto">
+<!-- Streamlined Scoreboard Header -->
+<section class="mb-4 bg-surface-container rounded-lg p-2 border border-outline-variant flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-3">
+<div class="flex flex-col items-center">
+<span class="font-label-bold text-[10px] text-on-surface-variant uppercase leading-none mb-1">NYY</span>
+<span class="font-display-lg-mobile text-2xl text-primary leading-none" id="away-score">3</span>
+</div>
+<div class="h-8 w-px bg-outline-variant"></div>
+<div class="flex flex-col items-center">
+<span class="font-label-bold text-[10px] text-on-surface-variant uppercase leading-none mb-1">BOS</span>
+<span class="font-display-lg-mobile text-2xl text-primary leading-none" id="home-score">2</span>
+</div>
+</div>
+<div class="flex flex-col items-center">
+<span class="font-label-bold text-[10px] text-secondary uppercase leading-none">Top 7th</span>
+<div class="flex gap-1 mt-1">
+<div class="w-2.5 h-2.5 rounded-full bg-secondary"></div>
+<div class="w-2.5 h-2.5 rounded-full border border-outline"></div>
+<div class="w-2.5 h-2.5 rounded-full border border-outline"></div>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<div class="flex items-center gap-2">
+<span class="font-caption text-[10px] text-on-surface-variant uppercase">1 OUT</span>
+<div class="w-20 h-1 bg-outline-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 72%"></div>
+</div>
+</div>
+<span class="font-caption text-[9px] text-on-surface-variant italic">Active Batter: Judge</span>
+</div>
+</section>
+<!-- Bingo Card Container -->
+<div class="relative">
+<div class="absolute -top-2 -left-2 rotate-[-5deg] z-10 bg-secondary px-2 py-0.5 rounded shadow-sm border border-on-secondary/20">
+<span class="font-label-bold text-[10px] text-on-secondary uppercase animate-pulse-soft">Live</span>
+</div><div class="absolute -top-2 -right-1 z-10 flex items-center gap-1.5 bg-surface-container-high px-2 py-1 rounded-full border border-outline-variant shadow-sm select-none cursor-pointer active:scale-95 transition-transform" onclick="this.querySelector('.toggle-dot').classList.toggle('translate-x-4'); this.querySelector('.toggle-bg').classList.toggle('bg-primary'); this.querySelector('.toggle-bg').classList.toggle('bg-outline-variant');">
+    <span class="font-label-bold text-[9px] text-on-surface-variant uppercase tracking-tighter">Auto-Mark</span>
+    <div class="relative w-8 h-4 flex items-center">
+        <div class="toggle-bg w-full h-full bg-outline-variant rounded-full transition-colors duration-200"></div>
+        <div class="toggle-dot absolute left-0.5 w-3 h-3 bg-white rounded-full shadow-sm transition-transform duration-200 transform"></div>
+    </div>
+</div>
+<!-- Optimized Bingo Grid -->
+<div class="bingo-grid gap-1.5 p-1.5 bg-surface-container-high rounded-xl border-2 border-outline-variant shadow-lg mb-6" id="bingo-grid"><div class="flex flex-col items-center justify-center text-center px-1.5 py-3 min-h-[64px] rounded-lg transition-all active:scale-95 cursor-pointer select-none bg-surface border border-outline-variant hover:shadow-sm"><span class="font-label-bold text-[9px] font-bold leading-[1.1] uppercase text-on-surface tracking-tighter">Sacrifice Fly</span></div><div class="flex flex-col items-center justify-center text-center px-1.5 py-3 min-h-[64px] rounded-lg transition-all active:scale-95 cursor-pointer select-none bg-surface border border-outline-variant hover:shadow-sm"><span class="font-label-bold text-[9px] font-bold leading-[1.1] uppercase text-on-surface tracking-tighter">Stolen Base</span></div><div class="flex flex-col items-center justify-center text-center px-1.5 py-3 min-h-[64px] rounded-lg transition-all active:scale-95 cursor-pointer select-none bg-surface border border-outline-variant hover:shadow-sm"><span class="font-label-bold text-[9px] font-bold leading-[1.1] uppercase text-on-surface tracking-tighter">Triple Base-hit</span></div><div class="flex flex-col items-center justify-center text-center px-1.5 py-3 min-h-[64px] rounded-lg transition-all active:scale-95 cursor-pointer select-none bg-surface border border-outline-variant hover:shadow-sm"><span class="font-label-bold text-[9px] font-bold leading-[1.1] uppercase text-on-surface tracking-tighter">Double Play Event</span></div><div class="flex flex-col items-center justify-center text-center px-1.5 py-3 min-h-[64px] rounded-lg transition-all active:scale-95 cursor-pointer select-none bg-surface border border-outline-variant hover:shadow-sm"><span class="font-label-bold text-[9px] font-bold leading-[1.1] uppercase text-on-surface tracking-tighter">Spectator Catches Ball</span></div><div class="flex flex-col items-center justify-center text-center px-1.5 py-3 min-h-[64px] rounded-lg transition-all active:scale-95 cursor-pointer select-none bg-surface border border-outline-variant hover:shadow-sm"><span class="font-label-bold text-[9px] font-bold leading-[1.1] uppercase text-on-surface tracking-tighter">Broken Bat Play</span></div><div class="flex flex-col items-center justify-center text-center px-1.5 py-3 min-h-[64px] rounded-lg transition-all active:scale-95 cursor-pointer select-none bg-surface border border-outline-variant hover:shadow-sm"><span class="font-label-bold text-[9px] font-bold leading-[1.1] uppercase text-on-surface tracking-tighter">Sacrifice Bunt</span></div><div class="flex flex-col items-center justify-center text-center px-1.5 py-3 min-h-[64px] rounded-lg transition-all active:scale-95 cursor-pointer select-none bg-surface border border-outline-variant hover:shadow-sm"><span class="font-label-bold text-[9px] font-bold leading-[1.1] uppercase text-on-surface tracking-tighter">Pitcher Change</span></div><div class="flex flex-col items-center justify-center text-center px-1.5 py-3 min-h-[64px] rounded-lg transition-all active:scale-95 cursor-pointer select-none bg-surface border border-outline-variant hover:shadow-sm"><span class="font-label-bold text-[9px] font-bold leading-[1.1] uppercase text-on-surface tracking-tighter">Two-base Double</span></div><div class="flex flex-col items-center justify-center text-center px-1.5 py-3 min-h-[64px] rounded-lg transition-all active:scale-95 cursor-pointer select-none bg-surface border border-outline-variant hover:shadow-sm"><span class="font-label-bold text-[9px] font-bold leading-[1.1] uppercase text-on-surface tracking-tighter">Walk on Balls</span></div><div class="flex flex-col items-center justify-center text-center px-1.5 py-3 min-h-[64px] rounded-lg transition-all active:scale-95 cursor-pointer select-none bg-surface border border-outline-variant hover:shadow-sm"><span class="font-label-bold text-[9px] font-bold leading-[1.1] uppercase text-on-surface tracking-tighter">Pitcher Mound Meeting</span></div><div class="flex flex-col items-center justify-center text-center px-1.5 py-3 min-h-[64px] rounded-lg transition-all active:scale-95 cursor-pointer select-none bg-surface border border-outline-variant hover:shadow-sm"><span class="font-label-bold text-[9px] font-bold leading-[1.1] uppercase text-on-surface tracking-tighter">Red Sox Strikeout</span></div><div class="flex flex-col items-center justify-center text-center px-1.5 py-3 min-h-[64px] rounded-lg transition-all active:scale-95 cursor-pointer select-none bg-tertiary-container text-on-tertiary-container border-2 border-primary/30 shadow-inner">
+                        <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">sports_baseball</span>
+                        <span class="font-label-bold text-[9px] uppercase tracking-tighter leading-tight mt-0.5">Free</span>
+                    </div><div class="flex flex-col items-center justify-center text-center px-1.5 py-3 min-h-[64px] rounded-lg transition-all active:scale-95 cursor-pointer select-none bg-surface border border-outline-variant hover:shadow-sm"><span class="font-label-bold text-[9px] font-bold leading-[1.1] uppercase text-on-surface tracking-tighter">Full Count</span></div><div class="flex flex-col items-center justify-center text-center px-1.5 py-3 min-h-[64px] rounded-lg transition-all active:scale-95 cursor-pointer select-none bg-surface border border-outline-variant hover:shadow-sm"><span class="font-label-bold text-[9px] font-bold leading-[1.1] uppercase text-on-surface tracking-tighter">Batter Hit By Pitch</span></div><div class="flex flex-col items-center justify-center text-center px-1.5 py-3 min-h-[64px] rounded-lg transition-all active:scale-95 cursor-pointer select-none bg-surface border border-outline-variant hover:shadow-sm"><span class="font-label-bold text-[9px] font-bold leading-[1.1] uppercase text-on-surface tracking-tighter">Strikeout Swinging</span></div><div class="flex flex-col items-center justify-center text-center px-1.5 py-3 min-h-[64px] rounded-lg transition-all active:scale-95 cursor-pointer select-none bg-surface border border-outline-variant hover:shadow-sm"><span class="font-label-bold text-[9px] font-bold leading-[1.1] uppercase text-on-surface tracking-tighter">Pinch Runner Added</span></div><div class="flex flex-col items-center justify-center text-center px-1.5 py-3 min-h-[64px] rounded-lg transition-all active:scale-95 cursor-pointer select-none bg-surface border border-outline-variant hover:shadow-sm"><span class="font-label-bold text-[9px] font-bold leading-[1.1] uppercase text-on-surface tracking-tighter">Yankees Home Run</span></div><div class="flex flex-col items-center justify-center text-center px-1.5 py-3 min-h-[64px] rounded-lg transition-all active:scale-95 cursor-pointer select-none bg-surface border border-outline-variant hover:shadow-sm"><span class="font-label-bold text-[9px] font-bold leading-[1.1] uppercase text-on-surface tracking-tighter">Scoreless Inning</span></div><div class="flex flex-col items-center justify-center text-center px-1.5 py-3 min-h-[64px] rounded-lg transition-all active:scale-95 cursor-pointer select-none bg-surface border border-outline-variant hover:shadow-sm"><span class="font-label-bold text-[9px] font-bold leading-[1.1] uppercase text-on-surface tracking-tighter">Pick-off Attempt</span></div><div class="flex flex-col items-center justify-center text-center px-1.5 py-3 min-h-[64px] rounded-lg transition-all active:scale-95 cursor-pointer select-none bg-surface border border-outline-variant hover:shadow-sm"><span class="font-label-bold text-[9px] font-bold leading-[1.1] uppercase text-on-surface tracking-tighter">Wild Pitch</span></div><div class="flex flex-col items-center justify-center text-center px-1.5 py-3 min-h-[64px] rounded-lg transition-all active:scale-95 cursor-pointer select-none bg-surface border border-outline-variant hover:shadow-sm"><span class="font-label-bold text-[9px] font-bold leading-[1.1] uppercase text-on-surface tracking-tighter">Caught Stealing</span></div><div class="flex flex-col items-center justify-center text-center px-1.5 py-3 min-h-[64px] rounded-lg transition-all active:scale-95 cursor-pointer select-none bg-surface border border-outline-variant hover:shadow-sm"><span class="font-label-bold text-[9px] font-bold leading-[1.1] uppercase text-on-surface tracking-tighter">Error</span></div><div class="flex flex-col items-center justify-center text-center px-1.5 py-3 min-h-[64px] rounded-lg transition-all active:scale-95 cursor-pointer select-none bg-surface border border-outline-variant hover:shadow-sm"><span class="font-label-bold text-[9px] font-bold leading-[1.1] uppercase text-on-surface tracking-tighter">Bases Loaded Jam</span></div><div class="flex flex-col items-center justify-center text-center px-1.5 py-3 min-h-[64px] rounded-lg transition-all active:scale-95 cursor-pointer select-none bg-surface border border-outline-variant hover:shadow-sm"><span class="font-label-bold text-[9px] font-bold leading-[1.1] uppercase text-on-surface tracking-tighter">Bunt</span></div></div>
+</div>
+<!-- Action Section -->
+<div class="space-y-4">
+<button class="w-full bg-primary text-on-primary py-3.5 rounded-xl font-label-bold text-label-bold uppercase tracking-widest shadow-md hover:bg-primary-container hover:text-on-primary-container transition-all active:scale-[0.98]" onclick="generateBoard(true)">
+                SHUFFLE NEW BOARD
+            </button>
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-white/80 p-3 rounded-xl border border-outline-variant">
+<h3 class="font-label-bold text-[10px] text-on-surface-variant uppercase mb-1.5">Last Calls</h3>
+<ul class="space-y-1" id="recently-called-list">
+                <li class="flex items-center gap-2 font-body-md text-[10px] leading-tight">
+                    <span class="w-1.5 h-1.5 rounded-full bg-secondary shrink-0"></span> <span class="truncate">Strikeout swinging</span>
+                </li>
+            
+                <li class="flex items-center gap-2 font-body-md text-[10px] leading-tight">
+                    <span class="w-1.5 h-1.5 rounded-full bg-secondary shrink-0"></span> <span class="truncate">Pop out</span>
+                </li>
+            </ul>
+</div>
+<div class="bg-white/80 p-3 rounded-xl border border-outline-variant flex flex-col justify-center items-center text-center">
+<span class="font-label-bold text-[10px] text-on-surface-variant uppercase">Est. Prize</span>
+<span class="font-headline-sm text-lg text-primary leading-tight" id="prize-text">$50 Credit</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Bingo Win Alert -->
+<div class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 hidden" id="bingo-alert-modal">
+<div class="bg-surface rounded-2xl border-4 border-tertiary p-6 max-w-sm w-full text-center shadow-2xl stitching-border">
+<span class="material-symbols-outlined text-[64px] text-tertiary mb-2" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+<h2 class="font-display-lg-mobile text-display-lg-mobile text-primary uppercase">BINGO!</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">You've hit a home run with your card!</p>
+<button class="w-full bg-primary text-on-primary py-3 rounded-xl font-label-bold uppercase tracking-widest" onclick="closeBingoAlert()">
+                Keep Playing
+            </button>
+</div>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-surface border-t border-outline-variant shadow-lg rounded-t-xl"><a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95 duration-150 ease-out" href="#"><span class="material-symbols-outlined" data-icon="home">home</span><span class="font-label-bold text-caption">Home</span></a><a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 hover:text-primary transition-all active:scale-95 duration-150 ease-out" href="#"><span class="material-symbols-outlined" data-icon="grid_view" style="font-variation-settings: 'FILL' 1;">grid_view</span><span class="font-label-bold text-caption">Card</span></a><a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95 duration-150 ease-out" href="#"><span class="material-symbols-outlined" data-icon="layers">layers</span><span class="font-label-bold text-caption">Switcher</span></a><a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95 duration-150 ease-out" href="#"><span class="material-symbols-outlined" data-icon="bolt">bolt</span><span class="font-label-bold text-caption">Quick Join</span></a><a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95 duration-150 ease-out" href="#"><span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span><span class="font-label-bold text-caption">Rankings</span></a></nav>
+<script>
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playSynthSound(type) {
+            initAudio();
+            if (!audioCtx) return;
+
+            if (type === 'bat') {
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(320, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.08);
+                gain.gain.setValueAtTime(1.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.15);
+            } else if (type === 'organ') {
+                const notes = [261.63, 329.63, 392.00, 523.25];
+                const timing = [0, 0.12, 0.24, 0.36];
+                notes.forEach((freq, i) => {
+                    let osc = audioCtx.createOscillator();
+                    let gain = audioCtx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.value = freq;
+                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime + timing[i]);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + timing[i] + 0.2);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(audioCtx.currentTime + timing[i]);
+                    osc.stop(audioCtx.currentTime + timing[i] + 0.22);
+                });
+            }
+        }
+
+        const fallbackGenericEvents = [
+            "Strikeout Swinging", "Base Hit Single", "Two-base Double", "Outfield Flyout",
+            "Stolen Base", "Pitcher Mound Meeting", "Scoreless Inning", "Walk on Balls",
+            "Broken Bat Play", "Diving Fielding Catch", "Wild Outfield Error", "Spectator Catches Ball",
+            "Pinch Runner Added", "Relief Pitcher Swapped", "Official Video Challenge", "Double Play Event",
+            "Manager Argues Rule", "Sacrifice Bunt", "Batter Hit By Pitch", "Full Count Run",
+            "Triple Base-hit", "Spectacular Slide", "Bases Loaded Jam", "Pick-off Attempt"
+        ];
+
+        let gameTeams = {
+            away: "Yankees",
+            home: "Red Sox",
+            lineups: ["Judge", "Soto", "Cole", "Stanton", "Devers", "Story", "Yoshida", "Bogaerts"]
+        };
+
+        let currentBoardEvents = [];
+        let markedSquares = Array(25).fill(false);
+        let boardSeed = 101;
+        let recentlyCalled = ["Strikeout swinging", "Pop out"];
+
+        function parseUrlState() {
+            try {
+                const hash = window.location.hash.substring(1);
+                if (hash) {
+                    const params = new URLSearchParams(hash);
+                    if (params.has('seed')) boardSeed = parseInt(params.get('seed'));
+                    if (params.has('marked')) {
+                        const marks = params.get('marked').split(',');
+                        markedSquares = Array(25).fill(false);
+                        marks.forEach(idx => {
+                            let i = parseInt(idx);
+                            if (!isNaN(i) && i >= 0 && i < 25) markedSquares[i] = true;
+                        });
+                    }
+                }
+            } catch (e) { console.error("URL state error", e); }
+        }
+
+        function updateUrlState() {
+            const marksList = [];
+            markedSquares.forEach((val, idx) => { if (val) marksList.push(idx); });
+            const params = new URLSearchParams();
+            params.set('seed', boardSeed);
+            params.set('marked', marksList.join(','));
+            window.location.hash = params.toString();
+        }
+
+        function seededRandom(seed) {
+            let x = Math.sin(seed++) * 10000;
+            return x - Math.floor(x);
+        }
+
+        function buildGameEventPool() {
+            let dynamicPool = [
+                `${gameTeams.away} Home Run`,
+                `${gameTeams.home} Strikeout`,
+                "Double Play",
+                "Wild Pitch",
+                "Error",
+                "Pitcher Change",
+                "Full Count",
+                "Caught Stealing",
+                "Bunt",
+                "Sacrifice Fly",
+                "Stolen Base",
+                "Hit By Pitch"
+            ];
+            let combined = [...dynamicPool];
+            fallbackGenericEvents.forEach(evt => {
+                if (!combined.includes(evt)) combined.push(evt);
+            });
+            return combined;
+        }
+
+        function generateBoard(generateNewSeed = false) {
+            if (generateNewSeed) {
+                boardSeed = Math.floor(Math.random() * 9999) + 1;
+                markedSquares = Array(25).fill(false);
+                markedSquares[12] = true;
+            }
+            
+            let pool = buildGameEventPool();
+            let tempPool = [...pool];
+            let selectedEvents = [];
+            let seedCount = boardSeed;
+            
+            for (let i = 0; i < 24; i++) {
+                let rng = seededRandom(seedCount++);
+                let index = Math.floor(rng * tempPool.length);
+                selectedEvents.push(tempPool.splice(index, 1)[0]);
+            }
+
+            currentBoardEvents = [];
+            let chosenCount = 0;
+            for (let j = 0; j < 25; j++) {
+                if (j === 12) {
+                    currentBoardEvents.push("FREE SPACE");
+                } else {
+                    currentBoardEvents.push(selectedEvents[chosenCount++]);
+                }
+            }
+
+            renderGrid();
+            updateRecentlyCalled();
+            updateUrlState();
+        }
+
+        function renderGrid() {
+            const gridContainer = document.getElementById('bingo-grid');
+            gridContainer.innerHTML = '';
+
+            for (let i = 0; i < 25; i++) {
+                const cell = document.createElement('div');
+                const isMarked = markedSquares[i];
+                
+                // Optimized mobile tap target and sizing
+                cell.className = "flex flex-col items-center justify-center text-center px-1.5 py-3 min-h-[64px] rounded-lg transition-all active:scale-95 cursor-pointer select-none";
+                
+                if (i === 12) {
+                    // Free Space Style
+                    cell.className += " bg-tertiary-container text-on-tertiary-container border-2 border-primary/30 shadow-inner";
+                    cell.innerHTML = `
+                        <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">sports_baseball</span>
+                        <span class="font-label-bold text-[9px] uppercase tracking-tighter leading-tight mt-0.5">Free</span>
+                    `;
+                } else if (isMarked) {
+                    // Ink Stamp Style
+                    cell.className += " bg-surface-container-highest border border-outline/30 shadow-inner ink-stamp";
+                    cell.innerHTML = `<span class="font-label-bold text-[9px] font-bold leading-[1.1] uppercase text-on-surface/40 scale-[0.9]">${currentBoardEvents[i]}</span>`;
+                } else {
+                    // Unmarked Style
+                    cell.className += " bg-surface border border-outline-variant hover:shadow-sm";
+                    cell.innerHTML = `<span class="font-label-bold text-[9px] font-bold leading-[1.1] uppercase text-on-surface tracking-tighter">${currentBoardEvents[i]}</span>`;
+                }
+
+                cell.addEventListener('click', () => toggleSquare(i));
+                gridContainer.appendChild(cell);
+            }
+        }
+
+        function toggleSquare(index) {
+            if (index === 12) return;
+            initAudio();
+            markedSquares[index] = !markedSquares[index];
+            playSynthSound('bat');
+            
+            if (markedSquares[index]) {
+                recentlyCalled.unshift(currentBoardEvents[index]);
+                if (recentlyCalled.length > 5) recentlyCalled.pop();
+            }
+
+            renderGrid();
+            updateRecentlyCalled();
+            updateUrlState();
+            checkForBingo();
+        }
+
+        function checkForBingo() {
+            const lines = [
+                [0, 1, 2, 3, 4], [5, 6, 7, 8, 9], [10, 11, 12, 13, 14], [15, 16, 17, 18, 19], [20, 21, 22, 23, 24],
+                [0, 5, 10, 15, 20], [1, 6, 11, 16, 21], [2, 7, 12, 17, 22], [3, 8, 13, 18, 23], [4, 9, 14, 19, 24],
+                [0, 6, 12, 18, 24], [4, 8, 12, 16, 20]
+            ];
+
+            let win = lines.some(line => line.every(idx => markedSquares[idx]));
+            if (win) {
+                playSynthSound('organ');
+                document.getElementById('bingo-alert-modal').classList.remove('hidden');
+            }
+        }
+
+        function closeBingoAlert() {
+            document.getElementById('bingo-alert-modal').classList.add('hidden');
+        }
+
+        function updateRecentlyCalled() {
+            const list = document.getElementById('recently-called-list');
+            list.innerHTML = recentlyCalled.map(item => `
+                <li class="flex items-center gap-2 font-body-md text-[10px] leading-tight">
+                    <span class="w-1.5 h-1.5 rounded-full bg-secondary shrink-0"></span> <span class="truncate">${item}</span>
+                </li>
+            `).join('');
+        }
+
+        window.onload = function() {
+            parseUrlState();
+            generateBoard(false);
+        };
+    </script>
+<button class="fixed bottom-24 right-4 z-50 w-14 h-14 bg-secondary text-on-secondary rounded-full shadow-lg flex items-center justify-center active:scale-95 transition-transform border-2 border-on-secondary/20"><div class="relative"><span class="material-symbols-outlined text-[28px]">style</span><div class="absolute -top-1 -right-1 w-5 h-5 bg-primary text-on-primary text-[10px] font-bold rounded-full flex items-center justify-center border border-on-secondary">3</div></div></button>
+
+</body></html>

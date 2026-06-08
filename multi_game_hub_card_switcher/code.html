@@ -1,0 +1,513 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Baseball Bingo - Multi-Game Hub</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400;600;700&amp;family=Work+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-bright": "#fcf9f8",
+                    "on-primary-fixed-variant": "#254f31",
+                    "surface-container": "#f0eded",
+                    "on-background": "#1b1c1c",
+                    "inverse-primary": "#a3d2ab",
+                    "on-primary-fixed": "#00210c",
+                    "tertiary-fixed-dim": "#c9c6bd",
+                    "primary-fixed": "#bfeec5",
+                    "primary": "#033016",
+                    "tertiary": "#292923",
+                    "surface-variant": "#e4e2e1",
+                    "on-tertiary-fixed": "#1c1c16",
+                    "on-error": "#ffffff",
+                    "on-secondary-fixed": "#3f0200",
+                    "surface-container-low": "#f6f3f2",
+                    "error": "#ba1a1a",
+                    "on-tertiary-container": "#acaaa1",
+                    "on-secondary": "#ffffff",
+                    "surface-container-highest": "#e4e2e1",
+                    "tertiary-fixed": "#e5e2d9",
+                    "surface-container-lowest": "#ffffff",
+                    "outline": "#727971",
+                    "on-tertiary-fixed-variant": "#484740",
+                    "error-container": "#ffdad6",
+                    "on-tertiary": "#ffffff",
+                    "outline-variant": "#c1c9bf",
+                    "on-error-container": "#93000a",
+                    "secondary": "#a43c2b",
+                    "surface-dim": "#dcd9d9",
+                    "surface-tint": "#3d6748",
+                    "surface-container-high": "#eae7e7",
+                    "on-secondary-container": "#71170a",
+                    "background": "#fcf9f8",
+                    "tertiary-container": "#403f38",
+                    "surface": "#fcf9f8",
+                    "primary-container": "#1d472a",
+                    "on-secondary-fixed-variant": "#842416",
+                    "on-surface": "#1b1c1c",
+                    "secondary-container": "#fd7e67",
+                    "on-surface-variant": "#414941",
+                    "secondary-fixed-dim": "#ffb4a6",
+                    "inverse-surface": "#303030",
+                    "on-primary": "#ffffff",
+                    "on-primary-container": "#88b590",
+                    "primary-fixed-dim": "#a3d2ab",
+                    "inverse-on-surface": "#f3f0f0",
+                    "secondary-fixed": "#ffdad4"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "xs": "4px",
+                    "gutter": "24px",
+                    "container-max": "1280px",
+                    "xl": "80px",
+                    "sm": "12px",
+                    "lg": "48px",
+                    "base": "8px",
+                    "md": "24px"
+            },
+            "fontFamily": {
+                    "stats-number": ["Domine"],
+                    "body-lg": ["Work Sans"],
+                    "display-lg": ["Domine"],
+                    "body-md": ["Work Sans"],
+                    "label-md": ["Work Sans"],
+                    "headline-lg-mobile": ["Domine"],
+                    "headline-lg": ["Domine"],
+                    "headline-md": ["Domine"]
+            },
+            "fontSize": {
+                    "stats-number": ["36px", {"lineHeight": "44px", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(252, 249, 248, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(114, 121, 113, 0.1);
+        }
+        .stadium-glow {
+            box-shadow: 0 0 60px 10px rgba(3, 48, 22, 0.08);
+        }
+        .etched-border {
+            border-bottom: 1px solid rgba(114, 121, 113, 0.3);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .bingo-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 2px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/90 dark:bg-surface-container-low/90 backdrop-blur-xl border-b border-outline-variant/30 dark:border-outline/20 shadow-[0_4px_20px_rgba(3,48,22,0.05)]">
+<div class="flex justify-between items-center px-gutter py-4 w-full max-w-container-max mx-auto">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container overflow-hidden ring-2 ring-primary-fixed">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a sports fan in a minimalist studio setting. The lighting is bright and clean with soft shadows, mirroring a high-end light-mode user interface. The subject wears a dark green baseball cap, subtly nodding to the stadium aesthetic, while the background remains a neutral, off-white cream to maintain the premium glassmorphism feel of the app." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAOUSPhuSR3Y8uYQROgGyJE_FDi0CJHR4c_-JshoJLQs8gn0CJthS-PJvvXQ50AZSYCCFOcv9Itd2UCbkyF33hJaNORwFaIDol8q9wW5dyz32g6g88HAUNdE3nrVIZNiH4SJBVtd0NWVwXgy7LLnav6rULUwceEHBlCU4W3CKrwxvNln8NgHYaxX_fePpf78_kU28uQFJm0NxEuLa_nQgZvxydr5FHbUoJfgkIs0hvNkO7ISMsrfaEPiYcRvrZZ6cTKqek-lMwJCCH">
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary dark:text-primary-fixed tracking-tight">Baseball Bingo</h1>
+</div>
+<div class="flex items-center gap-6">
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-primary font-bold transition-colors font-label-md text-label-md" href="#">Lobby</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-md text-label-md px-2 py-1 rounded" href="#">My Games</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-md text-label-md px-2 py-1 rounded" href="#">Stats</a>
+</nav>
+<button class="hover:bg-surface-container-high transition-colors p-2 rounded-full active:scale-95 duration-150">
+<span class="material-symbols-outlined text-primary">settings</span>
+</button>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-32 px-4 md:px-gutter max-w-container-max mx-auto">
+<!-- Live Games Header -->
+<section class="mb-lg">
+<div class="flex items-center justify-between mb-md">
+<h2 class="font-headline-md text-headline-md text-primary flex items-center gap-2">
+<span class="w-2 h-2 bg-secondary rounded-full animate-pulse"></span>
+                    Live Ballparks
+                </h2>
+<button class="text-on-secondary-fixed-variant font-label-md text-label-md flex items-center gap-1 hover:underline">
+                    View All Games <span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+<div class="flex gap-4 overflow-x-auto no-scrollbar pb-4 -mx-4 px-4">
+<!-- Game Card 1 -->
+<div class="min-w-[280px] glass-panel rounded-xl p-4 stadium-glow relative overflow-hidden group hover:scale-[1.02] transition-transform cursor-pointer border-l-4 border-l-secondary">
+<div class="flex justify-between items-center mb-4">
+<span class="bg-secondary text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-widest">Live • Top 4th</span>
+<span class="text-on-surface-variant font-label-md text-[12px]">Dodger Stadium</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex flex-col items-center gap-1">
+<div class="w-12 h-12 bg-surface-container-high rounded-lg flex items-center justify-center shadow-inner">
+<span class="material-symbols-outlined text-primary text-3xl">star</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface">LAD</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="font-stats-number text-stats-number text-primary">4 - 2</span>
+<span class="text-[10px] text-outline uppercase tracking-tighter">Current Score</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<div class="w-12 h-12 bg-surface-container-high rounded-lg flex items-center justify-center shadow-inner">
+<span class="material-symbols-outlined text-secondary text-3xl">brightness_high</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface">LAA</span>
+</div>
+</div>
+<div class="mt-4 pt-3 etched-border flex items-center gap-2 text-error font-label-md text-[12px]">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+                        New play: Ohtani Home Run!
+                    </div>
+</div>
+<!-- Game Card 2 -->
+<div class="min-w-[280px] glass-panel rounded-xl p-4 relative overflow-hidden group hover:scale-[1.02] transition-transform cursor-pointer opacity-90">
+<div class="flex justify-between items-center mb-4">
+<span class="bg-primary text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-widest">Live • Bot 2nd</span>
+<span class="text-on-surface-variant font-label-md text-[12px]">Citi Field</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex flex-col items-center gap-1">
+<div class="w-12 h-12 bg-surface-container-high rounded-lg flex items-center justify-center shadow-inner">
+<span class="material-symbols-outlined text-primary text-3xl">shield</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface">NYM</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="font-stats-number text-stats-number text-primary">0 - 1</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<div class="w-12 h-12 bg-surface-container-high rounded-lg flex items-center justify-center shadow-inner">
+<span class="material-symbols-outlined text-on-surface-variant text-3xl">rocket</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface">SDP</span>
+</div>
+</div>
+<div class="mt-4 pt-3 etched-border flex items-center gap-2 text-on-surface-variant font-label-md text-[12px]">
+<span class="material-symbols-outlined text-sm">schedule</span>
+                        Last play: Strikeout Swinging
+                    </div>
+</div>
+<!-- Game Card 3 -->
+<div class="min-w-[280px] glass-panel rounded-xl p-4 relative overflow-hidden group hover:scale-[1.02] transition-transform cursor-pointer opacity-90">
+<div class="flex justify-between items-center mb-4">
+<span class="bg-primary text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-widest">Live • Top 1st</span>
+<span class="text-on-surface-variant font-label-md text-[12px]">Wrigley Field</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex flex-col items-center gap-1">
+<div class="w-12 h-12 bg-surface-container-high rounded-lg flex items-center justify-center shadow-inner">
+<span class="material-symbols-outlined text-primary text-3xl">sports_baseball</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface">CHC</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="font-stats-number text-stats-number text-primary">0 - 0</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<div class="w-12 h-12 bg-surface-container-high rounded-lg flex items-center justify-center shadow-inner">
+<span class="material-symbols-outlined text-on-secondary-fixed-variant text-3xl">pest_control</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface">STL</span>
+</div>
+</div>
+<div class="mt-4 pt-3 etched-border flex items-center gap-2 text-on-surface-variant font-label-md text-[12px]">
+<span class="material-symbols-outlined text-sm">info</span>
+                        Game just started
+                    </div>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Active Card Switcher -->
+<div class="lg:col-span-4 space-y-md">
+<h2 class="font-headline-md text-headline-md text-primary">My Active Cards</h2>
+<!-- Card Management Section -->
+<div class="space-y-4">
+<!-- Preview Card 1 (Active) -->
+<div class="glass-panel p-4 rounded-xl ring-2 ring-primary relative stadium-glow group transition-all duration-300">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-headline-md text-[18px] text-primary leading-tight">LAD vs LAA</h3>
+<p class="text-[12px] text-outline">Evening Series #104</p>
+</div>
+<div class="bg-primary-fixed text-on-primary-fixed text-[10px] font-bold px-2 py-1 rounded">ACTIVE</div>
+</div>
+<div class="flex gap-4 mb-4">
+<div class="w-20 h-20 bingo-grid bg-surface-container rounded p-1 opacity-60">
+<div class="bg-primary-container rounded-xs"></div><div class="bg-surface-container-highest"></div><div class="bg-primary-container"></div><div class="bg-surface-container-highest"></div><div class="bg-surface-container-highest"></div>
+<div class="bg-surface-container-highest"></div><div class="bg-primary-container"></div><div class="bg-surface-container-highest"></div><div class="bg-surface-container-highest"></div><div class="bg-primary-container"></div>
+<div class="bg-primary-container"></div><div class="bg-surface-container-highest"></div><div class="bg-secondary rounded-xs"></div><div class="bg-surface-container-highest"></div><div class="bg-primary-container"></div>
+<div class="bg-surface-container-highest"></div><div class="bg-primary-container"></div><div class="bg-surface-container-highest"></div><div class="bg-primary-container"></div><div class="bg-surface-container-highest"></div>
+<div class="bg-primary-container"></div><div class="bg-surface-container-highest"></div><div class="bg-primary-container"></div><div class="bg-surface-container-highest"></div><div class="bg-primary-container"></div>
+</div>
+<div class="flex flex-col justify-center gap-1">
+<span class="font-stats-number text-[24px] text-primary leading-none">12/25</span>
+<span class="text-on-surface-variant text-[12px]">Squares marked</span>
+<div class="mt-1 flex items-center gap-1 text-secondary font-bold text-[12px]">
+<span class="material-symbols-outlined text-[14px]">bolt</span>
+                                    1 LINE AWAY!
+                                </div>
+</div>
+</div>
+<button class="w-full bg-primary text-white font-label-md text-label-md py-3 rounded hover:bg-primary-container transition-colors shadow-lg active:scale-95 duration-100">
+                            VIEW FULL GRID
+                        </button>
+</div>
+<!-- Preview Card 2 -->
+<div class="glass-panel p-4 rounded-xl opacity-70 hover:opacity-100 transition-all duration-300 border border-outline-variant/30 cursor-pointer">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-headline-md text-[18px] text-primary leading-tight">NYM vs SDP</h3>
+<p class="text-[12px] text-outline">Queens Classic</p>
+</div>
+<div class="bg-surface-container-highest text-on-surface-variant text-[10px] font-bold px-2 py-1 rounded">BG GAME</div>
+</div>
+<div class="flex gap-4">
+<div class="w-16 h-16 bingo-grid bg-surface-container rounded p-1 opacity-40">
+<div class="bg-primary-container"></div><div class="bg-surface-container-highest"></div><div class="bg-surface-container-highest"></div><div class="bg-surface-container-highest"></div><div class="bg-surface-container-highest"></div>
+<div class="bg-surface-container-highest"></div><div class="bg-primary-container"></div><div class="bg-surface-container-highest"></div><div class="bg-surface-container-highest"></div><div class="bg-surface-container-highest"></div>
+<div class="bg-surface-container-highest"></div><div class="bg-surface-container-highest"></div><div class="bg-secondary rounded-xs"></div><div class="bg-surface-container-highest"></div><div class="bg-surface-container-highest"></div>
+<div class="bg-surface-container-highest"></div><div class="bg-surface-container-highest"></div><div class="bg-surface-container-highest"></div><div class="bg-primary-container"></div><div class="bg-surface-container-highest"></div>
+<div class="bg-surface-container-highest"></div><div class="bg-surface-container-highest"></div><div class="bg-surface-container-highest"></div><div class="bg-surface-container-highest"></div><div class="bg-primary-container"></div>
+</div>
+<div class="flex flex-col justify-center gap-0.5">
+<span class="font-stats-number text-[20px] text-primary leading-none">5/25</span>
+<span class="text-on-surface-variant text-[11px]">Early Game progress</span>
+</div>
+</div>
+<div class="mt-4 flex items-center justify-between text-on-surface-variant font-label-md text-[12px]">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">sync</span> Syncing play-by-play</span>
+<span class="text-primary hover:underline">Switch</span>
+</div>
+</div>
+<!-- New Game Card -->
+<button class="w-full border-2 border-dashed border-outline-variant/50 p-6 rounded-xl flex flex-col items-center justify-center gap-2 text-outline hover:bg-surface-container-low transition-colors group">
+<span class="material-symbols-outlined text-3xl group-hover:scale-110 transition-transform">add_circle</span>
+<span class="font-label-md text-label-md">Join New Game</span>
+</button>
+</div>
+</div>
+<!-- Right Column: Interactive Bingo Grid (Featured) -->
+<div class="lg:col-span-8">
+<div class="flex items-center justify-between mb-md">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-2xl">grid_view</span>
+<h2 class="font-headline-md text-headline-md text-primary">Live Card: Dodgers vs Angels</h2>
+</div>
+<div class="flex gap-2">
+<button class="p-2 glass-panel rounded-lg hover:bg-surface-container-high">
+<span class="material-symbols-outlined text-on-surface">help</span>
+</button>
+<button class="p-2 glass-panel rounded-lg hover:bg-surface-container-high">
+<span class="material-symbols-outlined text-on-surface">share</span>
+</button>
+</div>
+</div>
+<div class="glass-panel p-6 rounded-xl stadium-glow relative">
+<div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: url('https://www.transparenttextures.com/patterns/pinstriped-suit.png');"></div>
+<!-- Bingo Header Row -->
+<div class="grid grid-cols-5 gap-4 mb-4">
+<div class="font-display-lg text-[24px] text-center text-secondary border-b-2 border-secondary pb-2">B</div>
+<div class="font-display-lg text-[24px] text-center text-secondary border-b-2 border-secondary pb-2">I</div>
+<div class="font-display-lg text-[24px] text-center text-secondary border-b-2 border-secondary pb-2">N</div>
+<div class="font-display-lg text-[24px] text-center text-secondary border-b-2 border-secondary pb-2">G</div>
+<div class="font-display-lg text-[24px] text-center text-secondary border-b-2 border-secondary pb-2">O</div>
+</div>
+<!-- Main Bingo Grid -->
+<div class="grid grid-cols-5 gap-3">
+<!-- Row 1 -->
+<div class="aspect-square glass-panel rounded-lg flex flex-col items-center justify-center p-2 text-center border-primary/20 bg-primary-fixed/40 group hover:shadow-inner transition-all">
+<span class="text-[11px] font-bold text-on-primary-fixed-variant leading-tight">Double Play</span>
+</div>
+<div class="aspect-square glass-panel rounded-lg flex flex-col items-center justify-center p-2 text-center border-outline-variant hover:border-primary cursor-pointer transition-all">
+<span class="text-[11px] font-body-md text-on-surface leading-tight">Strikeout Looking</span>
+</div>
+<div class="aspect-square glass-panel rounded-lg flex flex-col items-center justify-center p-2 text-center border-primary/20 bg-primary-fixed/40">
+<span class="text-[11px] font-bold text-on-primary-fixed-variant leading-tight">Pitch Change</span>
+</div>
+<div class="aspect-square glass-panel rounded-lg flex flex-col items-center justify-center p-2 text-center border-outline-variant hover:border-primary cursor-pointer transition-all">
+<span class="text-[11px] font-body-md text-on-surface leading-tight">Walked Batter</span>
+</div>
+<div class="aspect-square glass-panel rounded-lg flex flex-col items-center justify-center p-2 text-center border-outline-variant hover:border-primary cursor-pointer transition-all">
+<span class="text-[11px] font-body-md text-on-surface leading-tight">Stolen Base</span>
+</div>
+<!-- Row 2 -->
+<div class="aspect-square glass-panel rounded-lg flex flex-col items-center justify-center p-2 text-center border-outline-variant hover:border-primary cursor-pointer transition-all">
+<span class="text-[11px] font-body-md text-on-surface leading-tight">Foul Ball (Stand)</span>
+</div>
+<div class="aspect-square glass-panel rounded-lg flex flex-col items-center justify-center p-2 text-center border-primary/20 bg-primary-fixed/40">
+<span class="text-[11px] font-bold text-on-primary-fixed-variant leading-tight">Full Count</span>
+</div>
+<div class="aspect-square glass-panel rounded-lg flex flex-col items-center justify-center p-2 text-center border-outline-variant hover:border-primary cursor-pointer transition-all">
+<span class="text-[11px] font-body-md text-on-surface leading-tight">Sacrifice Fly</span>
+</div>
+<div class="aspect-square glass-panel rounded-lg flex flex-col items-center justify-center p-2 text-center border-outline-variant hover:border-primary cursor-pointer transition-all">
+<span class="text-[11px] font-body-md text-on-surface leading-tight">Bat Flip</span>
+</div>
+<div class="aspect-square glass-panel rounded-lg flex flex-col items-center justify-center p-2 text-center border-primary/20 bg-primary-fixed/40">
+<span class="text-[11px] font-bold text-on-primary-fixed-variant leading-tight">Error</span>
+</div>
+<!-- Row 3 -->
+<div class="aspect-square glass-panel rounded-lg flex flex-col items-center justify-center p-2 text-center border-primary/20 bg-primary-fixed/40">
+<span class="text-[11px] font-bold text-on-primary-fixed-variant leading-tight">Pinch Hitter</span>
+</div>
+<div class="aspect-square glass-panel rounded-lg flex flex-col items-center justify-center p-2 text-center border-outline-variant hover:border-primary cursor-pointer transition-all">
+<span class="text-[11px] font-body-md text-on-surface leading-tight">Triple</span>
+</div>
+<!-- Free Space -->
+<div class="aspect-square bg-secondary rounded-lg flex flex-col items-center justify-center p-2 text-center shadow-lg border-2 border-white/20">
+<span class="material-symbols-outlined text-white text-3xl" style="font-variation-settings: 'FILL' 1;">sports_baseball</span>
+<span class="text-[10px] font-bold text-white uppercase tracking-widest mt-1">FREE</span>
+</div>
+<div class="aspect-square glass-panel rounded-lg flex flex-col items-center justify-center p-2 text-center border-outline-variant hover:border-primary cursor-pointer transition-all">
+<span class="text-[11px] font-body-md text-on-surface leading-tight">Bunt</span>
+</div>
+<div class="aspect-square glass-panel rounded-lg flex flex-col items-center justify-center p-2 text-center border-primary/20 bg-primary-fixed/40">
+<span class="text-[11px] font-bold text-on-primary-fixed-variant leading-tight">Home Run</span>
+</div>
+<!-- Row 4 -->
+<div class="aspect-square glass-panel rounded-lg flex flex-col items-center justify-center p-2 text-center border-outline-variant hover:border-primary cursor-pointer transition-all">
+<span class="text-[11px] font-body-md text-on-surface leading-tight">Pickoff Attempt</span>
+</div>
+<div class="aspect-square glass-panel rounded-lg flex flex-col items-center justify-center p-2 text-center border-primary/20 bg-primary-fixed/40">
+<span class="text-[11px] font-bold text-on-primary-fixed-variant leading-tight">Wild Pitch</span>
+</div>
+<div class="aspect-square glass-panel rounded-lg flex flex-col items-center justify-center p-2 text-center border-outline-variant hover:border-primary cursor-pointer transition-all">
+<span class="text-[11px] font-body-md text-on-surface leading-tight">Ground Out</span>
+</div>
+<div class="aspect-square glass-panel rounded-lg flex flex-col items-center justify-center p-2 text-center border-primary/20 bg-primary-fixed/40">
+<span class="text-[11px] font-bold text-on-primary-fixed-variant leading-tight">Infield Fly</span>
+</div>
+<div class="aspect-square glass-panel rounded-lg flex flex-col items-center justify-center p-2 text-center border-outline-variant hover:border-primary cursor-pointer transition-all">
+<span class="text-[11px] font-body-md text-on-surface leading-tight">Hot Dog Mention</span>
+</div>
+<!-- Row 5 -->
+<div class="aspect-square glass-panel rounded-lg flex flex-col items-center justify-center p-2 text-center border-primary/20 bg-primary-fixed/40">
+<span class="text-[11px] font-bold text-on-primary-fixed-variant leading-tight">Double</span>
+</div>
+<div class="aspect-square glass-panel rounded-lg flex flex-col items-center justify-center p-2 text-center border-outline-variant hover:border-primary cursor-pointer transition-all">
+<span class="text-[11px] font-body-md text-on-surface leading-tight">Caught Stealing</span>
+</div>
+<div class="aspect-square glass-panel rounded-lg flex flex-col items-center justify-center p-2 text-center border-primary/20 bg-primary-fixed/40">
+<span class="text-[11px] font-bold text-on-primary-fixed-variant leading-tight">Bullpen Action</span>
+</div>
+<div class="aspect-square glass-panel rounded-lg flex flex-col items-center justify-center p-2 text-center border-outline-variant hover:border-primary cursor-pointer transition-all">
+<span class="text-[11px] font-body-md text-on-surface leading-tight">Base Hit</span>
+</div>
+<div class="aspect-square glass-panel rounded-lg flex flex-col items-center justify-center p-2 text-center border-primary/20 bg-primary-fixed/40">
+<span class="text-[11px] font-bold text-on-primary-fixed-variant leading-tight">Line Out</span>
+</div>
+</div>
+<div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-outline-variant/30 pt-6">
+<div class="flex items-center gap-4">
+<div class="flex flex-col">
+<span class="text-[12px] text-outline uppercase font-bold tracking-widest">Global Rank</span>
+<span class="font-stats-number text-[24px] text-primary">#42</span>
+</div>
+<div class="h-10 w-px bg-outline-variant/50"></div>
+<div class="flex flex-col">
+<span class="text-[12px] text-outline uppercase font-bold tracking-widest">Potential Prize</span>
+<span class="font-stats-number text-[24px] text-secondary">500 XP</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-[12px] text-on-surface-variant italic">New play every ~3 mins</span>
+<div class="flex flex-col items-end gap-1">
+  <span class="text-[10px] font-bold text-primary uppercase tracking-tighter">Mode: AI Auto-Mark</span>
+  <button class="bg-secondary text-white font-label-md text-label-md px-6 py-2 rounded-full hover:bg-on-secondary-fixed-variant transition-all shadow-[0_0_15px_rgba(164,60,43,0.4)] ring-2 ring-white/20 active:scale-95 flex items-center gap-2">
+    <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+    AUTO-MARK: ON
+  </button>
+  <p class="text-[10px] text-outline italic">Switch to 'Pro Manual' in settings</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<footer class="fixed bottom-0 w-full z-50 bg-surface/95 dark:bg-surface-container-lowest/95 backdrop-blur-md border-t border-outline-variant/50 shadow-[0_-8px_30px_rgba(0,0,0,0.04)]">
+<div class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2">
+<button class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">stadium</span>
+<span class="font-label-md text-label-md">Lobby</span>
+</button>
+<button class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim bg-primary-fixed/30 rounded-full px-4 py-1 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">sports_baseball</span>
+<span class="font-label-md text-label-md">My Games</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-md text-label-md">Stats</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md">Profile</span>
+</button>
+</div>
+</footer>
+<script>
+        // Micro-interactions for bingo tiles
+        document.querySelectorAll('.bingo-grid div, .aspect-square.cursor-pointer').forEach(tile => {
+            tile.addEventListener('click', () => {
+                tile.classList.toggle('bg-primary-fixed/40');
+                tile.classList.toggle('border-primary/20');
+                tile.classList.toggle('shadow-inner');
+                
+                // Visual feedback
+                if (tile.classList.contains('bg-primary-fixed/40')) {
+                    const spark = document.createElement('div');
+                    spark.className = 'absolute inset-0 bg-primary/10 rounded-lg animate-ping pointer-events-none';
+                    tile.style.position = 'relative';
+                    tile.appendChild(spark);
+                    setTimeout(() => spark.remove(), 1000);
+                }
+            });
+        });
+
+        // Simple tab switching simulation for the switcher
+        document.querySelectorAll('.glass-panel.cursor-pointer').forEach(panel => {
+            panel.addEventListener('click', function() {
+                // This would normally trigger a state change
+                console.log('Switching to game...');
+            });
+        });
+    </script>
+
+
+</body></html>

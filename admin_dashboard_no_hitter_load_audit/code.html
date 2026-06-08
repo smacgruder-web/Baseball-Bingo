@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Dashboard - Grand Slam Surge</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400;600;700&amp;family=Work+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-container": "#ff716d",
+                        "primary": "#033016",
+                        "surface-container-highest": "#e2e3de",
+                        "surface-dim": "#d9dad6",
+                        "outline": "#727971",
+                        "inverse-primary": "#a3d2ab",
+                        "on-tertiary-container": "#4e3d00",
+                        "surface-bright": "#f9faf5",
+                        "on-surface-variant": "#414941",
+                        "error": "#ba1a1a",
+                        "background": "#f9faf5",
+                        "tertiary": "#735c00",
+                        "secondary-fixed": "#ffdad7",
+                        "on-tertiary-fixed-variant": "#574500",
+                        "inverse-on-surface": "#f0f1ec",
+                        "on-surface": "#1a1c19",
+                        "surface": "#f9faf5",
+                        "primary-fixed": "#bfeec5",
+                        "on-secondary-fixed": "#410005",
+                        "tertiary-fixed": "#ffe084",
+                        "on-secondary-container": "#700310",
+                        "outline-variant": "#c1c9bf",
+                        "on-primary-fixed-variant": "#254f31",
+                        "primary-container": "#1d472a",
+                        "surface-container-high": "#e8e9e4",
+                        "on-secondary-fixed-variant": "#8a1a1f",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#2f312e",
+                        "on-primary-fixed": "#00210c",
+                        "on-primary-container": "#88b590",
+                        "primary-fixed-dim": "#a3d2ab",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#cea700",
+                        "surface-tint": "#3d6748",
+                        "secondary": "#ab3334",
+                        "on-background": "#1a1c19",
+                        "secondary-fixed-dim": "#ffb3ae",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f3f4ef",
+                        "tertiary-fixed-dim": "#eec209",
+                        "surface-container": "#edeee9",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed": "#231b00",
+                        "on-error": "#ffffff",
+                        "surface-variant": "#e2e3de",
+                        "on-secondary": "#ffffff",
+                        "on-primary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "48px",
+                        "base": "8px",
+                        "grid-margin-desktop": "32px",
+                        "grid-margin-mobile": "16px",
+                        "xs": "4px",
+                        "sm": "12px",
+                        "md": "24px",
+                        "grid-gutter": "16px",
+                        "xl": "64px"
+                    },
+                    "fontFamily": {
+                        "display-lg-mobile": ["Domine"],
+                        "headline-sm": ["Domine"],
+                        "label-bold": ["Work Sans"],
+                        "display-lg": ["Domine"],
+                        "caption": ["Work Sans"],
+                        "body-md": ["Work Sans"],
+                        "headline-md": ["Domine"],
+                        "body-lg": ["Work Sans"]
+                    },
+                    "fontSize": {
+                        "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .pinstripe-bg {
+            background-image: repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(114, 121, 113, 0.05) 40px);
+        }
+        .paper-grain {
+            background-color: #f9faf5;
+            background-image: url("https://www.transparenttextures.com/patterns/felt.png");
+        }
+        .inset-press {
+            box-shadow: inset 2px 2px 4px rgba(0,0,0,0.05);
+        }
+        .stitching-border {
+            border-style: dashed;
+            border-width: 2px;
+            border-image: repeating-linear-gradient(to right, #033016, #033016 10px, transparent 10px, transparent 20px) 1;
+        }
+        .celebration-log-scroll {
+            scrollbar-width: thin;
+            scrollbar-color: #3d6748 #f3f4ef;
+        }
+        @keyframes surge-pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+        .surge-active {
+            animation: surge-pulse 2s infinite ease-in-out;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="paper-grain font-body-md text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed min-h-screen pb-24 md:pb-0">
+<!-- TopAppBar -->
+<header class="bg-surface/90 backdrop-blur-md sticky top-0 z-50 border-b border-outline-variant/30 shadow-sm flex justify-between items-center w-full px-4 h-16">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary font-headline-md text-headline-md" style="font-variation-settings: 'FILL' 1;">sports_baseball</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Admin Dashboard</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex gap-6 mr-6">
+<a class="font-label-bold text-label-bold text-primary font-bold" href="#">Health</a>
+<a class="font-label-bold text-label-bold text-on-surface-variant hover:bg-primary/5 transition-colors px-2 py-1 rounded" href="#">Metrics</a>
+<a class="font-label-bold text-label-bold text-on-surface-variant hover:bg-primary/5 transition-colors px-2 py-1 rounded" href="#">Logs</a>
+</div>
+<div class="flex items-center gap-2 cursor-pointer active:opacity-80">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold text-xs">AU</div>
+<span class="hidden sm:inline font-label-bold text-label-bold text-on-surface">Admin User</span>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto p-4 md:p-8 space-y-8">
+<!-- Grand Slam Surge Hero Banner -->
+<section class="bg-primary text-on-primary rounded-xl overflow-hidden relative shadow-lg">
+<div class="pinstripe-bg absolute inset-0 opacity-10"></div>
+<div class="relative p-6 md:p-10 flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="space-y-4 max-w-2xl text-center md:text-left">
+<div class="inline-flex items-center gap-2 bg-secondary px-3 py-1 rounded-full text-white font-label-bold text-caption animate-pulse"><span class="material-symbols-outlined text-sm">bolt</span> LIVE: NO-HITTER REWARD SURGE</div>
+<h2 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg">No-Hitter Traffic Surge</h2>
+<p class="font-body-lg text-body-lg text-on-primary/80">WebSocket traffic has spiked again following the final out of the No-Hitter. Reward distribution service is processing 18.2k events/sec while maintaining stability.</p>
+</div>
+<div class="flex flex-col items-center justify-center bg-white/10 backdrop-blur-md rounded-full w-48 h-48 border-2 border-dashed border-on-primary/30 surge-active">
+<span class="font-display-lg text-display-lg-mobile text-on-primary">99.9%</span>
+<span class="font-label-bold text-caption text-on-primary/70">UPTIME</span>
+</div>
+</div>
+</section>
+<!-- KPI Grid -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- WebSocket Traffic -->
+<div class="bg-surface border border-outline-variant/30 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+<div class="flex justify-between items-start mb-4">
+<div>
+<p class="font-label-bold text-caption text-on-surface-variant uppercase tracking-wider">WebSocket Traffic</p>
+<h3 class="font-headline-md text-headline-md text-primary mt-1">520% Surge</h3>
+</div>
+<span class="material-symbols-outlined text-secondary font-headline-md" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+</div>
+<div class="h-2 bg-surface-container-highest rounded-full overflow-hidden flex">
+<div class="h-full bg-secondary w-full" style="width: 85%;"></div>
+</div>
+<p class="mt-4 font-caption text-caption text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-sm text-secondary">warning</span> Running at 3.1M concurrent connections</p>
+</div>
+<!-- Notification Service -->
+<div class="bg-surface border border-outline-variant/30 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<div>
+<p class="font-label-bold text-caption text-on-surface-variant uppercase tracking-wider">Notification Delivery</p>
+<h3 class="font-headline-md text-headline-md text-primary mt-1">Peak Capacity</h3>
+</div>
+<span class="material-symbols-outlined text-primary font-headline-md" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+</div>
+<div class="flex gap-2 items-end h-12">
+<div class="flex-1 bg-primary/20 h-4 rounded-t"></div>
+<div class="flex-1 bg-primary/30 h-6 rounded-t"></div>
+<div class="flex-1 bg-primary/40 h-8 rounded-t"></div>
+<div class="flex-1 bg-primary/60 h-12 rounded-t"></div>
+<div class="flex-1 bg-primary h-10 rounded-t"></div>
+</div>
+<p class="mt-4 font-caption text-caption text-on-surface-variant">Queue lag: <span class="text-primary font-bold">14ms</span> (Optimal)</p>
+</div>
+<!-- Server Integrity -->
+<div class="bg-surface border border-outline-variant/30 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<div>
+<p class="font-label-bold text-caption text-on-surface-variant uppercase tracking-wider">Server Integrity</p>
+<h3 class="font-headline-md text-headline-md text-primary mt-1">Stable (99.9%)</h3>
+</div>
+<span class="material-symbols-outlined text-primary font-headline-md" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+</div>
+<div class="stitching-border border-primary/20 h-0 w-full my-6"></div>
+<p class="font-body-md text-body-md text-on-surface-variant italic">"The stadium holds firm under the roar of the crowd."</p>
+</div>
+</section>
+<!-- Main Dashboard Content -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Real-Time Celebration Packet Delivery Log -->
+<section class="lg:col-span-2 space-y-6">
+<div class="bg-surface border border-outline-variant/30 rounded-xl shadow-sm overflow-hidden">
+<div class="bg-primary/5 px-6 py-4 border-b border-outline-variant/30 flex justify-between items-center">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">data_object</span>
+<h4 class="font-headline-sm text-headline-sm text-primary">Celebration Packet Delivery Log</h4>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="font-label-bold text-caption text-secondary uppercase tracking-tighter">Live Stream</span>
+</div>
+</div>
+<div class="h-[500px] overflow-y-auto p-6 celebration-log-scroll space-y-3 bg-[#fdfdfb]" id="packet-log"><div class="flex items-center gap-4 py-2 border-b border-outline-variant/10 font-mono text-xs text-on-surface-variant"><span class="text-primary-container font-bold">[17:42:10]</span><span class="text-secondary font-bold">NOHIT_REWARD</span><span class="flex-1">UserID: #12984 (Region: US-West)</span><span class="text-primary">ACK delivered (4ms)</span></div><div class="flex items-center gap-4 py-2 border-b border-outline-variant/10 font-mono text-xs text-on-surface-variant"><span class="text-primary-container font-bold">[17:42:09]</span><span class="text-secondary font-bold">NOHIT_REWARD</span><span class="flex-1">UserID: #88271 (Region: EU-Central)</span><span class="text-primary">ACK delivered (6ms)</span></div><div class="flex items-center gap-4 py-2 border-b border-outline-variant/10 font-mono text-xs text-on-surface-variant"><span class="text-primary-container font-bold">[17:42:08]</span><span class="text-secondary font-bold">NOHIT_REWARD</span><span class="flex-1">UserID: #44512 (Region: US-East)</span><span class="text-primary">ACK delivered (3ms)</span></div></div>
+<div class="p-4 bg-surface-container-low border-t border-outline-variant/30 flex justify-between items-center">
+<span class="font-caption text-caption text-on-surface-variant">Total Packets Processed: <strong id="packet-counter">42,912</strong></span>
+<button class="bg-primary text-white font-label-bold text-caption px-4 py-2 rounded shadow hover:translate-y-[2px] transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">download</span> EXPORT AUDIT
+                        </button>
+</div>
+</div>
+</section>
+<!-- Technical Detail Rail -->
+<aside class="space-y-6">
+<div class="bg-surface border border-outline-variant/30 rounded-xl p-6 shadow-sm">
+<h4 class="font-headline-sm text-headline-sm text-primary mb-4">Winner Notification Service</h4>
+<div class="space-y-6">
+<div>
+<div class="flex justify-between mb-2">
+<span class="font-label-bold text-caption text-on-surface-variant">THROUGHPUT</span>
+<span class="font-label-bold text-caption text-primary">88%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full">
+<div class="h-full bg-primary rounded-full" style="width: 88%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-2">
+<span class="font-label-bold text-caption text-on-surface-variant">ERROR RATE</span>
+<span class="font-label-bold text-caption text-secondary">0.01%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full">
+<div class="h-full bg-secondary rounded-full" style="width: 1%"></div>
+</div>
+</div>
+<div class="pt-4 border-t border-outline-variant/30 grid grid-cols-2 gap-4">
+<div class="inset-press bg-surface-container-low p-3 rounded text-center">
+<p class="font-label-bold text-caption text-on-surface-variant">LATENCY</p>
+<p class="font-headline-md text-headline-md text-primary">12ms</p>
+</div>
+<div class="inset-press bg-surface-container-low p-3 rounded text-center">
+<p class="font-label-bold text-caption text-on-surface-variant">NODES</p>
+<p class="font-headline-md text-headline-md text-primary">24</p>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-surface border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm">
+<div class="h-40 bg-surface-container-highest relative">
+<img class="w-full h-full object-cover grayscale opacity-60" data-alt="A vintage architectural blueprint of a historic baseball stadium during sunset, overlaid with glowing digital data visualization points and lines representing network traffic. The scene blends old-world paper textures with high-tech cyan and green data metrics, creating a sophisticated heritage-tech aesthetic for a dashboard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJoZgFLTQ-8rECi5VXsoedSFtZeQgbfiGc8IP2btFi9K7mi5buU2myzOT2ifE8ckOJ3O0uMgct1fwJJztq9QjGb_9h73an07nEATy-H6C1DPD4NwKodNBEkKfHAWrmk01jTJBWCeByEFjlJEQ6nI6UdREVJZWvjqhHrIgjC9gPIPGc6IUdkjSx7EJltoHp8agbu0Bsq9kH1u4p9gBSD-zq7J2sncePTWz_Gj9UOQH2NPxhEXbjzWgVNoRMzDap6iW5jyZaIi8o5BJO"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface to-transparent"></div>
+<div class="absolute bottom-4 left-6">
+<span class="font-label-bold text-caption text-primary uppercase bg-white/80 backdrop-blur px-2 py-1 rounded">System Atlas</span>
+</div>
+</div>
+<div class="p-6">
+<h5 class="font-label-bold text-body-md text-primary mb-2">Heritage Data Integrity</h5>
+<p class="font-caption text-caption text-on-surface-variant">Archive syncing successful across all 12 regional clusters. No data corruption detected during the No-Hitter traffic spike.</p>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface/90 backdrop-blur-md border-t border-outline-variant/30 shadow-lg h-16">
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 transition-all duration-200 active:scale-95 cursor-pointer">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="font-label-md text-label-md">Users</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all duration-200 active:scale-95 cursor-pointer">
+<span class="material-symbols-outlined">sports_esports</span>
+<span class="font-label-md text-label-md">Games</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all duration-200 active:scale-95 cursor-pointer">
+<span class="material-symbols-outlined">rate_review</span>
+<span class="font-label-md text-label-md">Feedback</span>
+</div>
+</nav>
+<script>
+        // Micro-interactions for the packet log
+        const logContainer = document.getElementById('packet-log');
+        const counterEl = document.getElementById('packet-counter');
+        let counter = 42912;
+
+        const regions = ['US-East', 'US-West', 'EU-Central', 'AP-South', 'SA-East'];
+        const types = ['BINGO_CLAIM', 'CELL_MARKED', 'WINNER_ACK', 'HEARTBEAT', 'SCORE_SYNC'];
+        const colors = {
+            'BINGO_CLAIM': 'text-secondary font-bold',
+            'CELL_MARKED': 'text-primary-container',
+            'WINNER_ACK': 'text-tertiary',
+            'HEARTBEAT': 'text-outline',
+            'SCORE_SYNC': 'text-on-primary-fixed-variant'
+        };
+
+        function addLogEntry() {
+            const time = new Date().toLocaleTimeString('en-GB', { hour12: false });
+            const type = types[Math.floor(Math.random() * types.length)];
+            const region = regions[Math.floor(Math.random() * regions.length)];
+            const userId = Math.floor(10000 + Math.random() * 90000);
+            const latency = Math.floor(2 + Math.random() * 15);
+
+            const div = document.createElement('div');
+            div.className = "flex items-center gap-4 py-2 border-b border-outline-variant/10 font-mono text-xs text-on-surface-variant opacity-0 translate-x-4 transition-all duration-500";
+            div.innerHTML = `
+                <span class="text-primary-container font-bold">[${time}]</span>
+                <span class="${colors[type]}">${type}</span>
+                <span class="flex-1">UserID: #${userId} (Region: ${region})</span>
+                <span class="text-primary">ACK delivered (${latency}ms)</span>
+            `;
+
+            logContainer.prepend(div);
+            
+            // Trigger animation
+            setTimeout(() => {
+                div.classList.remove('opacity-0', 'translate-x-4');
+            }, 50);
+
+            // Keep log size manageable
+            if (logContainer.children.length > 50) {
+                logContainer.removeChild(logContainer.lastChild);
+            }
+
+            // Update counter
+            counter += Math.floor(Math.random() * 5);
+            counterEl.innerText = counter.toLocaleString();
+        }
+
+        // Simulate traffic
+        setInterval(addLogEntry, 800);
+    </script>
+</body></html>

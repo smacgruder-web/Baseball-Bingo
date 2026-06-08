@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BALLPARK BINGO - Live Gameday</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400;600;700&amp;family=Work+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .pinstripe-bg {
+            background-image: repeating-linear-gradient(90deg, rgba(3, 48, 22, 0.05) 0px, rgba(3, 48, 22, 0.05) 1px, transparent 1px, transparent 40px);
+        }
+        .paper-texture {
+            background-image: url("https://www.transparenttextures.com/patterns/paper-fibers.png");
+        }
+        .pressed-cell {
+            box-shadow: inset 2px 2px 4px rgba(0,0,0,0.1), inset -1px -1px 2px rgba(255,255,255,0.5);
+        }
+        .stitching-border {
+            border-style: dashed;
+            border-width: 2px;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        @keyframes pulse-subtle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .live-pulse {
+            animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        /* Win Animation Styles */
+        @keyframes trophy-bounce {
+            0% { transform: scale(0); opacity: 0; }
+            60% { transform: scale(1.15); opacity: 1; }
+            80% { transform: scale(0.95); }
+            100% { transform: scale(1); }
+        }
+        @keyframes scoreboard-flicker {
+            0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+                opacity: 1;
+                text-shadow: 0 0 10px rgba(3, 48, 22, 0.3);
+            }
+            20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+                opacity: 0.8;
+                text-shadow: none;
+            }
+        }
+        @keyframes cta-pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(3, 48, 22, 0.4); }
+            70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(3, 48, 22, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(3, 48, 22, 0); }
+        }
+        @keyframes modal-fade-in {
+            from { opacity: 0; backdrop-filter: blur(0px); }
+            to { opacity: 1; backdrop-filter: blur(8px); }
+        }
+
+        .animate-trophy { animation: trophy-bounce 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .animate-scoreboard { animation: scoreboard-flicker 4s infinite; }
+        .animate-cta { animation: cta-pulse 2s infinite; }
+        .win-overlay-enter { animation: modal-fade-in 0.6s ease-out forwards; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .animate-trophy, .animate-scoreboard, .animate-cta, .win-overlay-enter, .live-pulse {
+                animation: none !important;
+                transform: none !important;
+                opacity: 1 !important;
+            }
+        }
+
+        canvas#confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 110;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-container": "#ff716d",
+                      "outline-variant": "#c1c9bf",
+                      "on-primary-fixed-variant": "#254f31",
+                      "surface-container-high": "#e8e9e4",
+                      "primary-container": "#1d472a",
+                      "surface": "#f9faf5",
+                      "primary-fixed-dim": "#a3d2ab",
+                      "on-secondary-container": "#700310",
+                      "on-error": "#ffffff",
+                      "surface-container-highest": "#e2e3de",
+                      "surface-dim": "#d9dad6",
+                      "secondary-fixed-dim": "#ffb3ae",
+                      "on-primary-container": "#88b590",
+                      "tertiary": "#735c00",
+                      "on-secondary": "#ffffff",
+                      "on-surface-variant": "#414941",
+                      "on-background": "#1a1c19",
+                      "tertiary-fixed": "#ffe084",
+                      "outline": "#727971",
+                      "surface-variant": "#e2e3de",
+                      "surface-tint": "#3d6748",
+                      "inverse-on-surface": "#f0f1ec",
+                      "error-container": "#ffdad6",
+                      "on-tertiary-fixed-variant": "#574500",
+                      "on-tertiary-fixed": "#231b00",
+                      "surface-bright": "#f9faf5",
+                      "surface-container-low": "#f3f4ef",
+                      "primary-fixed": "#bfeec5",
+                      "on-secondary-fixed-variant": "#8a1a1f",
+                      "background": "#f9faf5",
+                      "on-tertiary": "#ffffff",
+                      "on-error-container": "#93000a",
+                      "tertiary-container": "#cea700",
+                      "on-primary-fixed": "#00210c",
+                      "on-tertiary-container": "#4e3d00",
+                      "on-surface": "#1a1c19",
+                      "on-secondary-fixed": "#410005",
+                      "surface-container": "#edeee9",
+                      "inverse-surface": "#2f312e",
+                      "on-primary": "#ffffff",
+                      "primary": "#033016",
+                      "tertiary-fixed-dim": "#eec209",
+                      "error": "#ba1a1a",
+                      "inverse-primary": "#a3d2ab",
+                      "surface-container-lowest": "#ffffff",
+                      "secondary": "#ab3334",
+                      "secondary-fixed": "#ffdad7"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "xl": "64px",
+                      "base": "8px",
+                      "grid-margin-desktop": "32px",
+                      "grid-margin-mobile": "16px",
+                      "lg": "48px",
+                      "grid-gutter": "16px",
+                      "xs": "4px",
+                      "sm": "12px",
+                      "md": "24px"
+              },
+              "fontFamily": {
+                      "caption": ["Work Sans"],
+                      "headline-md": ["Domine"],
+                      "display-lg-mobile": ["Domine"],
+                      "headline-sm": ["Domine"],
+                      "label-bold": ["Work Sans"],
+                      "display-lg": ["Domine"],
+                      "body-md": ["Work Sans"],
+                      "body-lg": ["Work Sans"]
+              },
+              "fontSize": {
+                      "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                      "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen pinstripe-bg overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/90 dark:bg-surface-dim/90 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm flex justify-between items-center px-grid-margin-mobile md:px-grid-margin-desktop h-16 w-full">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="sports_baseball">sports_baseball</span>
+<h1 class="font-headline-md text-headline-md font-bold tracking-tight text-primary">BALLPARK BINGO</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex gap-6 items-center">
+<a class="font-label-bold text-label-bold text-on-surface-variant hover:bg-primary/5 px-3 py-2 rounded-lg transition-colors" href="#">Lobby</a>
+<a class="font-label-bold text-label-bold text-primary px-3 py-2 rounded-lg bg-primary/5" href="#">Card</a>
+<a class="font-label-bold text-label-bold text-on-surface-variant hover:bg-primary/5 px-3 py-2 rounded-lg transition-colors" href="#">Ranks</a>
+</div>
+<button class="material-symbols-outlined text-primary p-2 hover:bg-primary/5 rounded-full active:scale-95 transition-all" data-icon="account_circle">account_circle</button>
+</div>
+</header>
+<main class="pt-20 pb-24 px-grid-margin-mobile md:px-grid-margin-desktop max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-grid-gutter">
+<!-- Scoreboard Section -->
+<section class="lg:col-span-12 mb-4">
+<div class="bg-primary text-on-primary rounded-xl overflow-hidden shadow-lg border border-primary-container relative">
+<div class="absolute top-0 left-0 w-full h-full opacity-10 paper-texture pointer-events-none"></div>
+<div class="grid grid-cols-3 md:grid-cols-5 p-md items-center text-center">
+<!-- Home Team -->
+<div class="flex flex-col items-center">
+<div class="w-16 h-16 bg-white rounded-full flex items-center justify-center border-4 border-secondary-container mb-2">
+<span class="font-headline-md text-secondary font-bold">NYY</span>
+</div>
+<span class="font-label-bold text-white/80">YANKEES</span>
+<span class="font-display-lg text-display-lg leading-none mt-1">2</span>
+</div>
+<!-- Game Info -->
+<div class="hidden md:flex flex-col items-center justify-center border-x border-white/10 px-4">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-secondary-container live-pulse" data-icon="emergency_home" style="font-variation-settings: 'FILL' 1;">emergency_home</span>
+<span class="font-label-bold text-secondary-container uppercase tracking-widest">Live Now</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="font-headline-sm text-headline-sm">TOP 3RD</span>
+<span class="font-body-md text-white/70">2 OUTS</span>
+</div>
+<div class="mt-4 flex flex-col gap-1 w-full max-w-[100px]">
+<div class="flex justify-center gap-1">
+<div class="w-3 h-3 bg-white rotate-45"></div> <!-- 2nd base -->
+</div>
+<div class="flex justify-between w-full">
+<div class="w-3 h-3 bg-white rotate-45"></div> <!-- 3rd base -->
+<div class="w-3 h-3 bg-white rotate-45"></div> <!-- 1st base -->
+</div>
+<div class="text-center font-label-bold text-[10px] text-secondary-container mt-1">BASES LOADED</div>
+</div>
+</div>
+<!-- VS / Mobile Middle -->
+<div class="md:hidden flex flex-col items-center">
+<span class="font-label-bold text-secondary-container mb-1">T3rd • 2 Out</span>
+<div class="flex gap-1 justify-center py-2">
+<div class="w-2 h-2 bg-white rotate-45"></div>
+<div class="w-2 h-2 bg-white rotate-45"></div>
+<div class="w-2 h-2 bg-white rotate-45"></div>
+</div>
+</div>
+<!-- Current Batter (Desktop Center) -->
+<div class="hidden md:flex flex-col items-center px-4">
+<div class="w-12 h-12 rounded-full overflow-hidden mb-2 border-2 border-white/20">
+<img alt="Batter" class="w-full h-full object-cover" data-alt="A focused professional baseball player standing in the batter's box, adjusting his gloves under stadium lights. The atmosphere is intense with the glow of the night game and a subtle heritage filter applying warm, earthy tones consistent with the vintage ballpark aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4ZoJcvH3zPXYZMZffymxQu9u9fnmsO-AsEoqiABZ95fyMSrtUbvuqZflYpXXiY_VU4gXAhMMKxk1GAY0T8_DQcF9M1iKbBsr4Jm1TyF-I1TYiRaDVXYHri3qZ9r20OjMbiqMTRAT9ma6vT3MOmI4x84EnAVC9D6bE7BySIbR6kL-cHF3MfJOS_vZ8Q0Xh4oquWbFL83bhPMlv2UzVvkZ9A-SfmLdMq8U4vbeWuOkutlek3Jgyr0RPgt0U5DzQ8mwwOrjcKIaoRJ-Q"/>
+</div>
+<span class="font-label-bold text-white uppercase">A. JUDGE</span>
+<span class="font-caption text-white/60">AVG: .284 • 1-1</span>
+</div>
+<!-- Away Team -->
+<div class="flex flex-col items-center">
+<div class="w-16 h-16 bg-white rounded-full flex items-center justify-center border-4 border-outline-variant mb-2">
+<span class="font-headline-md text-primary font-bold">BOS</span>
+</div>
+<span class="font-label-bold text-white/80">RED SOX</span>
+<span class="font-display-lg text-display-lg leading-none mt-1">1</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Left Column: Feed & AI Commentator -->
+<div class="lg:col-span-7 space-y-grid-gutter">
+<!-- Bleacher Bill (AI Commentator) -->
+<article class="bg-surface-container rounded-xl p-md border border-outline-variant/30 relative overflow-hidden shadow-sm">
+<div class="absolute -right-8 -bottom-8 opacity-10">
+<span class="material-symbols-outlined text-[160px]" data-icon="campaign">campaign</span>
+</div>
+<div class="flex gap-4 items-start relative z-10">
+<div class="shrink-0">
+<div class="w-20 h-20 rounded-lg overflow-hidden border-2 border-secondary rotate-[-2deg] shadow-md">
+<img alt="Bleacher Bill" class="w-full h-full object-cover" data-alt="A portrait of a charismatic, elderly baseball fan wearing a vintage newsboy cap and a green pinstripe jersey. He has a warm, weathered face with a joyful expression, set against the blurred backdrop of a classic wooden baseball stadium. The lighting is golden-hour soft, evoking nostalgia and heritage." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmHBR2019jC-btlhRCv9ta680XScRn6Ej_z3GAFYguAFnu--hZ7cZJSEDtMiKS1xLdUeUZmfDMbXXkm-QejGHYO05T2fY9zvH5rh434Fx46Hd5CJd7XnM-kKSzXm-sG_rIz9IYaPr5Az7Bef-L_rqBDNhEJy_njppY7Bn5b6IV076fgmSo6fxngZKOm5qLa1Zt97yS6tJybKHfwwwSrS4-hwIgo0sLG4jJHOzrYjZHdsQXmg5fBbKBtHBlG1s8v5aZT0pMzv_L7dqk"/>
+</div>
+<div class="text-center mt-1">
+<span class="bg-secondary text-white text-[10px] font-label-bold px-1 rounded uppercase">PRO</span>
+</div>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-primary mb-1">Bleacher Bill Says...</h3>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+                            "High Tension! Bases are loaded for Judge. Bingo alert: <span class="font-bold text-secondary">12 players</span> are one square away from a Grand Slam Bingo! Don't look away now, folks."
+                        </p>
+</div>
+</div>
+</article>
+<!-- Live Play Feed -->
+<section class="space-y-4">
+<div class="flex justify-between items-center">
+<h2 class="font-headline-sm text-headline-sm flex items-center gap-2">
+<span class="w-2 h-2 bg-error rounded-full live-pulse"></span>
+                        Live Play Feed
+                    </h2>
+<span class="font-caption text-on-surface-variant uppercase tracking-tighter">Inning 3 • Top</span>
+</div>
+<div class="space-y-3">
+<!-- Feed Item 1 -->
+<div class="bg-white p-sm rounded-lg border-b-2 border-outline-variant/20 flex gap-4 items-center group hover:bg-surface-container-low transition-colors">
+<div class="bg-primary/10 text-primary p-2 rounded-full">
+<span class="material-symbols-outlined" data-icon="sports_baseball">sports_baseball</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between">
+<span class="font-label-bold text-label-bold text-primary">Strikeout Swinging</span>
+<span class="font-caption text-on-surface-variant">2:14 PM</span>
+</div>
+<p class="text-body-md text-on-surface-variant">G. Stanton out on strikes. 2 Outs.</p>
+</div>
+<div class="hidden group-hover:block">
+<span class="text-[10px] bg-tertiary-container/30 text-on-tertiary-container px-2 py-1 rounded font-label-bold">MARKED</span>
+</div>
+</div>
+<!-- Feed Item 2 -->
+<div class="bg-white p-sm rounded-lg border-b-2 border-outline-variant/20 flex gap-4 items-center">
+<div class="bg-secondary/10 text-secondary p-2 rounded-full">
+<span class="material-symbols-outlined" data-icon="ads_click">ads_click</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between">
+<span class="font-label-bold text-label-bold text-secondary">Base Hit to Center</span>
+<span class="font-caption text-on-surface-variant">2:11 PM</span>
+</div>
+<p class="text-body-md text-on-surface-variant">J. Soto singles to center field. Bases Loaded.</p>
+</div>
+</div>
+<!-- Feed Item 3 -->
+<div class="bg-white p-sm rounded-lg border-b-2 border-outline-variant/20 flex gap-4 items-center">
+<div class="bg-tertiary-container/20 text-tertiary p-2 rounded-full">
+<span class="material-symbols-outlined" data-icon="directions_run">directions_run</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between">
+<span class="font-label-bold text-label-bold text-tertiary">Walk</span>
+<span class="font-caption text-on-surface-variant">2:08 PM</span>
+</div>
+<p class="text-body-md text-on-surface-variant">A. Rizzo walks. Runners move up.</p>
+</div>
+</div>
+</div>
+<button class="w-full py-3 font-label-bold text-primary border-2 border-primary rounded-lg hover:bg-primary hover:text-white transition-all active:translate-y-0.5">
+                    VIEW FULL BOX SCORE
+                </button>
+</section>
+</div>
+<!-- Right Column: Bingo Card Preview & Stats -->
+<aside class="lg:col-span-5 space-y-grid-gutter">
+<!-- Bingo Preview Card -->
+<div class="bg-surface-container-highest rounded-xl p-md border border-outline-variant shadow-lg paper-texture">
+<div class="flex justify-between items-center mb-md">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-primary">Your Bingo Card</h3>
+<div class="flex items-center gap-2">
+<div class="h-2 w-24 bg-outline-variant rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-2/3"></div>
+</div>
+<span class="font-caption text-secondary font-bold">2/3 TO BINGO!</span>
+</div>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant" data-icon="fullscreen">fullscreen</button>
+</div>
+<!-- Mini Bingo Grid (5x5) -->
+<div class="grid grid-cols-5 gap-1 mb-md aspect-square bg-outline-variant p-1 rounded shadow-inner">
+<!-- Row 1 -->
+<div class="bg-white flex items-center justify-center p-1 text-[8px] font-label-bold text-center border border-outline-variant/20">HR</div>
+<div class="bg-primary text-white flex items-center justify-center p-1 text-[8px] font-label-bold text-center pressed-cell">STRIKEOUT</div>
+<div class="bg-white flex items-center justify-center p-1 text-[8px] font-label-bold text-center">DOUBLE</div>
+<div class="bg-white flex items-center justify-center p-1 text-[8px] font-label-bold text-center">FLY OUT</div>
+<div class="bg-white flex items-center justify-center p-1 text-[8px] font-label-bold text-center">WALK</div>
+<!-- Row 2 -->
+<div class="bg-white flex items-center justify-center p-1 text-[8px] font-label-bold text-center">SINGLE</div>
+<div class="bg-primary text-white flex items-center justify-center p-1 text-[8px] font-label-bold text-center pressed-cell">STRIKEOUT</div>
+<div class="bg-white flex items-center justify-center p-1 text-[8px] font-label-bold text-center">ERROR</div>
+<div class="bg-white flex items-center justify-center p-1 text-[8px] font-label-bold text-center">STEAL</div>
+<div class="bg-white flex items-center justify-center p-1 text-[8px] font-label-bold text-center">DOUBLE</div>
+<!-- Row 3 -->
+<div class="bg-white flex items-center justify-center p-1 text-[8px] font-label-bold text-center">TRIPLE</div>
+<div class="bg-secondary-container text-on-secondary-container flex items-center justify-center p-1 text-[8px] font-label-bold text-center animate-pulse">GRAND SLAM</div>
+<div class="bg-tertiary-container text-on-tertiary-container flex items-center justify-center p-1 text-[8px] font-label-bold text-center pressed-cell">FREE</div>
+<div class="bg-white flex items-center justify-center p-1 text-[8px] font-label-bold text-center">DOUBLE PLAY</div>
+<div class="bg-white flex items-center justify-center p-1 text-[8px] font-label-bold text-center">K</div>
+<!-- Row 4 -->
+<div class="bg-white flex items-center justify-center p-1 text-[8px] font-label-bold text-center">BUNT</div>
+<div class="bg-white flex items-center justify-center p-1 text-[8px] font-label-bold text-center">WALK</div>
+<div class="bg-white flex items-center justify-center p-1 text-[8px] font-label-bold text-center">SINGLE</div>
+<div class="bg-white flex items-center justify-center p-1 text-[8px] font-label-bold text-center">HR</div>
+<div class="bg-white flex items-center justify-center p-1 text-[8px] font-label-bold text-center">FOUL</div>
+<!-- Row 5 -->
+<div class="bg-white flex items-center justify-center p-1 text-[8px] font-label-bold text-center">OUT</div>
+<div class="bg-white flex items-center justify-center p-1 text-[8px] font-label-bold text-center">WP</div>
+<div class="bg-white flex items-center justify-center p-1 text-[8px] font-label-bold text-center">BALK</div>
+<div class="bg-white flex items-center justify-center p-1 text-[8px] font-label-bold text-center">SINGLE</div>
+<div class="bg-white flex items-center justify-center p-1 text-[8px] font-label-bold text-center">WALK</div>
+</div>
+<button class="w-full bg-primary text-white py-3 font-label-bold rounded-lg shadow-md hover:brightness-110 active:translate-y-0.5 transition-all uppercase tracking-widest">
+                    VIEW FULL CARD
+                </button>
+</div>
+<!-- Recently Called Stats -->
+<div class="bg-white border-2 border-outline-variant/30 rounded-xl overflow-hidden shadow-sm">
+<div class="bg-surface-container p-sm border-b border-outline-variant/30">
+<h4 class="font-label-bold text-label-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="history">history</span>
+                        STREAKING SQUARES
+                    </h4>
+</div>
+<div class="p-sm space-y-3">
+<div class="flex justify-between items-center">
+<span class="text-body-md">Strikeout Swinging</span>
+<div class="flex gap-1">
+<span class="bg-primary/10 text-primary text-[10px] px-1.5 py-0.5 rounded font-bold">HOT</span>
+<span class="text-caption font-bold">x14</span>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-body-md">Base Hit to Center</span>
+<div class="flex gap-1">
+<span class="text-caption font-bold">x8</span>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-body-md">Walk</span>
+<div class="flex gap-1">
+<span class="text-caption font-bold">x5</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Rankings Snippet -->
+<div class="bg-primary text-on-primary rounded-xl p-md border-2 border-primary-container stitching-border">
+<div class="flex justify-between items-center mb-sm">
+<span class="font-headline-sm text-headline-sm">Current Rank</span>
+<span class="text-secondary-fixed-dim font-display-lg text-headline-md">#42</span>
+</div>
+<div class="text-caption text-white/70">Top 5% of 1,240 players active now.</div>
+</div>
+</aside>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 bg-surface/90 dark:bg-surface-dim/90 backdrop-blur-xl border-t border-outline-variant/30 shadow-lg flex justify-around items-center h-20 w-full pb-safe">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary/10 transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-md text-label-md">Lobby</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary font-bold hover:bg-secondary/10 transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="grid_view" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+<span class="font-label-md text-label-md">Card</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary/10 transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+<span class="font-label-md text-label-md">Ranks</span>
+</a>
+</nav>
+<!-- Win Overlay -->
+<div class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 win-overlay-enter" id="win-overlay">
+<canvas id="confetti-canvas"></canvas>
+<div class="relative bg-surface-container-highest rounded-xl p-lg border-4 border-tertiary shadow-2xl max-w-md w-full mx-grid-margin-mobile paper-texture overflow-hidden">
+<div class="relative z-10 text-center space-y-4">
+<div class="flex justify-center">
+<div class="w-24 h-24 bg-tertiary-container rounded-full flex items-center justify-center shadow-lg border-4 border-white animate-trophy">
+<span class="material-symbols-outlined text-6xl text-on-tertiary-container" style="font-variation-settings: 'FILL' 1;">trophy</span>
+</div>
+</div>
+<div class="space-y-1">
+<h2 class="font-display-lg text-display-lg-mobile text-primary uppercase tracking-tighter animate-scoreboard">BINGO!</h2>
+<p class="font-headline-sm text-secondary font-bold">GRAND SLAM WIN</p>
+</div>
+<div class="bg-white/50 p-md rounded-lg border border-outline-variant/30">
+<div class="flex justify-between items-center mb-2">
+<span class="text-label-bold text-on-surface-variant">WIN TYPE</span>
+<span class="text-label-bold text-primary">GRAND SLAM</span>
+</div>
+<div class="flex justify-between items-center mb-2">
+<span class="text-label-bold text-on-surface-variant">PRIZE POOL</span>
+<span class="text-label-bold text-secondary">5,000 PTS</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-label-bold text-on-surface-variant">RANK UP</span>
+<div class="flex items-center gap-1">
+<span class="text-label-bold text-on-surface-variant">#</span><span class="text-label-bold text-on-surface-variant" id="rank-old">42</span>
+<span class="text-label-bold text-on-surface-variant">→</span>
+<span class="text-label-bold text-tertiary font-bold">#</span><span class="text-label-bold text-tertiary font-bold" id="rank-new">42</span>
+</div>
+</div>
+</div>
+<div class="pt-4 flex flex-col gap-3">
+<button class="w-full bg-primary text-white py-4 font-label-bold rounded-lg shadow-md hover:brightness-110 active:scale-95 transition-all uppercase tracking-widest animate-cta" onclick="document.getElementById('win-overlay').remove()">
+                    CLAIM REWARDS
+                </button>
+<button class="w-full py-2 font-label-bold text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors" onclick="document.getElementById('win-overlay').remove()">
+                    CLOSE
+                </button>
+</div>
+</div>
+</div>
+</div>
+<script>
+        // Micro-interaction for clicking the bingo card cells
+        document.querySelectorAll('.aspect-square > div').forEach(cell => {
+            cell.addEventListener('click', function() {
+                if (!this.classList.contains('bg-primary') && !this.classList.contains('bg-tertiary-container')) {
+                    this.classList.toggle('bg-secondary-container');
+                    this.classList.toggle('text-on-secondary-container');
+                    this.classList.toggle('pressed-cell');
+                }
+            });
+        });
+
+        // Rank Counting Animation
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Initialize Win State Animations
+        window.addEventListener('load', () => {
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            
+            // Start rank animation after a small delay
+            setTimeout(() => {
+                const rankNew = document.getElementById('rank-new');
+                if (rankNew) {
+                    if (prefersReducedMotion) {
+                        rankNew.innerHTML = "12";
+                    } else {
+                        animateValue(rankNew, 42, 12, 1500);
+                    }
+                }
+            }, 800);
+
+            // Confetti Particle System
+            if (!prefersReducedMotion) {
+                const canvas = document.getElementById('confetti-canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+
+                const particles = [];
+                const particleCount = 100;
+                const colors = ['#ffffff', '#ba1a1a', '#033016', '#ffdad6']; // White, Red (Sox), Green (Field), Light Red
+
+                class Particle {
+                    constructor() {
+                        this.x = Math.random() * canvas.width;
+                        this.y = Math.random() * canvas.height - canvas.height;
+                        this.size = Math.random() * 8 + 4;
+                        this.speedY = Math.random() * 3 + 2;
+                        this.speedX = Math.random() * 2 - 1;
+                        this.color = colors[Math.floor(Math.random() * colors.length)];
+                        this.rotation = Math.random() * 360;
+                        this.rotationSpeed = Math.random() * 5 - 2.5;
+                        this.shape = Math.random() > 0.5 ? 'circle' : 'rect'; // Baseball vs ticket stub
+                    }
+                    update() {
+                        this.y += this.speedY;
+                        this.x += this.speedX;
+                        this.rotation += this.rotationSpeed;
+                        if (this.y > canvas.height) {
+                            this.y = -20;
+                            this.x = Math.random() * canvas.width;
+                        }
+                    }
+                    draw() {
+                        ctx.save();
+                        ctx.translate(this.x, this.y);
+                        ctx.rotate(this.rotation * Math.PI / 180);
+                        ctx.fillStyle = this.color;
+                        if (this.shape === 'circle') {
+                            ctx.beginPath();
+                            ctx.arc(0, 0, this.size / 2, 0, Math.PI * 2);
+                            ctx.fill();
+                            // Optional stitching line for baseball look
+                            ctx.strokeStyle = '#ba1a1a';
+                            ctx.lineWidth = 0.5;
+                            ctx.beginPath();
+                            ctx.arc(0, 0, this.size / 3, 0, Math.PI);
+                            ctx.stroke();
+                        } else {
+                            ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size * 1.5);
+                        }
+                        ctx.restore();
+                    }
+                }
+
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push(new Particle());
+                }
+
+                function animateConfetti() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    particles.forEach(p => {
+                        p.update();
+                        p.draw();
+                    });
+                    if (document.getElementById('win-overlay')) {
+                        requestAnimationFrame(animateConfetti);
+                    }
+                }
+                animateConfetti();
+            }
+        });
+    </script>
+</body></html>

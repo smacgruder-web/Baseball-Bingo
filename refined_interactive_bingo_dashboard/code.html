@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Baseball Bingo - Live Game Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400;600;700&amp;family=Work+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .paper-texture {
+            background-color: #f9faf5;
+            background-image: radial-gradient(#d9dad6 0.5px, transparent 0.5px);
+            background-size: 16px 16px;
+            background-repeat: repeat;
+        }
+        .pinstripe-overlay {
+            position: relative;
+        }
+        .pinstripe-overlay::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(3, 48, 22, 0.05) 40px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .bingo-cell-pressed {
+            box-shadow: inset 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .ink-stamp {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Domine', serif;
+            font-weight: 900;
+            color: rgba(171, 51, 52, 0.7); /* secondary color with alpha */
+            font-size: 2.5rem;
+            transform: rotate(-12deg);
+            pointer-events: none;
+            mix-blend-mode: multiply;
+            text-shadow: 1px 1px 0px rgba(255,255,255,0.2);
+            opacity: 0.85;
+            user-select: none;
+        }
+        .diamond-base {
+            width: 14px;
+            height: 14px;
+            transform: rotate(45deg);
+        }
+        @keyframes subtle-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .live-indicator {
+            animation: subtle-pulse 2s infinite;
+        }
+        .ticker-scroll {
+            display: flex;
+            white-space: nowrap;
+            animation: ticker 20s linear infinite;
+        }
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+        .animate-spin-slow {
+            animation: spin 8s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-fixed-dim": "#ffb3ae",
+                      "surface-container": "#edeee9",
+                      "surface-dim": "#d9dad6",
+                      "secondary-fixed": "#ffdad7",
+                      "inverse-on-surface": "#f0f1ec",
+                      "primary-fixed-dim": "#a3d2ab",
+                      "surface": "#f9faf5",
+                      "on-background": "#1a1c19",
+                      "primary": "#033016",
+                      "on-surface": "#1a1c19",
+                      "inverse-primary": "#a3d2ab",
+                      "surface-container-high": "#e8e9e4",
+                      "outline": "#727971",
+                      "tertiary-fixed-dim": "#eec209",
+                      "on-secondary-container": "#700310",
+                      "on-primary-fixed-variant": "#254f31",
+                      "surface-variant": "#e2e3de",
+                      "on-secondary": "#ffffff",
+                      "outline-variant": "#c1c9bf",
+                      "tertiary-fixed": "#ffe084",
+                      "on-tertiary": "#ffffff",
+                      "surface-tint": "#3d6748",
+                      "secondary": "#ab3334",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary-container": "#4e3d00",
+                      "on-tertiary-fixed": "#231b00",
+                      "error-container": "#ffdad6",
+                      "surface-container-low": "#f3f4ef",
+                      "primary-fixed": "#bfeec5",
+                      "on-error-container": "#93000a",
+                      "secondary-container": "#ff716d",
+                      "background": "#f9faf5",
+                      "error": "#ba1a1a",
+                      "on-primary-fixed": "#00210c",
+                      "surface-container-highest": "#e2e3de",
+                      "on-tertiary-fixed-variant": "#574500",
+                      "on-primary-container": "#88b590",
+                      "surface-bright": "#f9faf5",
+                      "on-secondary-fixed-variant": "#8a1a1f",
+                      "on-secondary-fixed": "#410005",
+                      "inverse-surface": "#2f312e",
+                      "primary-container": "#1d472a",
+                      "on-surface-variant": "#414941",
+                      "on-error": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "tertiary": "#735c00",
+                      "tertiary-container": "#cea700"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "grid-gutter": "16px",
+                      "base": "8px",
+                      "lg": "48px",
+                      "sm": "12px",
+                      "md": "24px",
+                      "xs": "4px",
+                      "xl": "64px",
+                      "grid-margin-desktop": "32px",
+                      "grid-margin-mobile": "16px"
+              },
+              "fontFamily": {
+                      "label-bold": ["Work Sans"],
+                      "display-lg": ["Domine"],
+                      "headline-sm": ["Domine"],
+                      "caption": ["Work Sans"],
+                      "display-lg-mobile": ["Domine"],
+                      "headline-md": ["Domine"],
+                      "body-lg": ["Work Sans"],
+                      "body-md": ["Work Sans"]
+              },
+              "fontSize": {
+                      "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                      "display-lg-mobile": ["28px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md text-body-md paper-texture pinstripe-overlay min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-grid-margin-mobile py-1 bg-surface border-b border-outline-variant bg-surface-variant/5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">sports_baseball</span>
+<h1 class="font-display-lg-mobile text-[24px] text-primary uppercase tracking-tight">BASEBALL BINGO</h1>
+</div>
+<button class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-primary-fixed-dim/20 transition-colors">
+<span class="material-symbols-outlined text-primary">account_circle</span>
+</button>
+</header>
+<!-- Recent Plays Ticker -->
+<div class="fixed top-[41px] w-full z-40 bg-primary text-on-primary py-1 overflow-hidden border-y border-primary-container">
+<div class="ticker-scroll flex items-center gap-12 text-[10px] font-label-bold uppercase">
+<span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span> M. Betts singles to center field</span>
+<span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span> G. Cole strikes out F. Freeman</span>
+<span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span> LAD Score: Ohtani doubles, Betts scores</span>
+<!-- Duplicate for loop -->
+<span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span> M. Betts singles to center field</span>
+<span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span> G. Cole strikes out F. Freeman</span>
+<span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span> LAD Score: Ohtani doubles, Betts scores</span>
+</div>
+</div>
+<main class="pt-24 px-grid-margin-mobile max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-4">
+<!-- Left Column: Live Visualization -->
+<section class="md:col-span-4 space-y-4">
+<!-- Game Status Card -->
+<div class="bg-surface border border-outline-variant rounded-xl p-3 shadow-sm overflow-hidden">
+<div class="flex justify-between items-start mb-2">
+<div class="flex flex-col">
+<span class="font-label-bold text-[10px] text-secondary flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-secondary live-indicator"></span> LIVE • TOP 7TH
+                    </span>
+<h2 class="font-headline-sm text-lg" id="game-matchup">LAD @ NYY</h2>
+</div>
+<div class="text-right">
+<p class="font-headline-md text-xl text-primary"><span id="away-score">4</span> - <span id="home-score">2</span></p>
+<p class="font-label-bold text-[10px] text-on-surface-variant">2 OUTS</p>
+</div>
+</div>
+<!-- Diamond Visualization -->
+<div class="relative w-40 h-40 mx-auto my-4">
+<div class="absolute inset-0 border-2 border-outline-variant rotate-45 transform scale-75 translate-y-1"></div>
+<div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1 diamond-base border-2 border-outline bg-surface-container-high" id="base-2"></div>
+<div class="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1 diamond-base border-2 border-outline bg-primary" id="base-1"></div>
+<div class="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1 diamond-base border-2 border-outline bg-primary" id="base-3"></div>
+<div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1 diamond-base border-2 border-outline bg-surface-container-high"></div>
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<span class="material-symbols-outlined text-outline-variant opacity-10 text-5xl" style="font-variation-settings: 'FILL' 1;">sports_baseball</span>
+</div>
+</div>
+<!-- Count & Stats -->
+<div class="flex justify-around border-t border-outline-variant pt-2">
+<div class="text-center">
+<p class="font-label-bold text-[10px] text-on-surface-variant">BALLS</p>
+<div class="flex gap-1 justify-center mt-0.5">
+<div class="w-2.5 h-2.5 rounded-full bg-tertiary" id="ball-1"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-tertiary" id="ball-2"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-surface-variant" id="ball-3"></div>
+</div>
+</div>
+<div class="text-center">
+<p class="font-label-bold text-[10px] text-on-surface-variant">STRIKES</p>
+<div class="flex gap-1 justify-center mt-0.5">
+<div class="w-2.5 h-2.5 rounded-full bg-secondary" id="strike-1"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-surface-variant" id="strike-2"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Player Matchup -->
+<div class="bg-surface border border-outline-variant rounded-xl p-3 shadow-sm">
+<div class="space-y-3">
+<div class="flex items-center gap-3">
+<img alt="Pitcher" class="w-10 h-10 rounded-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeAvBZIv4eCqw4qhMq8Epe2q2fbH9gXqxw6pBQOV_yx8c5Ti9ObzRqGojTIH_FQGOk-esBDneg8HR64MlcGMPpZczJwQ_8SmLueHKsvg9ciEZEOnkEW9irLQdfQdl3XyOvdNHNzBDzpDRyeuFDMw3RjOFAE6Zbw436KbGpYFaTDTek_O7nkV7VsFmpMtEvlw7rGQvhlvJDkeAwEwNBmSEONayDiEbQF7JhusV65eAmqM6Ns13tGK7iaCEXqjTuY_ZOhx9DGQsoSaD1"/>
+<div>
+<p class="font-label-bold text-[10px] text-on-surface-variant uppercase">Pitching</p>
+<p class="font-body-md text-sm font-bold" id="pitcher-name">G. Cole (NYY)</p>
+</div>
+</div>
+<div class="border-t border-dashed border-outline-variant"></div>
+<div class="flex items-center gap-3">
+<img alt="Batter" class="w-10 h-10 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAY_Wc43uGDbtfdrMCYKyTHUmeAT2YnxbDpotYUzfnajB8_zQck5WFka2Ie55zhbYjwQ9pUUngoQOF7LmmySfnp1b9BIFnOI8lgT5V3PGC5viVW7roRQnvj0djnYaRHsHYBXp4UuYNNsTEiGXhVs--w39_rl93pnO0yW6UhUHDNFnEyv0nbrr1IfSGHVXNuYlMS_uzyFQVaKYLYY7MjaR2BdeZh8Fkf2eDkKJ3RJxn3YJ5KcVQ-WVGThjXXEn9jQNC04bKF7PBDPTM4"/>
+<div>
+<p class="font-label-bold text-[10px] text-on-surface-variant uppercase">Batting</p>
+<p class="font-body-md text-sm font-bold" id="batter-name">M. Betts (LAD)</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Center Column: Bingo Card -->
+<section class="md:col-span-5 space-y-4">
+<div class="bg-surface border border-outline-variant rounded-xl p-4 shadow-md">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-headline-md text-primary">Your Bingo Card</h3>
+<div class="flex items-center gap-2">
+<button class="font-label-bold text-caption text-secondary hover:underline uppercase" onclick="generateBoard(true)">Reshuffle</button>
+</div>
+</div>
+<!-- Bingo Grid -->
+<div class="grid grid-cols-5 gap-1.5 aspect-square" id="bingo-grid">
+<!-- Populated by JS -->
+</div>
+<!-- Bingo Meter -->
+<div class="mt-6 space-y-2">
+<div class="flex justify-between items-center">
+<p class="font-label-bold text-sm tracking-widest text-primary">PROGRESS TO BINGO</p>
+<p class="font-headline-sm text-secondary" id="progress-text">2 SQUARES AWAY</p>
+</div>
+<div class="h-6 w-full bg-surface-container rounded-full overflow-hidden flex p-1 border border-outline-variant/30" id="progress-bar">
+<!-- Progress segments populated by JS -->
+</div>
+<p class="text-center font-caption text-[11px] text-on-surface-variant italic mt-2">Win $50 MLB Shop credit for any line!</p>
+</div>
+</div>
+</section>
+<!-- Right Column: Stadium Chatter -->
+<section class="md:col-span-3 h-full">
+<div class="bg-surface border border-outline-variant rounded-xl flex flex-col h-[calc(100vh-160px)] sticky top-24 shadow-sm overflow-hidden">
+<div class="p-3 border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
+<h3 class="font-label-bold text-on-surface flex items-center gap-2 text-xs">
+<span class="material-symbols-outlined text-sm">gavel</span> GEMINI UMPIRE
+                </h3>
+<span class="px-2 py-0.5 bg-secondary/10 text-secondary text-[9px] font-bold rounded-full border border-secondary/20">LIVE RULINGS</span>
+</div>
+<!-- Chat Feed -->
+<div class="flex-1 overflow-y-auto p-3 space-y-3" id="gemini-chat-log">
+<div class="flex gap-2">
+<div class="w-6 h-6 rounded-full bg-primary-fixed flex items-center justify-center text-[10px] font-bold">GU</div>
+<div class="flex-1">
+<div class="flex items-center gap-1 mb-1">
+<p class="font-label-bold text-[10px] text-primary">Umpire Gemini</p>
+<span class="bg-primary/10 text-primary text-[8px] px-1 rounded font-bold uppercase tracking-tighter">Umpire's Ruling</span>
+</div>
+<div class="bg-surface-container p-2 rounded-lg rounded-tl-none border-l-2 border-primary">
+<p class="text-caption">Welcome! Ask me any baseball ruling question. E.g., "Does a sac-fly count towards an RBI strike?"</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Input -->
+<div class="p-3 border-t border-outline-variant bg-surface">
+<form class="relative flex items-center" id="gemini-chat-form" onsubmit="handleChatSubmit(event)">
+<input class="w-full bg-surface-container border-none rounded-full py-2 px-4 text-[11px] focus:ring-2 focus:ring-primary" id="chat-input" placeholder="Ask Umpire Gem..." type="text"/>
+<button class="absolute right-2 text-primary hover:scale-110 transition-transform" type="submit">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</form>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-surface border-t border-outline-variant shadow-lg rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-bold text-caption text-[10px]">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-1 active:scale-95" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+<span class="font-label-bold text-caption text-[10px]">Card</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-label-bold text-caption text-[10px]">Rankings</span>
+</a>
+</nav>
+<script>
+    // --- AUDIO LOGIC ---
+    let audioCtx = null;
+    function initAudio() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+    }
+
+    function playSynthSound(type) {
+        initAudio();
+        if (!audioCtx) return;
+        if (type === 'bat') {
+            let osc = audioCtx.createOscillator();
+            let gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(320, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.08);
+            gain.gain.setValueAtTime(0.8, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.12);
+        } else if (type === 'organ') {
+            const notes = [261.63, 329.63, 392.00, 523.25];
+            notes.forEach((freq, i) => {
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime + (i * 0.12));
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + (i * 0.12) + 0.3);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(audioCtx.currentTime + (i * 0.12));
+                osc.stop(audioCtx.currentTime + (i * 0.12) + 0.35);
+            });
+        }
+    }
+
+    // --- GAME DATA ---
+    const genericEvents = [
+        "STOLEN BASE", "DOUBLE PLAY", "HOME RUN", "BUNT", "STRIKEOUT",
+        "PINCH HITTER", "WILD PITCH", "FULL COUNT", "FOUL BALL", "SINGLE",
+        "ERROR", "WALK", "BALK", "HIT BY PITCH", "FLY OUT",
+        "TRIPLE", "SAC FLY", "RELIEF PITCHER", "PICK OFF", "DOUBLE",
+        "GROUND OUT", "LINE DRIVE", "NO-HITTER (LIVE)", "DOUBLE", "SAC BUNT"
+    ];
+
+    let gameTeams = {
+        away: "LAD", home: "NYY",
+        pitcher: "G. Cole", batter: "M. Betts"
+    };
+
+    let markedSquares = Array(25).fill(false);
+    let boardSeed = 42;
+    let currentBoardEvents = [];
+
+    function seededRandom(seed) {
+        let x = Math.sin(seed++) * 10000;
+        return x - Math.floor(x);
+    }
+
+    function generateBoard(newSeed = false) {
+        if (newSeed) {
+            boardSeed = Math.floor(Math.random() * 10000);
+            markedSquares = Array(25).fill(false);
+            markedSquares[12] = true;
+        }
+
+        let pool = [...genericEvents];
+        let selected = [];
+        let tempPool = [...pool];
+        let s = boardSeed;
+        for (let i = 0; i < 24; i++) {
+            let rng = seededRandom(s++);
+            let idx = Math.floor(rng * tempPool.length);
+            selected.push(tempPool.splice(idx, 1)[0]);
+        }
+
+        currentBoardEvents = [];
+        let count = 0;
+        for (let j = 0; j < 25; j++) {
+            if (j === 12) currentBoardEvents.push("FREE SPACE");
+            else currentBoardEvents.push(selected[count++]);
+        }
+        renderGrid();
+        updateProgress();
+    }
+
+    function renderGrid() {
+        const grid = document.getElementById('bingo-grid');
+        grid.innerHTML = '';
+        currentBoardEvents.forEach((evt, i) => {
+            const cell = document.createElement('div');
+            const isMarked = markedSquares[i];
+            const isFree = i === 12;
+            
+            cell.className = `relative aspect-square flex items-center justify-center text-center p-1 rounded-md transition-all cursor-pointer bg-surface border border-outline-variant overflow-hidden ${
+                isMarked ? 'bingo-cell-pressed bg-surface-container' : 'hover:bg-primary-fixed-dim/10'
+            }`;
+            
+            if (isFree) {
+                cell.innerHTML = `
+                    <div class="flex flex-col items-center">
+                        <span class="font-label-bold text-[8px] leading-tight">FREE SPACE</span>
+                        <span class="material-symbols-outlined text-[10px] animate-spin-slow">sports_baseball</span>
+                    </div>
+                `;
+            } else {
+                cell.innerHTML = `<span class="font-label-bold text-[9px] leading-tight uppercase relative z-10">${evt}</span>`;
+            }
+
+            if (isMarked && !isFree) {
+                const stamp = document.createElement('div');
+                stamp.className = 'ink-stamp';
+                stamp.innerText = 'X';
+                cell.appendChild(stamp);
+            } else if (isFree) {
+                 const stamp = document.createElement('div');
+                 stamp.className = 'ink-stamp !text-[2rem] opacity-40';
+                 stamp.innerText = 'OK';
+                 cell.appendChild(stamp);
+            }
+            
+            cell.onclick = () => toggleSquare(i);
+            grid.appendChild(cell);
+        });
+    }
+
+    function toggleSquare(idx) {
+        if (idx === 12) return;
+        markedSquares[idx] = !markedSquares[idx];
+        playSynthSound('bat');
+        renderGrid();
+        updateProgress();
+        checkForBingo();
+    }
+
+    function updateProgress() {
+        const lines = [
+            [0,1,2,3,4], [5,6,7,8,9], [10,11,12,13,14], [15,16,17,18,19], [20,21,22,23,24],
+            [0,5,10,15,20], [1,6,11,16,21], [2,7,12,17,22], [3,8,13,18,23], [4,9,14,19,24],
+            [0,6,12,18,24], [4,8,12,16,20]
+        ];
+
+        let minAway = 5;
+        let bestLineMarked = 0;
+        lines.forEach(line => {
+            const markedInLine = line.filter(idx => markedSquares[idx]).length;
+            const away = 5 - markedInLine;
+            if (away < minAway) {
+                minAway = away;
+                bestLineMarked = markedInLine;
+            }
+        });
+
+        const text = document.getElementById('progress-text');
+        text.innerText = minAway === 0 ? "BINGO!" : `${minAway} SQUARE${minAway > 1 ? 'S' : ''} AWAY`;
+        
+        const bar = document.getElementById('progress-bar');
+        bar.innerHTML = '';
+        for (let i = 0; i < 5; i++) {
+            const seg = document.createElement('div');
+            seg.className = `h-full flex-1 rounded-sm transition-all duration-500 ${i < bestLineMarked ? 'bg-secondary' : 'bg-surface-variant/30'} ${i > 0 ? 'ml-1' : ''}`;
+            bar.appendChild(seg);
+        }
+    }
+
+    function checkForBingo() {
+        const lines = [
+            [0,1,2,3,4], [5,6,7,8,9], [10,11,12,13,14], [15,16,17,18,19], [20,21,22,23,24],
+            [0,5,10,15,20], [1,6,11,16,21], [2,7,12,17,22], [3,8,13,18,23], [4,9,14,19,24],
+            [0,6,12,18,24], [4,8,12,16,20]
+        ];
+        const win = lines.some(line => line.every(idx => markedSquares[idx]));
+        if (win) {
+            playSynthSound('organ');
+            alert("BINGO! You've won $50 MLB Shop credit!");
+        }
+    }
+
+    function handleChatSubmit(e) {
+        e.preventDefault();
+        const input = document.getElementById('chat-input');
+        const msg = input.value.trim();
+        if (!msg) return;
+
+        appendChatMessage("ME", "You", msg, true);
+        input.value = '';
+
+        setTimeout(() => {
+            const answer = "Official Umpire Ruling: According to Rule 5.06(c), the ball becomes dead and runners advance one base if a pitched ball lodges in the umpire's or catcher's mask. Check your 'WILD PITCH' square if applicable!";
+            appendChatMessage("GU", "Umpire Gemini", answer, false);
+        }, 1000);
+    }
+
+    function appendChatMessage(initials, name, text, isUser) {
+        const log = document.getElementById('gemini-chat-log');
+        const msgDiv = document.createElement('div');
+        msgDiv.className = "flex gap-2";
+        
+        msgDiv.innerHTML = `
+            <div class="w-6 h-6 rounded-full ${isUser ? 'bg-primary text-white' : 'bg-primary-fixed text-primary'} flex items-center justify-center text-[10px] font-bold shrink-0">${initials}</div>
+            <div class="flex-1 ${isUser ? 'text-right' : ''}">
+                <div class="flex items-center gap-1 mb-1 ${isUser ? 'justify-end' : ''}">
+                    <p class="font-label-bold text-[10px] text-primary">${name}</p>
+                    ${!isUser ? '<span class="bg-primary/10 text-primary text-[8px] px-1 rounded font-bold uppercase tracking-tighter">Umpire\'s Ruling</span>' : ''}
+                </div>
+                <div class="${isUser ? 'bg-primary text-white ml-auto rounded-tr-none' : 'bg-surface-container rounded-tl-none border-l-2 border-primary'} p-2 rounded-lg inline-block text-left max-w-[90%]">
+                    <p class="text-caption">${text}</p>
+                </div>
+            </div>
+        `;
+        log.appendChild(msgDiv);
+        log.scrollTop = log.scrollHeight;
+    }
+
+    window.onload = () => {
+        generateBoard();
+    };
+</script>
+</body></html>

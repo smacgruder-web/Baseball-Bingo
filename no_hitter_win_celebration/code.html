@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400;600;700&amp;family=Work+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "secondary-container": "#ff716d",
+                "on-tertiary-fixed-variant": "#574500",
+                "on-primary": "#ffffff",
+                "tertiary-fixed": "#ffe084",
+                "on-background": "#1a1c19",
+                "secondary": "#ab3334",
+                "background": "#f9faf5",
+                "primary-container": "#1d472a",
+                "primary-fixed-dim": "#a3d2ab",
+                "surface-tint": "#3d6748",
+                "on-error-container": "#93000a",
+                "secondary-fixed": "#ffdad7",
+                "on-tertiary-fixed": "#231b00",
+                "primary-fixed": "#bfeec5",
+                "on-error": "#ffffff",
+                "surface": "#f9faf5",
+                "on-secondary-fixed-variant": "#8a1a1f",
+                "on-secondary-fixed": "#410005",
+                "on-primary-fixed-variant": "#254f31",
+                "surface-dim": "#d9dad6",
+                "surface-bright": "#f9faf5",
+                "surface-container-highest": "#e2e3de",
+                "surface-container-high": "#e8e9e4",
+                "primary": "#033016",
+                "tertiary": "#735c00",
+                "on-primary-fixed": "#00210c",
+                "inverse-surface": "#2f312e",
+                "error-container": "#ffdad6",
+                "outline-variant": "#c1c9bf",
+                "secondary-fixed-dim": "#ffb3ae",
+                "on-tertiary-container": "#4e3d00",
+                "surface-container-lowest": "#ffffff",
+                "on-surface-variant": "#414941",
+                "on-primary-container": "#88b590",
+                "error": "#ba1a1a",
+                "on-secondary-container": "#700310",
+                "surface-container-low": "#f3f4ef",
+                "on-secondary": "#ffffff",
+                "inverse-on-surface": "#f0f1ec",
+                "outline": "#727971",
+                "on-tertiary": "#ffffff",
+                "inverse-primary": "#a3d2ab",
+                "surface-variant": "#e2e3de",
+                "tertiary-container": "#cea700",
+                "on-surface": "#1a1c19",
+                "tertiary-fixed-dim": "#eec209",
+                "surface-container": "#edeee9"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "xl": "64px",
+                "grid-gutter": "16px",
+                "base": "8px",
+                "md": "24px",
+                "xs": "4px",
+                "sm": "12px",
+                "lg": "48px",
+                "grid-margin-desktop": "32px",
+                "grid-margin-mobile": "16px"
+            },
+            "fontFamily": {
+                "label-bold": ["Work Sans"],
+                "display-lg-mobile": ["Domine"],
+                "headline-sm": ["Domine"],
+                "display-lg": ["Domine"],
+                "body-md": ["Work Sans"],
+                "body-lg": ["Work Sans"],
+                "headline-md": ["Domine"],
+                "caption": ["Work Sans"]
+            },
+            "fontSize": {
+                "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .pinstripe-overlay {
+            background-image: repeating-linear-gradient(90deg, transparent, transparent 19px, rgba(3, 48, 22, 0.05) 20px);
+            background-size: 20px 100%;
+        }
+        .paper-texture {
+            background-image: url("https://www.transparenttextures.com/patterns/felt.png");
+        }
+        .confetti {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            opacity: 0;
+            animation: fall 3s ease-out infinite;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+        .pressed-card {
+            box-shadow: inset 2px 2px 4px rgba(0,0,0,0.05), inset -2px -2px 4px rgba(255,255,255,0.8);
+        }
+        .trophy-bounce {
+            animation: float 4s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        .stitch-line {
+            border-bottom: 2px dashed #727971;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body-md text-on-surface overflow-hidden">
+<!-- Confetti Container -->
+<div class="fixed inset-0 pointer-events-none z-0" id="confetti-container"></div>
+<main class="relative min-h-screen flex flex-col paper-texture pinstripe-overlay">
+<!-- Header - Managed by JSON logic (TopAppBar) -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-grid-margin-mobile py-2 bg-surface dark:bg-surface border-b border-outline-variant bg-surface-variant/5 dark:bg-surface-container">
+<div class="flex items-center gap-2 text-primary dark:text-inverse-primary">
+<span class="material-symbols-outlined" data-icon="sports_baseball">sports_baseball</span>
+<h1 class="font-display-lg-mobile text-display-lg-mobile uppercase tracking-tight">BASEBALL BINGO</h1>
+</div>
+<div class="text-primary dark:text-inverse-primary">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="flex-1 flex flex-col items-center justify-center px-4 pt-20 pb-24 z-10">
+<!-- Success Modal/Card -->
+<div class="w-full max-w-[500px] bg-surface-container-lowest border border-outline-variant rounded-xl p-8 shadow-lg relative flex flex-col items-center text-center overflow-hidden">
+<!-- Background Decorative Stitches -->
+<div class="absolute top-4 left-4 right-4 h-2 stitch-line opacity-20"></div>
+<div class="absolute bottom-4 left-4 right-4 h-2 stitch-line opacity-20"></div>
+<!-- Trophy Icon -->
+<div class="trophy-bounce mb-6 bg-tertiary-fixed p-6 rounded-full shadow-lg border-2 border-tertiary">
+<span class="material-symbols-outlined text-6xl text-on-tertiary-fixed" data-icon="emoji_events" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+</div>
+<!-- Celebration Titles -->
+<div class="space-y-1 mb-8">
+<p class="font-label-bold text-label-bold text-secondary uppercase tracking-[0.2em]">Game Milestone</p>
+<h2 class="font-display-lg-mobile text-display-lg-mobile text-primary leading-none">NO-HITTER WIN</h2>
+</div>
+<!-- Prize Section -->
+<div class="w-full bg-surface-container-high rounded-lg p-6 mb-8 pressed-card border border-outline-variant/30">
+<p class="font-label-bold text-label-bold text-on-surface-variant uppercase mb-2">Total Prize Pool</p>
+<div class="flex items-center justify-center gap-2">
+<span class="font-display-lg text-primary">10,000</span>
+<span class="font-headline-sm text-primary-container bg-primary-fixed-dim px-2 py-1 rounded">PTS</span>
+</div>
+</div>
+<!-- Rank Progress Bento -->
+<div class="grid grid-cols-2 gap-4 w-full mb-10">
+<div class="flex flex-col items-center p-4 bg-background border border-outline-variant rounded-lg">
+<span class="font-label-bold text-caption text-on-surface-variant uppercase mb-1">Previous Rank</span>
+<span class="font-headline-md text-on-surface-variant">#12</span>
+</div>
+<div class="flex flex-col items-center p-4 bg-primary-container text-on-primary-container border border-primary rounded-lg shadow-md transform scale-105">
+<div class="flex items-center gap-1 mb-1">
+<span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span>
+<span class="font-label-bold text-caption uppercase">New Rank</span>
+</div>
+<span class="font-display-lg-mobile">#3</span>
+</div>
+</div>
+<!-- Action Button -->
+<button class="w-full bg-primary text-on-primary font-label-bold text-label-bold py-5 rounded-lg uppercase tracking-widest hover:bg-primary-container active:translate-y-0.5 transition-all shadow-md group">
+<span class="flex items-center justify-center gap-3">
+                        Claim Rewards
+                        <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</span>
+</button>
+<p class="mt-6 font-body-md text-on-surface-variant opacity-60 italic">"A performance for the record books, kid."</p>
+</div>
+<!-- Recently Called / Secondary Content -->
+<div class="mt-8 flex flex-wrap justify-center gap-3 max-w-[600px]">
+<span class="px-4 py-2 bg-secondary-fixed text-on-secondary-fixed rounded-full font-label-bold text-caption uppercase border border-secondary/20">Strikeout King</span>
+<span class="px-4 py-2 bg-primary-fixed text-on-primary-fixed rounded-full font-label-bold text-caption uppercase border border-primary/20">Golden Glove</span>
+<span class="px-4 py-2 bg-tertiary-fixed text-on-tertiary-fixed rounded-full font-label-bold text-caption uppercase border border-tertiary/20">Double Play</span>
+</div>
+</div>
+<!-- Footer - Managed by JSON logic (BottomNavBar) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-surface dark:bg-inverse-surface border-t border-outline-variant shadow-lg rounded-t-xl">
+<div class="flex flex-col items-center justify-center text-on-surface-variant font-label-bold text-caption">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span>Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant font-label-bold text-caption">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+<span>Card</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 font-label-bold text-caption">
+<span class="material-symbols-outlined" data-icon="leaderboard" style="font-variation-settings: 'FILL' 1;">leaderboard</span>
+<span>Rankings</span>
+</div>
+</nav>
+</main>
+<script>
+        // Micro-interactions and Confetti
+        function createConfetti() {
+            const container = document.getElementById('confetti-container');
+            const colors = ['#033016', '#ab3334', '#735c00', '#1d472a', '#ff716d'];
+            
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 3 + 's';
+                confetti.style.width = (Math.random() * 10 + 5) + 'px';
+                confetti.style.height = confetti.style.width;
+                container.appendChild(confetti);
+            }
+        }
+
+        // Initialize effects
+        window.addEventListener('load', () => {
+            createConfetti();
+            
+            // Re-generate confetti every few seconds for celebration feel
+            setInterval(() => {
+                const container = document.getElementById('confetti-container');
+                container.innerHTML = '';
+                createConfetti();
+            }, 6000);
+        });
+    </script>
+</body></html>

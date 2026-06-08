@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bingo Private Box - Waiting Room</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400;600;700&amp;family=Work+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .pinstripe-bg {
+            background-image: repeating-linear-gradient(90deg, transparent, transparent 15px, rgba(65, 73, 65, 0.05) 15px, rgba(65, 73, 65, 0.05) 16px);
+        }
+        .paper-texture {
+            background-image: url("https://www.transparenttextures.com/patterns/felt.png");
+        }
+        .pressed-state {
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+        }
+        @keyframes pulse-soft {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(0.98); }
+        }
+        .animate-pulse-soft {
+            animation: pulse-soft 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#88b590",
+                        "tertiary": "#735c00",
+                        "on-secondary-fixed-variant": "#8a1a1f",
+                        "secondary-container": "#ff716d",
+                        "on-surface-variant": "#414941",
+                        "on-tertiary-fixed-variant": "#574500",
+                        "surface-dim": "#d9dad6",
+                        "secondary-fixed": "#ffdad7",
+                        "surface-container-high": "#e8e9e4",
+                        "surface-container-highest": "#e2e3de",
+                        "error-container": "#ffdad6",
+                        "primary-fixed": "#bfeec5",
+                        "on-tertiary-container": "#4e3d00",
+                        "surface-container-low": "#f3f4ef",
+                        "secondary-fixed-dim": "#ffb3ae",
+                        "on-background": "#1a1c19",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "surface": "#f9faf5",
+                        "on-secondary": "#ffffff",
+                        "surface-tint": "#3d6748",
+                        "on-surface": "#1a1c19",
+                        "primary-fixed-dim": "#a3d2ab",
+                        "on-secondary-container": "#700310",
+                        "tertiary-container": "#cea700",
+                        "on-secondary-fixed": "#410005",
+                        "outline": "#727971",
+                        "inverse-surface": "#2f312e",
+                        "tertiary-fixed": "#ffe084",
+                        "surface-bright": "#f9faf5",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed": "#00210c",
+                        "tertiary-fixed-dim": "#eec209",
+                        "background": "#f9faf5",
+                        "surface-container": "#edeee9",
+                        "primary-container": "#1d472a",
+                        "outline-variant": "#c1c9bf",
+                        "on-tertiary-fixed": "#231b00",
+                        "on-tertiary": "#ffffff",
+                        "primary": "#033016",
+                        "inverse-primary": "#a3d2ab",
+                        "on-error-container": "#93000a",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed-variant": "#254f31",
+                        "inverse-on-surface": "#f0f1ec",
+                        "secondary": "#ab3334",
+                        "surface-variant": "#e2e3de"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "grid-margin-desktop": "32px",
+                        "grid-margin-mobile": "16px",
+                        "xs": "4px",
+                        "md": "24px",
+                        "grid-gutter": "16px",
+                        "xl": "64px",
+                        "sm": "12px",
+                        "lg": "48px"
+                    },
+                    "fontFamily": {
+                        "display-lg-mobile": ["Domine"],
+                        "headline-sm": ["Domine"],
+                        "headline-md": ["Domine"],
+                        "display-lg": ["Domine"],
+                        "body-md": ["Work Sans"],
+                        "caption": ["Work Sans"],
+                        "body-lg": ["Work Sans"],
+                        "label-bold": ["Work Sans"]
+                    },
+                    "fontSize": {
+                        "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface pinstripe-bg min-h-screen pb-32">
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm">
+<div class="flex items-center justify-between px-md py-sm w-full max-w-4xl mx-auto">
+<div class="flex items-center gap-base">
+<button class="w-10 h-10 flex items-center justify-center rounded-full transition-colors duration-200 hover:bg-primary/5">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-primary">Room Access Control</h1>
+</div>
+<div class="flex items-center gap-xs">
+<button class="w-10 h-10 flex items-center justify-center rounded-full transition-colors duration-200 hover:bg-primary/5">
+<span class="material-symbols-outlined text-primary">share</span>
+</button>
+</div>
+</div>
+</header>
+<main class="pt-24 px-grid-margin-mobile md:px-grid-margin-desktop max-w-4xl mx-auto space-y-lg">
+<!-- Scoreboard / Header Section -->
+<section class="bg-surface-container rounded-xl border border-outline-variant/50 shadow-sm overflow-hidden">
+<div class="bg-primary px-base py-xs text-center">
+<span class="text-on-primary font-label-bold uppercase tracking-widest text-[10px]">Live from Fenway Park</span>
+</div>
+<div class="p-md flex items-center justify-between">
+<div class="flex flex-col items-center">
+<span class="font-label-bold text-on-surface-variant text-caption uppercase">Home</span>
+<span class="font-display-lg-mobile text-display-lg-mobile text-primary">4</span>
+</div>
+<div class="flex flex-col items-center border-x border-outline-variant/30 px-lg">
+<span class="font-label-bold text-tertiary text-caption uppercase">Inning</span>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-tertiary text-[18px]" style="font-variation-settings: 'FILL' 1;">change_history</span>
+<span class="font-headline-md text-headline-md text-on-surface">7th</span>
+</div>
+</div>
+<div class="flex flex-col items-center">
+<span class="font-label-bold text-on-surface-variant text-caption uppercase">Away</span>
+<span class="font-display-lg-mobile text-display-lg-mobile text-secondary">2</span>
+</div>
+</div>
+</section>
+<!-- Status & Animation -->
+<div class="text-center space-y-md py-lg">
+<div class="relative inline-block">
+<div class="w-24 h-24 rounded-full bg-primary-container/20 flex items-center justify-center animate-pulse-soft">
+<span class="material-symbols-outlined text-primary text-[48px]" style="font-variation-settings: 'FILL' 1;">stadium</span>
+</div>
+<div class="absolute -bottom-2 -right-2 bg-tertiary-container p-1 rounded-full border-2 border-surface">
+<span class="material-symbols-outlined text-on-tertiary-container text-[16px]">hourglass_empty</span>
+</div>
+</div>
+<div class="space-y-xs">
+<h2 class="font-headline-md text-headline-md text-primary">Waiting for Host...</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Private Box #2931 is warming up.</p>
+</div>
+</div>
+<!-- Bento Layout for Players and Rules -->
+<div class="grid grid-cols-1 md:grid-cols-5 gap-grid-gutter">
+<!-- Dugout Section -->
+<div class="md:col-span-3 bg-surface border border-outline-variant/30 rounded-xl p-md paper-texture">
+<div class="flex items-center justify-between mb-md border-b border-outline-variant/20 pb-base">
+<h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-base">
+<span class="material-symbols-outlined text-primary">group</span>
+                        In the Dugout
+                    </h3>
+<span class="font-label-bold text-caption bg-surface-variant px-base py-xs rounded-full">8 / 12</span>
+</div>
+<div class="grid grid-cols-4 sm:grid-cols-6 gap-md">
+<!-- Players -->
+<div class="flex flex-col items-center gap-xs">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-primary bg-primary-fixed">
+<img class="w-full h-full object-cover" data-alt="A vintage-style illustrated circular avatar of a cheerful baseball fan wearing a retro team cap. The art style is minimalist with clean lines and a warm, heritage color palette featuring muted greens and creams, perfectly matching a sports app aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaG03JaMqswBF08HhGm4438__UeW_KIHZ7e4tePsTpbcb_qIavgZnQVU7dc2DOkQ05o_RtTT3xsZ_InXzQO2kFxaGGAoo5SFb35K-wBZMpi5DvcB3aXUjbQqDKasBsVNKaHXk06-Xg12za3DVB1fW98v_sYTGl8zYyKlPOJHOrbMT-NnO90wGq-VLX1D_7b5Y9nbfyOBYL0R93LLdp2oYrlNKntVDkJrynWzkI4ppr3_12_Bzz1wgHjqjQV4HDL7DPxINmIxp3M5IM"/>
+</div>
+<span class="font-caption text-caption truncate w-full text-center">You</span>
+</div>
+<div class="flex flex-col items-center gap-xs">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-transparent bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="A clean, modern circular avatar profile picture of a young woman with a friendly expression. The visual style is heritage-inspired with a soft grain texture overlay. The background is a muted clay red, maintaining the professional and celebratory tone of a vintage ballpark design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfjOYWJegZ-tfYRTUJW5YJeclj7ZSJLYRJrb1uwh1tfE7mnJOARf12vDk12VAyhs7R0q3tOtRgUoNibMq_19K_ocdp73FGUaYcDl2Ba7Hl5XlYdEPptKKSN7fmuJUn_YyIISSOg3md3p6KZ6r0YSguKbNLjZmQjIT0egrGkl9-DXxJDUeQ37lOF25ZrFuoVoPylvTXolgaLc2M1x2Vg23aul1U78d0EmQJQVEJeP1FaUtAwhUuRsXuxUGl5fjOzxCToNUe3_Fe6HiJ"/>
+</div>
+<span class="font-caption text-caption truncate w-full text-center">MikeR</span>
+</div>
+<div class="flex flex-col items-center gap-xs">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-transparent bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="A stylish circular avatar of a middle-aged man with glasses, rendered in a warm, athletic illustrative style. The lighting is bright and high-key, suggesting a sunny day at a stadium. The color palette uses deep greens and off-whites to align with a vintage modern design system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBiykWK1vAlmQ714tiitARivkjlbg0Z7QRlHv1qz52eXFZ2OyhOlvFNKOQqpVsSXGOjgKfxcuyeJ-rqyp-XTWy5-b4yrVeBFbPJ4zCzGpcfBrmCKT3b7cGvPHC2HD6WKTa4niUPZwLAqQuzRBV8VPg5o7PfMeJvl-fS3DuGaeUxa-JFW-YhGfPBZHxkJsGk6A4ehhxoi7E43Z_TtQMaINFaLPnQ7I8RDaZCMJ8gI2dd-flpMyZp2jDmEv4vpSjwBUd9mNI0X-dFZ8pk"/>
+</div>
+<span class="font-caption text-caption truncate w-full text-center">Sarah_J</span>
+</div>
+<div class="flex flex-col items-center gap-xs">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-transparent bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="A professional circular profile illustration of a baseball enthusiast. The style is minimalist with tactile paper-like textures and a subtle pinstripe background behind the subject. Colors include deep stadium green and antique cream, evoking a heritage and playful atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDl-hCqvcE9FPwntFblwOr9rf5gpybDbu1fJB0EwOSGRuttJoDzW5IIXQXwumsPQY5d6beJmtoqpC7mUOIT9MwD-D0DisLOJJFDi3ifSRlUa8ilSELTnv4WSvGj_Mpu7awYMceWfNlA9_xEZ0CnTQzmQmw8T7WcX71RtbSRurcypsIdD8-6f4EZrhqMu1OaxfvxvQDe4EjAYTeMYiUFm9qGA7c1roRyZ9IOd71rTigZ5cU_dZmN_URydetA9KyZuPvXbYKQzABzwwZJ"/>
+</div>
+<span class="font-caption text-caption truncate w-full text-center">HomeRun</span>
+</div>
+<!-- Empty Slot -->
+<div class="flex flex-col items-center gap-xs opacity-40">
+<div class="w-12 h-12 rounded-full border-2 border-dashed border-outline-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-outline">person_add</span>
+</div>
+<span class="font-caption text-caption text-outline">Open</span>
+</div>
+</div>
+</div>
+<!-- Rules Snippets -->
+<div class="md:col-span-2 space-y-grid-gutter">
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
+<div class="flex items-center gap-base mb-sm">
+<span class="material-symbols-outlined text-tertiary">info</span>
+<h4 class="font-label-bold text-on-surface">Stadium Rules</h4>
+</div>
+<ul class="space-y-sm">
+<li class="flex gap-sm items-start">
+<span class="text-tertiary font-bold text-caption">01.</span>
+<p class="font-caption text-caption text-on-surface-variant leading-tight">Bingo is called on game events like Home Runs, Strikeouts, or Double Plays.</p>
+</li>
+<li class="flex gap-sm items-start">
+<span class="text-tertiary font-bold text-caption">02.</span>
+<p class="font-caption text-caption text-on-surface-variant leading-tight">Must mark your card within 2 innings of the event occurring.</p>
+</li>
+</ul>
+</div>
+<div class="bg-secondary/5 border border-secondary/20 rounded-xl p-md flex items-center justify-between">
+<div>
+<p class="font-label-bold text-secondary text-caption uppercase">Pro Tip</p>
+<p class="font-body-md text-caption text-on-surface-variant">Tap the 7th Inning Stretch for a bonus!</p>
+</div>
+<span class="material-symbols-outlined text-secondary text-[32px]">lightbulb</span>
+</div>
+</div>
+</div>
+<!-- Invite Section -->
+<div class="bg-primary/5 rounded-xl p-md flex flex-col sm:flex-row items-center justify-between gap-md border border-primary/10">
+<div class="flex items-center gap-md">
+<div class="bg-surface p-base rounded-lg border border-outline-variant/30 pressed-state">
+<span class="font-headline-md tracking-[0.2em] text-primary">BX-992</span>
+</div>
+<div>
+<h5 class="font-label-bold text-on-surface">Invite your team</h5>
+<p class="font-caption text-caption text-on-surface-variant">Share this code with players</p>
+</div>
+</div>
+<button class="w-full sm:w-auto bg-surface border-2 border-primary text-primary font-label-bold py-base px-lg rounded-full flex items-center justify-center gap-base hover:bg-primary/5 transition-all active:translate-y-[2px]">
+<span class="material-symbols-outlined">content_copy</span>
+                Copy Link
+            </button>
+</div>
+</main>
+<!-- Bottom Action Bar (Non-standard navigation replacement) -->
+<footer class="fixed bottom-0 w-full z-50 bg-surface/90 backdrop-blur-xl border-t border-outline-variant/30 shadow-lg">
+<div class="flex justify-between items-center h-20 w-full px-grid-margin-mobile md:px-grid-margin-desktop max-w-4xl mx-auto">
+<div class="flex flex-col">
+<span class="font-label-bold text-caption text-on-surface-variant uppercase">Your Status</span>
+<span class="font-body-lg text-secondary font-bold" id="statusText">Not Ready</span>
+</div>
+<div class="flex items-center gap-md">
+<button class="bg-secondary text-on-secondary font-label-bold py-md px-xl rounded-lg uppercase tracking-widest shadow-md hover:brightness-110 active:translate-y-[2px] transition-all flex items-center gap-base" id="readyBtn" onclick="toggleReady()">
+<span class="material-symbols-outlined" id="readyIcon">check_circle</span>
+<span id="btnText">Ready Up</span>
+</button>
+</div>
+</div>
+</footer>
+<!-- Bottom Nav Bar (Shared Component - Fallback Visibility) -->
+<nav class="md:hidden hidden">
+<!-- Hidden for focused journey but kept as required structure -->
+</nav>
+<script>
+        let isReady = false;
+        function toggleReady() {
+            const btn = document.getElementById('readyBtn');
+            const btnText = document.getElementById('btnText');
+            const statusText = document.getElementById('statusText');
+            const readyIcon = document.getElementById('readyIcon');
+            
+            isReady = !isReady;
+            
+            if (isReady) {
+                btn.classList.remove('bg-secondary');
+                btn.classList.add('bg-primary-container', 'text-on-primary-container');
+                btnText.innerText = "Locked In";
+                statusText.innerText = "Ready to Play";
+                statusText.classList.remove('text-secondary');
+                statusText.classList.add('text-primary');
+                readyIcon.style.fontVariationSettings = "'FILL' 1";
+            } else {
+                btn.classList.add('bg-secondary');
+                btn.classList.remove('bg-primary-container', 'text-on-primary-container');
+                btnText.innerText = "Ready Up";
+                statusText.innerText = "Not Ready";
+                statusText.classList.add('text-secondary');
+                statusText.classList.remove('text-primary');
+                readyIcon.style.fontVariationSettings = "'FILL' 0";
+            }
+        }
+    </script>
+</body></html>

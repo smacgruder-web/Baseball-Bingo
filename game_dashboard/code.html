@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Baseball Bingo - Live Game Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400;600;700&amp;family=Work+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .paper-texture {
+            background-color: #f9faf5;
+            background-image: radial-gradient(#d9dad6 0.5px, transparent 0.5px);
+            background-size: 16px 16px;
+            background-repeat: repeat;
+        }
+        .pinstripe-overlay {
+            position: relative;
+        }
+        .pinstripe-overlay::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(3, 48, 22, 0.05) 40px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .bingo-cell-pressed {
+            box-shadow: inset 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .diamond-base {
+            width: 14px;
+            height: 14px;
+            transform: rotate(45deg);
+        }
+        @keyframes subtle-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .live-indicator {
+            animation: subtle-pulse 2s infinite;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-fixed-dim": "#ffb3ae",
+                      "surface-container": "#edeee9",
+                      "surface-dim": "#d9dad6",
+                      "secondary-fixed": "#ffdad7",
+                      "inverse-on-surface": "#f0f1ec",
+                      "primary-fixed-dim": "#a3d2ab",
+                      "surface": "#f9faf5",
+                      "on-background": "#1a1c19",
+                      "primary": "#033016",
+                      "on-surface": "#1a1c19",
+                      "inverse-primary": "#a3d2ab",
+                      "surface-container-high": "#e8e9e4",
+                      "outline": "#727971",
+                      "tertiary-fixed-dim": "#eec209",
+                      "on-secondary-container": "#700310",
+                      "on-primary-fixed-variant": "#254f31",
+                      "surface-variant": "#e2e3de",
+                      "on-secondary": "#ffffff",
+                      "outline-variant": "#c1c9bf",
+                      "tertiary-fixed": "#ffe084",
+                      "on-tertiary": "#ffffff",
+                      "surface-tint": "#3d6748",
+                      "secondary": "#ab3334",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary-container": "#4e3d00",
+                      "on-tertiary-fixed": "#231b00",
+                      "error-container": "#ffdad6",
+                      "surface-container-low": "#f3f4ef",
+                      "primary-fixed": "#bfeec5",
+                      "on-error-container": "#93000a",
+                      "secondary-container": "#ff716d",
+                      "background": "#f9faf5",
+                      "error": "#ba1a1a",
+                      "on-primary-fixed": "#00210c",
+                      "surface-container-highest": "#e2e3de",
+                      "on-tertiary-fixed-variant": "#574500",
+                      "on-primary-container": "#88b590",
+                      "surface-bright": "#f9faf5",
+                      "on-secondary-fixed-variant": "#8a1a1f",
+                      "on-secondary-fixed": "#410005",
+                      "inverse-surface": "#2f312e",
+                      "primary-container": "#1d472a",
+                      "on-surface-variant": "#414941",
+                      "on-error": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "tertiary": "#735c00",
+                      "tertiary-container": "#cea700"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "grid-gutter": "16px",
+                      "base": "8px",
+                      "lg": "48px",
+                      "sm": "12px",
+                      "md": "24px",
+                      "xs": "4px",
+                      "xl": "64px",
+                      "grid-margin-desktop": "32px",
+                      "grid-margin-mobile": "16px"
+              },
+              "fontFamily": {
+                      "label-bold": ["Work Sans"],
+                      "display-lg": ["Domine"],
+                      "headline-sm": ["Domine"],
+                      "caption": ["Work Sans"],
+                      "display-lg-mobile": ["Domine"],
+                      "headline-md": ["Domine"],
+                      "body-lg": ["Work Sans"],
+                      "body-md": ["Work Sans"]
+              },
+              "fontSize": {
+                      "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                      "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-md text-body-md paper-texture pinstripe-overlay min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-grid-margin-mobile py-2 bg-surface border-b border-outline-variant bg-surface-variant/5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">sports_baseball</span>
+<h1 class="font-display-lg-mobile text-display-lg-mobile text-primary uppercase tracking-tight">BASEBALL BINGO</h1>
+</div>
+<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-primary-fixed-dim/20 transition-colors">
+<span class="material-symbols-outlined text-primary">account_circle</span>
+</button>
+</header>
+<main class="pt-20 px-grid-margin-mobile max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-grid-gutter">
+<!-- Left Column: Live Visualization -->
+<section class="md:col-span-4 space-y-grid-gutter">
+<!-- Game Status Card -->
+<div class="bg-surface border border-outline-variant rounded-xl p-md shadow-sm overflow-hidden">
+<div class="flex justify-between items-start mb-4">
+<div class="flex flex-col">
+<span class="font-label-bold text-caption text-secondary flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-secondary live-indicator"></span> LIVE • TOP 7TH
+                        </span>
+<h2 class="font-headline-sm text-headline-sm">LAD @ NYY</h2>
+</div>
+<div class="text-right">
+<p class="font-headline-md text-headline-md text-primary">4 - 2</p>
+<p class="font-label-bold text-caption text-on-surface-variant">2 OUTS</p>
+</div>
+</div>
+<!-- Diamond Visualization -->
+<div class="relative w-48 h-48 mx-auto my-8">
+<!-- Lines -->
+<div class="absolute inset-0 border-2 border-outline-variant rotate-45 transform scale-75 translate-y-2"></div>
+<!-- Bases -->
+<div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1 diamond-base border-2 border-outline bg-surface-container-high" title="Second Base"></div>
+<div class="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1 diamond-base border-2 border-outline bg-primary" title="First Base (Occupied)"></div>
+<div class="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1 diamond-base border-2 border-outline bg-primary" title="Third Base (Occupied)"></div>
+<div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1 diamond-base border-2 border-outline bg-surface-container-high" title="Home Plate"></div>
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<span class="material-symbols-outlined text-outline-variant opacity-20 text-6xl" style="font-variation-settings: 'FILL' 1;">sports_baseball</span>
+</div>
+</div>
+<!-- Count & Stats -->
+<div class="flex justify-around border-t border-outline-variant pt-4">
+<div class="text-center">
+<p class="font-label-bold text-caption text-on-surface-variant">BALLS</p>
+<div class="flex gap-1 justify-center mt-1">
+<div class="w-3 h-3 rounded-full bg-tertiary"></div>
+<div class="w-3 h-3 rounded-full bg-tertiary"></div>
+<div class="w-3 h-3 rounded-full bg-surface-variant"></div>
+</div>
+</div>
+<div class="text-center">
+<p class="font-label-bold text-caption text-on-surface-variant">STRIKES</p>
+<div class="flex gap-1 justify-center mt-1">
+<div class="w-3 h-3 rounded-full bg-secondary"></div>
+<div class="w-3 h-3 rounded-full bg-surface-variant"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Player Matchup -->
+<div class="bg-surface border border-outline-variant rounded-xl p-md shadow-sm">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<img class="w-12 h-12 rounded-full object-cover grayscale" data-alt="A close-up portrait of a professional baseball pitcher with a focused expression, wearing a classic pinstriped jersey. The lighting is bright and high-contrast, reminiscent of a sunny stadium afternoon. The aesthetic is clean and athletic, fitting the vintage-meets-modern design system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeAvBZIv4eCqw4qhMq8Epe2q2fbH9gXqxw6pBQOV_yx8c5Ti9ObzRqGojTIH_FQGOk-esBDneg8HR64MlcGMPpZczJwQ_8SmLueHKsvg9ciEZEOnkEW9irLQdfQdl3XyOvdNHNzBDzpDRyeuFDMw3RjOFAE6Zbw436KbGpYFaTDTek_O7nkV7VsFmpMtEvlw7rGQvhlvJDkeAwEwNBmSEONayDiEbQF7JhusV65eAmqM6Ns13tGK7iaCEXqjTuY_ZOhx9DGQsoSaD1"/>
+<div>
+<p class="font-label-bold text-caption text-on-surface-variant uppercase">Pitching</p>
+<p class="font-body-lg text-body-lg font-bold">G. Cole (NYY)</p>
+<p class="font-caption text-caption">98 MPH Fastball • 7 K's</p>
+</div>
+</div>
+<div class="border-t border-dashed border-outline-variant"></div>
+<div class="flex items-center gap-3">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="A professional baseball batter in a batting stance, wearing a clean white jersey with navy accents. The image is shot from a low angle to capture a heroic athletic feel. The lighting is warm and golden, capturing the nostalgia of a ballpark at sunset." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAY_Wc43uGDbtfdrMCYKyTHUmeAT2YnxbDpotYUzfnajB8_zQck5WFka2Ie55zhbYjwQ9pUUngoQOF7LmmySfnp1b9BIFnOI8lgT5V3PGC5viVW7roRQnvj0djnYaRHsHYBXp4UuYNNsTEiGXhVs--w39_rl93pnO0yW6UhUHDNFnEyv0nbrr1IfSGHVXNuYlMS_uzyFQVaKYLYY7MjaR2BdeZh8Fkf2eDkKJ3RJxn3YJ5KcVQ-WVGThjXXEn9jQNC04bKF7PBDPTM4"/>
+<div>
+<p class="font-label-bold text-caption text-on-surface-variant uppercase">Batting</p>
+<p class="font-body-lg text-body-lg font-bold">M. Betts (LAD)</p>
+<p class="font-caption text-caption">.304 AVG • 1-3 Today</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Center Column: Bingo Card -->
+<section class="md:col-span-5 space-y-grid-gutter">
+<div class="bg-surface border border-outline-variant rounded-xl p-grid-margin-mobile shadow-md">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-md text-headline-md text-primary">Your Bingo Card</h3>
+<div class="flex items-center gap-2">
+<div class="flex -space-x-1">
+<span class="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-[10px] text-white ring-2 ring-surface">B</span>
+<span class="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-[10px] text-white ring-2 ring-surface">I</span>
+<span class="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-[10px] text-white ring-2 ring-surface">N</span>
+</div>
+<span class="font-label-bold text-caption">LIVE SYNC ON</span>
+</div>
+</div>
+<!-- Bingo Grid -->
+<div class="grid grid-cols-5 gap-2 aspect-square">
+<!-- Row 1 -->
+<div class="aspect-square bg-primary text-white flex items-center justify-center text-center p-1 rounded-lg bingo-cell-pressed cursor-default transition-all">
+<span class="font-label-bold text-[10px] leading-tight">STOLEN BASE</span>
+</div>
+<div class="aspect-square bg-surface border border-outline-variant flex items-center justify-center text-center p-1 rounded-lg hover:bg-primary-fixed-dim/20 cursor-pointer transition-all">
+<span class="font-label-bold text-[10px] leading-tight">DOUBLE PLAY</span>
+</div>
+<div class="aspect-square bg-surface border border-outline-variant flex items-center justify-center text-center p-1 rounded-lg hover:bg-primary-fixed-dim/20 cursor-pointer transition-all">
+<span class="font-label-bold text-[10px] leading-tight">HOME RUN</span>
+</div>
+<div class="aspect-square bg-primary text-white flex items-center justify-center text-center p-1 rounded-lg bingo-cell-pressed cursor-default transition-all">
+<span class="font-label-bold text-[10px] leading-tight">BUNT</span>
+</div>
+<div class="aspect-square bg-surface border border-outline-variant flex items-center justify-center text-center p-1 rounded-lg hover:bg-primary-fixed-dim/20 cursor-pointer transition-all">
+<span class="font-label-bold text-[10px] leading-tight">STRIKEOUT</span>
+</div>
+<!-- Row 2 -->
+<div class="aspect-square bg-surface border border-outline-variant flex items-center justify-center text-center p-1 rounded-lg hover:bg-primary-fixed-dim/20 cursor-pointer transition-all">
+<span class="font-label-bold text-[10px] leading-tight">PINCH HITTER</span>
+</div>
+<div class="aspect-square bg-surface border border-outline-variant flex items-center justify-center text-center p-1 rounded-lg hover:bg-primary-fixed-dim/20 cursor-pointer transition-all">
+<span class="font-label-bold text-[10px] leading-tight">WILD PITCH</span>
+</div>
+<div class="aspect-square bg-surface border border-outline-variant flex items-center justify-center text-center p-1 rounded-lg hover:bg-primary-fixed-dim/20 cursor-pointer transition-all">
+<span class="font-label-bold text-[10px] leading-tight">FULL COUNT</span>
+</div>
+<div class="aspect-square bg-surface border border-outline-variant flex items-center justify-center text-center p-1 rounded-lg hover:bg-primary-fixed-dim/20 cursor-pointer transition-all">
+<span class="font-label-bold text-[10px] leading-tight">FOUL BALL (STANDS)</span>
+</div>
+<div class="aspect-square bg-primary text-white flex items-center justify-center text-center p-1 rounded-lg bingo-cell-pressed cursor-default transition-all">
+<span class="font-label-bold text-[10px] leading-tight">SINGLE</span>
+</div>
+<!-- Row 3 (Free Space Row) -->
+<div class="aspect-square bg-surface border border-outline-variant flex items-center justify-center text-center p-1 rounded-lg hover:bg-primary-fixed-dim/20 cursor-pointer transition-all">
+<span class="font-label-bold text-[10px] leading-tight">ERROR</span>
+</div>
+<div class="aspect-square bg-surface border border-outline-variant flex items-center justify-center text-center p-1 rounded-lg hover:bg-primary-fixed-dim/20 cursor-pointer transition-all">
+<span class="font-label-bold text-[10px] leading-tight">WALK</span>
+</div>
+<div class="aspect-square bg-tertiary text-on-tertiary-container flex items-center justify-center text-center p-1 rounded-lg bingo-cell-pressed cursor-default transition-all border-2 border-tertiary-container">
+<span class="font-label-bold text-[10px] leading-tight">FREE SPACE</span>
+</div>
+<div class="aspect-square bg-surface border border-outline-variant flex items-center justify-center text-center p-1 rounded-lg hover:bg-primary-fixed-dim/20 cursor-pointer transition-all">
+<span class="font-label-bold text-[10px] leading-tight">BALK</span>
+</div>
+<div class="aspect-square bg-surface border border-outline-variant flex items-center justify-center text-center p-1 rounded-lg hover:bg-primary-fixed-dim/20 cursor-pointer transition-all">
+<span class="font-label-bold text-[10px] leading-tight">HIT BY PITCH</span>
+</div>
+<!-- Row 4 -->
+<div class="aspect-square bg-primary text-white flex items-center justify-center text-center p-1 rounded-lg bingo-cell-pressed cursor-default transition-all">
+<span class="font-label-bold text-[10px] leading-tight">FLY OUT</span>
+</div>
+<div class="aspect-square bg-surface border border-outline-variant flex items-center justify-center text-center p-1 rounded-lg hover:bg-primary-fixed-dim/20 cursor-pointer transition-all">
+<span class="font-label-bold text-[10px] leading-tight">TRIPLE</span>
+</div>
+<div class="aspect-square bg-surface border border-outline-variant flex items-center justify-center text-center p-1 rounded-lg hover:bg-primary-fixed-dim/20 cursor-pointer transition-all">
+<span class="font-label-bold text-[10px] leading-tight">SAC FLY</span>
+</div>
+<div class="aspect-square bg-surface border border-outline-variant flex items-center justify-center text-center p-1 rounded-lg hover:bg-primary-fixed-dim/20 cursor-pointer transition-all">
+<span class="font-label-bold text-[10px] leading-tight">RELIEF PITCHER</span>
+</div>
+<div class="aspect-square bg-surface border border-outline-variant flex items-center justify-center text-center p-1 rounded-lg hover:bg-primary-fixed-dim/20 cursor-pointer transition-all">
+<span class="font-label-bold text-[10px] leading-tight">PICK OFF</span>
+</div>
+<!-- Row 5 -->
+<div class="aspect-square bg-surface border border-outline-variant flex items-center justify-center text-center p-1 rounded-lg hover:bg-primary-fixed-dim/20 cursor-pointer transition-all">
+<span class="font-label-bold text-[10px] leading-tight">CATCHER'S INTERF.</span>
+</div>
+<div class="aspect-square bg-surface border border-outline-variant flex items-center justify-center text-center p-1 rounded-lg hover:bg-primary-fixed-dim/20 cursor-pointer transition-all">
+<span class="font-label-bold text-[10px] leading-tight">DOUBLE</span>
+</div>
+<div class="aspect-square bg-primary text-white flex items-center justify-center text-center p-1 rounded-lg bingo-cell-pressed cursor-default transition-all">
+<span class="font-label-bold text-[10px] leading-tight">GROUND OUT</span>
+</div>
+<div class="aspect-square bg-surface border border-outline-variant flex items-center justify-center text-center p-1 rounded-lg hover:bg-primary-fixed-dim/20 cursor-pointer transition-all">
+<span class="font-label-bold text-[10px] leading-tight">INTENTIONAL WALK</span>
+</div>
+<div class="aspect-square bg-surface border border-outline-variant flex items-center justify-center text-center p-1 rounded-lg hover:bg-primary-fixed-dim/20 cursor-pointer transition-all">
+<span class="font-label-bold text-[10px] leading-tight">LINE DRIVE</span>
+</div>
+</div>
+<!-- Bingo Meter -->
+<div class="mt-8 space-y-2">
+<div class="flex justify-between items-end">
+<p class="font-label-bold text-caption">BINGO PROGRESS</p>
+<p class="font-headline-sm text-headline-sm text-primary">2 SQUARES AWAY</p>
+</div>
+<div class="h-4 w-full bg-surface-container rounded-full overflow-hidden flex gap-0.5">
+<div class="h-full bg-primary flex-1"></div>
+<div class="h-full bg-primary flex-1"></div>
+<div class="h-full bg-primary flex-1"></div>
+<div class="h-full bg-primary flex-1"></div>
+<div class="h-full bg-surface-variant flex-1 border-l-2 border-surface border-dashed"></div>
+<div class="h-full bg-surface-variant flex-1 border-l-2 border-surface border-dashed"></div>
+</div>
+<p class="text-center font-caption text-caption text-on-surface-variant italic">Complete a row, column, or diagonal to win $50 MLB Shop credit!</p>
+</div>
+</div>
+</section>
+<!-- Right Column: Stadium Chatter -->
+<section class="md:col-span-3 h-full">
+<div class="bg-surface border border-outline-variant rounded-xl flex flex-col h-[calc(100vh-140px)] sticky top-20 shadow-sm overflow-hidden">
+<div class="p-4 border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
+<h3 class="font-label-bold text-on-surface">STADIUM CHATTER</h3>
+<span class="px-2 py-0.5 bg-secondary/10 text-secondary text-[10px] font-bold rounded-full border border-secondary/20">4.2k LIVE</span>
+</div>
+<!-- Chat Feed -->
+<div class="flex-1 overflow-y-auto p-4 space-y-4">
+<div class="flex gap-2">
+<div class="w-6 h-6 rounded-full bg-primary-fixed flex items-center justify-center text-[10px] font-bold">JD</div>
+<div>
+<p class="font-label-bold text-[11px] text-primary">J.Dixon</p>
+<div class="bg-surface-container p-2 rounded-lg rounded-tl-none">
+<p class="text-caption">That Mookie Betts hit was a rocket! 🚀 Almost got my "Single" square.</p>
+</div>
+</div>
+</div>
+<div class="flex gap-2">
+<div class="w-6 h-6 rounded-full bg-secondary-fixed flex items-center justify-center text-[10px] font-bold">SM</div>
+<div>
+<p class="font-label-bold text-[11px] text-secondary">S.Miller</p>
+<div class="bg-surface-container p-2 rounded-lg rounded-tl-none">
+<p class="text-caption">Need a Home Run for the win. Come on Judge!</p>
+</div>
+</div>
+</div>
+<div class="flex gap-2">
+<div class="w-6 h-6 rounded-full bg-tertiary-fixed flex items-center justify-center text-[10px] font-bold">BL</div>
+<div>
+<p class="font-label-bold text-[11px] text-tertiary">B_Larkin</p>
+<div class="bg-surface-container p-2 rounded-lg rounded-tl-none">
+<p class="text-caption">Anyone else missing "Triple"? 😭</p>
+</div>
+</div>
+</div>
+<!-- System Message -->
+<div class="text-center py-2">
+<span class="font-label-bold text-[10px] text-on-surface-variant bg-surface-variant/30 px-3 py-1 rounded-full uppercase">User "DodgerBlue" marked STOLEN BASE</span>
+</div>
+<div class="flex gap-2">
+<div class="w-6 h-6 rounded-full bg-primary-container text-white flex items-center justify-center text-[10px] font-bold">ME</div>
+<div class="flex-1">
+<p class="font-label-bold text-[11px] text-primary text-right">You</p>
+<div class="bg-primary text-white p-2 rounded-lg rounded-tr-none ml-auto max-w-[80%]">
+<p class="text-caption">So close! Just need a Strikeout now.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Input -->
+<div class="p-4 border-t border-outline-variant bg-surface">
+<div class="relative flex items-center">
+<input class="w-full bg-surface-container border-none rounded-full py-2 px-4 text-caption focus:ring-2 focus:ring-primary" placeholder="Send a message..." type="text"/>
+<button class="absolute right-2 text-primary hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-surface border-t border-outline-variant shadow-lg rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95 duration-150 ease-out" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-bold text-caption">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 active:scale-95 duration-150 ease-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+<span class="font-label-bold text-caption">Card</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95 duration-150 ease-out" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-label-bold text-caption">Rankings</span>
+</a>
+</nav>
+<script>
+        // Simple micro-interaction for Bingo cells
+        document.querySelectorAll('.aspect-square.cursor-pointer').forEach(cell => {
+            cell.addEventListener('click', () => {
+                if (!cell.classList.contains('bg-primary')) {
+                    cell.classList.remove('bg-surface', 'border', 'border-outline-variant', 'hover:bg-primary-fixed-dim/20');
+                    cell.classList.add('bg-primary', 'text-white', 'bingo-cell-pressed');
+                    
+                    // Add success effect
+                    const sparkle = document.createElement('div');
+                    sparkle.innerText = '⭐';
+                    sparkle.className = 'absolute animate-ping';
+                    cell.appendChild(sparkle);
+                    setTimeout(() => sparkle.remove(), 1000);
+                }
+            });
+        });
+    </script>
+</body></html>

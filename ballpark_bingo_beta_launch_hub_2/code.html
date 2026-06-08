@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BALLPARK BINGO - Beta Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400;600;700&amp;family=Work+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .pinstripe-bg {
+            background-image: repeating-linear-gradient(90deg, transparent, transparent 31px, rgba(3, 48, 22, 0.05) 31px, rgba(3, 48, 22, 0.05) 32px);
+            background-color: #f9faf5;
+        }
+        .pressed-card {
+            box-shadow: inset 2px 2px 4px rgba(0,0,0,0.05);
+        }
+        .stitching-border {
+            background-image: linear-gradient(to right, #727971 50%, transparent 50%);
+            background-size: 8px 1px;
+            background-repeat: repeat-x;
+        }
+        .tactile-btn {
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+        }
+        .tactile-btn:hover {
+            transform: translateY(-1px);
+        }
+        .tactile-btn:active {
+            transform: translateY(2px);
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .shimmer-bg {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 2.5s infinite linear;
+        }
+
+        @keyframes drift {
+            0% { transform: rotate(12deg) translate(0, 0); }
+            50% { transform: rotate(15deg) translate(10px, -10px); }
+            100% { transform: rotate(12deg) translate(0, 0); }
+        }
+        .animate-drift {
+            animation: drift 60s infinite ease-in-out;
+        }
+
+        @keyframes slideInRotation {
+            from { transform: translateX(50px) rotate(3deg); opacity: 0; }
+            to { transform: translateX(0) rotate(0deg); opacity: 1; }
+        }
+        .bill-entry {
+            animation: slideInRotation 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes pulse-lite {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+        .animate-pulse-lite {
+            animation: pulse-lite 2s infinite ease-in-out;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-container": "#1d472a",
+                      "on-tertiary-fixed": "#231b00",
+                      "tertiary-container": "#cea700",
+                      "surface-bright": "#f9faf5",
+                      "on-surface": "#1a1c19",
+                      "on-secondary-container": "#700310",
+                      "on-tertiary": "#ffffff",
+                      "tertiary-fixed-dim": "#eec209",
+                      "outline-variant": "#c1c9bf",
+                      "on-tertiary-fixed-variant": "#574500",
+                      "on-secondary-fixed-variant": "#8a1a1f",
+                      "inverse-on-surface": "#f0f1ec",
+                      "on-surface-variant": "#414941",
+                      "secondary": "#ab3334",
+                      "on-background": "#1a1c19",
+                      "secondary-container": "#ff716d",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary-container": "#4e3d00",
+                      "outline": "#727971",
+                      "surface-container-low": "#f3f4ef",
+                      "surface-container-high": "#e8e9e4",
+                      "surface-dim": "#d9dad6",
+                      "on-primary-fixed": "#00210c",
+                      "tertiary": "#735c00",
+                      "primary-fixed-dim": "#a3d2ab",
+                      "on-primary-fixed-variant": "#254f31",
+                      "inverse-primary": "#a3d2ab",
+                      "surface": "#f9faf5",
+                      "inverse-surface": "#2f312e",
+                      "tertiary-fixed": "#ffe084",
+                      "error": "#ba1a1a",
+                      "secondary-fixed": "#ffdad7",
+                      "on-error-container": "#93000a",
+                      "surface-container-highest": "#e2e3de",
+                      "primary-fixed": "#bfeec5",
+                      "primary": "#033016",
+                      "on-error": "#ffffff",
+                      "surface-variant": "#e2e3de",
+                      "on-secondary-fixed": "#410005",
+                      "on-primary-container": "#88b590",
+                      "surface-container": "#edeee9",
+                      "surface-tint": "#3d6748",
+                      "error-container": "#ffdad6",
+                      "background": "#f9faf5",
+                      "secondary-fixed-dim": "#ffb3ae",
+                      "on-secondary": "#ffffff",
+                      "on-primary": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "md": "24px",
+                      "grid-margin-mobile": "16px",
+                      "xl": "64px",
+                      "grid-margin-desktop": "32px",
+                      "grid-gutter": "16px",
+                      "xs": "4px",
+                      "lg": "48px",
+                      "sm": "12px",
+                      "base": "8px"
+              },
+              "fontFamily": {
+                      "headline-sm": ["Domine"],
+                      "headline-md": ["Domine"],
+                      "display-lg": ["Domine"],
+                      "body-lg": ["Work Sans"],
+                      "label-bold": ["Work Sans"],
+                      "caption": ["Work Sans"],
+                      "display-lg-mobile": ["Domine"],
+                      "body-md": ["Work Sans"]
+              },
+              "fontSize": {
+                      "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                      "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="pinstripe-bg text-on-surface min-h-screen pb-24 md:pb-0 font-body-md text-body-md">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm flex justify-between items-center px-grid-margin-mobile md:px-grid-margin-desktop h-16">
+<div class="flex items-center gap-base">
+<span class="material-symbols-outlined text-primary text-headline-md" data-icon="sports_baseball">sports_baseball</span>
+<h1 class="font-headline-md text-headline-md font-bold tracking-tight text-primary">BALLPARK BINGO</h1>
+</div>
+<div class="flex items-center gap-sm">
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-primary/5 transition-colors p-2 rounded-full active:scale-95" data-icon="account_circle">account_circle</button>
+</div>
+</header>
+<main class="pt-20 px-grid-margin-mobile md:px-grid-margin-desktop max-w-7xl mx-auto space-y-md pb-lg">
+<!-- Beta Feedback Banner -->
+<section class="relative overflow-hidden rounded-xl bg-primary-container text-on-primary-container p-md flex flex-col md:flex-row justify-between items-center gap-md border border-outline-variant/20 shadow-md">
+<div class="z-10 text-center md:text-left">
+<h2 class="font-headline-sm text-headline-sm mb-xs">Welcome to the Beta, Scout!</h2>
+<p class="font-body-md text-body-md opacity-90 max-w-xl">Your feedback helps us perfect the diamond. Report bugs or suggest tiles to earn the exclusive 'First Pitch' badge.</p>
+</div>
+<button class="z-10 tactile-btn bg-surface text-primary font-label-bold text-label-bold px-lg py-sm rounded-full shadow-lg border border-outline-variant uppercase hover:shadow-xl">Give Feedback</button>
+<div class="absolute -right-8 -top-8 opacity-10 rotate-12 animate-drift">
+<span class="material-symbols-outlined text-[120px]" data-icon="bug_report">bug_report</span>
+</div>
+</section>
+<!-- Bento Grid Main Content -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-md">
+<!-- Active Games Rail -->
+<div class="md:col-span-8 space-y-md">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-sm text-headline-sm flex items-center gap-xs text-primary">
+<span class="material-symbols-outlined" data-icon="play_circle">play_circle</span>
+                        Active Games
+                    </h3>
+<span class="font-label-bold text-label-bold text-secondary px-sm py-xs bg-secondary/10 rounded-full flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+                        2 Games Live
+                    </span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-sm">
+<!-- Game Card 1 -->
+<div class="bg-surface border border-outline-variant/30 rounded-lg p-md hover:shadow-md transition-all cursor-pointer relative group overflow-hidden">
+<div class="flex justify-between items-start mb-sm">
+<span class="font-label-bold text-label-bold text-primary uppercase">Cubs vs Mets</span>
+<span class="bg-secondary text-white text-[10px] px-2 py-0.5 rounded-full font-bold flex items-center gap-1 animate-pulse-lite">
+<span class="w-1 h-1 bg-white rounded-full"></span>
+                        INNING 4
+                    </span>
+</div>
+<div class="flex gap-xs mb-md">
+<!-- Bingo Card Miniature -->
+<div class="grid grid-cols-3 gap-0.5 w-16 h-16 bg-outline-variant/20 p-0.5 rounded">
+<div class="bg-primary/20 rounded-sm"></div>
+<div class="bg-primary/20 rounded-sm"></div>
+<div class="bg-surface rounded-sm"></div>
+<div class="bg-surface rounded-sm"></div>
+<div class="bg-tertiary/40 rounded-sm"></div>
+<div class="bg-primary/20 rounded-sm"></div>
+<div class="bg-surface rounded-sm"></div>
+<div class="bg-surface rounded-sm"></div>
+<div class="bg-surface rounded-sm"></div>
+</div>
+<div class="flex flex-col justify-center overflow-hidden flex-1">
+<p class="font-body-md text-body-md font-bold relative inline-block">
+                        12 / 24 Tiles
+                        <span class="absolute inset-0 shimmer-bg opacity-30"></span>
+</p>
+<p class="font-caption text-caption text-on-surface-variant">2 Away from Bingo</p>
+</div>
+</div>
+<div class="stitching-border h-px w-full mb-sm"></div>
+<button class="w-full tactile-btn bg-primary text-white font-label-bold text-label-bold py-xs rounded uppercase hover:bg-primary-container">Resume Game</button>
+</div>
+<!-- Game Card 2 -->
+<div class="bg-surface border border-outline-variant/30 rounded-lg p-md hover:shadow-md transition-all cursor-pointer relative group overflow-hidden">
+<div class="flex justify-between items-start mb-sm">
+<span class="font-label-bold text-label-bold text-primary uppercase">Dodgers vs Giants</span>
+<span class="bg-outline text-white text-[10px] px-2 py-0.5 rounded-full font-bold uppercase flex items-center gap-1">
+<span class="w-1 h-1 bg-white/50 rounded-full"></span>
+                        Pre-Game
+                    </span>
+</div>
+<div class="flex gap-xs mb-md">
+<div class="grid grid-cols-3 gap-0.5 w-16 h-16 bg-outline-variant/20 p-0.5 rounded">
+<div class="bg-surface rounded-sm"></div>
+<div class="bg-surface rounded-sm"></div>
+<div class="bg-surface rounded-sm"></div>
+<div class="bg-surface rounded-sm"></div>
+<div class="bg-tertiary/40 rounded-sm"></div>
+<div class="bg-surface rounded-sm"></div>
+<div class="bg-surface rounded-sm"></div>
+<div class="bg-surface rounded-sm"></div>
+<div class="bg-surface rounded-sm"></div>
+</div>
+<div class="flex flex-col justify-center">
+<p class="font-body-md text-body-md font-bold">0 / 24 Tiles</p>
+<p class="font-caption text-caption text-on-surface-variant">Starts in 42 mins</p>
+</div>
+</div>
+<div class="stitching-border h-px w-full mb-sm"></div>
+<button class="w-full tactile-btn border-2 border-primary text-primary font-label-bold text-label-bold py-xs rounded uppercase hover:bg-primary/5">View Lineup</button>
+</div>
+</div>
+<!-- Quick Join Area -->
+<div class="bg-surface-container border-2 border-dashed border-outline-variant rounded-xl p-lg text-center space-y-sm">
+<span class="material-symbols-outlined text-outline text-[40px]" data-icon="grid_view">grid_view</span>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Enter a Private Room</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Have a 6-digit code from your friends? Jump in!</p>
+<div class="flex max-w-sm mx-auto gap-xs mt-md">
+<input class="flex-1 bg-surface border-b-2 border-primary border-t-0 border-l-0 border-r-0 focus:ring-0 focus:border-secondary font-headline-sm text-center tracking-widest placeholder:opacity-30" placeholder="CODE-123" type="text"/>
+<button class="tactile-btn bg-primary text-white p-sm rounded-lg flex items-center justify-center hover:scale-105">
+<span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Side Rail: AI Commentator & Challenges -->
+<div class="md:col-span-4 space-y-md">
+<!-- Bleacher Bill AI -->
+<div class="bg-surface border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm bill-entry">
+<div class="p-md flex items-center gap-sm bg-surface-container-high border-b border-outline-variant/20">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-primary flex-shrink-0">
+<img alt="Bleacher Bill" class="w-full h-full object-cover" data-alt="A close-up portrait of an elderly, friendly man with a weathered face and warm eyes, wearing a vintage green baseball cap and a pinstripe jersey. He is smiling slightly, set against a softly blurred background of a sun-drenched baseball stadium bleacher. The lighting is golden-hour warm, suggesting a nostalgic and athletic light-mode aesthetic with rich greens and creamy whites." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCSrHQdOqEfXKB2w9xBQH8_D3ltH57zrpMPGsOT5wHyWsDZXUqe53uhVAQmfeE-ZzOVEbIj1N7xGaJEYposRbe_3tnoVZtblxLhqcBzPAzu56P2cc2bPQSHR8SEwiD2yD5U_rGJPATrugd6B9cbsPbbn5kkkRPLGu5V5JcTxV4W0-cB3ilDvoxP3htTAsJtLYCAvy55Y7KWrnBS7fz6nAOeLHQGmhRa0k-6AMKJ_HZgMmFdWkm4UcxAUe5HIuN2koZtvXfoX1S5Nx5"/>
+</div>
+<div>
+<p class="font-label-bold text-label-bold text-primary">Bleacher Bill</p>
+<p class="font-caption text-caption text-secondary flex items-center gap-1">
+<span class="w-2 h-2 bg-secondary rounded-full animate-pulse"></span> LIVE TIP
+                            </p>
+</div>
+</div>
+<div class="p-md bg-white italic font-body-md text-on-surface leading-relaxed relative">
+<span class="material-symbols-outlined absolute -left-1 top-2 text-primary/10 text-[60px] pointer-events-none" data-icon="format_quote">format_quote</span>
+                        "Keep an eye on the bullpen early today, Scout! The breeze is blowing out to left field—might see a few 'Warning Track Flyouts' on your card sooner than you think!"
+                    </div>
+</div>
+<!-- Daily Challenges -->
+<div class="bg-surface-container-low rounded-xl p-md border border-outline-variant/30">
+<div class="flex items-center gap-xs mb-md">
+<span class="material-symbols-outlined text-tertiary" data-icon="stars" data-weight="fill" style="font-variation-settings: 'FILL' 1;">stars</span>
+<h4 class="font-label-bold text-label-bold text-primary uppercase">Daily Challenges</h4>
+</div>
+<div class="space-y-md">
+<div class="space-y-xs">
+<div class="flex justify-between font-caption text-caption">
+<span>The Slugger (3/5 Strikeouts)</span>
+<span class="font-bold">60%</span>
+</div>
+<div class="h-2 bg-outline-variant/30 rounded-full overflow-hidden relative">
+<div class="h-full bg-primary" style="width: 60%"></div>
+<div class="absolute inset-0 shimmer-bg opacity-20"></div>
+</div>
+</div>
+<div class="space-y-xs">
+<div class="flex justify-between font-caption text-caption">
+<span>Fast Foodie (Mark 'Vendor' Tile)</span>
+<span class="text-on-surface-variant italic">Incomplete</span>
+</div>
+<div class="h-2 bg-outline-variant/30 rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 0%"></div>
+</div>
+</div>
+</div>
+<button class="w-full mt-lg text-primary font-label-bold text-label-bold uppercase tracking-widest hover:underline text-xs tactile-btn">View All Badges</button>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 bg-surface/90 backdrop-blur-xl border-t border-outline-variant/30 shadow-lg flex justify-around items-center h-20 pb-safe">
+<a class="flex flex-col items-center justify-center text-secondary font-bold hover:bg-secondary/10 transition-colors px-md rounded-lg active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="home" data-weight="fill" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary/10 transition-colors px-md rounded-lg active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+<span class="font-label-md text-label-md">Card</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary/10 transition-colors px-md rounded-lg active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+<span class="font-label-md text-label-md">Rankings</span>
+</a>
+</nav>
+<script>
+        // Simple micro-interactions and haptic logic placeholders
+        document.querySelectorAll('.tactile-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                // If this were native, we'd trigger haptics here
+                console.log('Tactile action recorded');
+            });
+        });
+    </script>
+</body></html>

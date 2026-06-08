@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Grand Slam Win Simulation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400..700&amp;family=Work+Sans:wght@400;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@100..900&amp;family=Work+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "tertiary-container": "#cea700",
+                "on-background": "#1a1c19",
+                "secondary": "#ab3334",
+                "on-primary-fixed-variant": "#254f31",
+                "primary-fixed": "#bfeec5",
+                "error-container": "#ffdad6",
+                "inverse-on-surface": "#f0f1ec",
+                "surface": "#f9faf5",
+                "on-tertiary-fixed": "#231b00",
+                "on-primary-fixed": "#00210c",
+                "tertiary-fixed": "#ffe084",
+                "surface-tint": "#3d6748",
+                "surface-container-highest": "#e2e3de",
+                "on-surface-variant": "#414941",
+                "on-error-container": "#93000a",
+                "surface-dim": "#d9dad6",
+                "primary-fixed-dim": "#a3d2ab",
+                "on-secondary-fixed-variant": "#8a1a1f",
+                "secondary-fixed": "#ffdad7",
+                "on-tertiary": "#ffffff",
+                "on-secondary": "#ffffff",
+                "surface-bright": "#f9faf5",
+                "error": "#ba1a1a",
+                "on-surface": "#1a1c19",
+                "secondary-container": "#ff716d",
+                "on-primary": "#ffffff",
+                "surface-container-lowest": "#ffffff",
+                "secondary-fixed-dim": "#ffb3ae",
+                "tertiary-fixed-dim": "#eec209",
+                "primary-container": "#1d472a",
+                "inverse-surface": "#2f312e",
+                "surface-container-high": "#e8e9e4",
+                "on-secondary-fixed": "#410005",
+                "on-primary-container": "#88b590",
+                "on-error": "#ffffff",
+                "background": "#f9faf5",
+                "on-tertiary-container": "#4e3d00",
+                "primary": "#033016",
+                "on-tertiary-fixed-variant": "#574500",
+                "outline-variant": "#c1c9bf",
+                "tertiary": "#735c00",
+                "surface-container-low": "#f3f4ef",
+                "outline": "#727971",
+                "on-secondary-container": "#700310",
+                "surface-container": "#edeee9",
+                "surface-variant": "#e2e3de",
+                "inverse-primary": "#a3d2ab"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "lg": "48px",
+                "base": "8px",
+                "xs": "4px",
+                "sm": "12px",
+                "grid-margin-desktop": "32px",
+                "md": "24px",
+                "xl": "64px",
+                "grid-gutter": "16px",
+                "grid-margin-mobile": "16px"
+            },
+            "fontFamily": {
+                "caption": ["Work Sans"],
+                "headline-sm": ["Domine"],
+                "headline-md": ["Domine"],
+                "display-lg-mobile": ["Domine"],
+                "body-md": ["Work Sans"],
+                "label-bold": ["Work Sans"],
+                "display-lg": ["Domine"],
+                "body-lg": ["Work Sans"]
+            },
+            "fontSize": {
+                "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        @keyframes elastic-entrance {
+            0% { transform: scale(0.3) translateY(100px); opacity: 0; }
+            60% { transform: scale(1.1) translateY(-20px); opacity: 1; }
+            80% { transform: scale(0.95) translateY(10px); }
+            100% { transform: scale(1) translateY(0); }
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        @keyframes confetti-fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+        .animate-elastic { animation: elastic-entrance 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .animate-shimmer {
+            background: linear-gradient(90deg, #cea700 0%, #ffe084 50%, #cea700 100%);
+            background-size: 200% auto;
+            animation: shimmer 3s linear infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .animate-float { animation: float 4s ease-in-out infinite; }
+        .confetti {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .pinstripe {
+            background-image: radial-gradient(circle, #000 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.05;
+        }
+        .stadium-gradient {
+            background: radial-gradient(circle at center, rgba(3, 48, 22, 0.4) 0%, rgba(26, 28, 25, 0.95) 100%);
+        }
+        .pressed-card {
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-md m-0 p-0 overflow-hidden">
+<!-- Background Game View (Blurred) -->
+<div class="fixed inset-0 z-0 scale-110 blur-md grayscale-[0.3]">
+<img class="w-full h-full object-cover" data-alt="A cinematic, wide-angle shot of a classic American baseball stadium at night under brilliant floodlights. The field is a vibrant emerald green with pristine white chalk lines, and the grandstands are filled with a blurred audience. The atmosphere is electric, with a slight haze in the air catching the light beams, rendered in a heritage athletic aesthetic with deep greens and warm shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGTcFJBFgJsox88uJfh9pM_tydevETXDPtwQYonSmaIwnPuVGvr2waUonVpZfwbW7XClE_Lp-SpqH5mFUoqctzAUW4KtlpkqRm-W1uM_dwnkAkYwjzJxorlIck1coW6TQYl48xox7q60xFYnccww_sO--7uWhT5zubwdin_45ywIth1RKkvyUfkg5xFF28HQt_UfUUJFmtvHKn9P1sVBDQIWfGjqoRzNhH38JRzsnco-goLXquV4_iYkXfw4s7WOogZ3EveuWmwn3K"/>
+</div>
+<!-- Celebration Overlay Container -->
+<div class="fixed inset-0 z-50 flex items-center justify-center stadium-gradient p-grid-margin-mobile md:p-grid-margin-desktop">
+<!-- Confetti Layer (JS generated) -->
+<div class="absolute inset-0 overflow-hidden pointer-events-none" id="confetti-container"></div>
+<!-- Main Dialog Content -->
+<div class="relative w-full max-w-[600px] flex flex-col items-center">
+<!-- Trophy Section -->
+<div class="relative z-20 animate-elastic animate-float mb-base">
+<div class="absolute -inset-10 bg-tertiary-fixed/20 blur-3xl rounded-full"></div>
+<span class="material-symbols-outlined text-[160px] text-tertiary-fixed-dim drop-shadow-[0_0_30px_rgba(238,194,9,0.5)]" style="font-variation-settings: 'FILL' 1;">
+                    trophy
+                </span>
+</div>
+<!-- Victory Text -->
+<div class="text-center z-20 mb-md">
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-white drop-shadow-lg tracking-tighter uppercase mb-xs">
+                    GRAND SLAM WIN
+                </h1>
+<div class="h-1 w-24 bg-tertiary mx-auto rounded-full"></div>
+</div>
+<!-- Stats Card (Bento Style) -->
+<div class="w-full bg-surface-container/95 backdrop-blur-md rounded-xl border border-outline-variant/30 overflow-hidden shadow-2xl relative mb-lg">
+<!-- Pinstripe texture overlay -->
+<div class="absolute inset-0 pinstripe pointer-events-none"></div>
+<div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-outline-variant/30">
+<!-- Win Type -->
+<div class="p-md flex flex-col items-center justify-center space-y-xs">
+<span class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-widest">Win Type</span>
+<div class="px-sm py-xs bg-secondary/10 rounded-full border border-secondary/20">
+<span class="font-body-md text-body-md font-bold text-secondary">GRAND SLAM</span>
+</div>
+</div>
+<!-- Prize Pool -->
+<div class="p-md flex flex-col items-center justify-center space-y-xs">
+<span class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-widest text-center">Prize Pool</span>
+<div class="flex items-center space-x-xs">
+<span class="material-symbols-outlined text-tertiary-fixed-dim" style="font-variation-settings: 'FILL' 1;">stars</span>
+<span class="font-headline-md text-headline-md animate-shimmer font-bold">5,000 PTS</span>
+</div>
+</div>
+<!-- Rank Up -->
+<div class="p-md flex flex-col items-center justify-center space-y-xs">
+<span class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-widest">Rank Progress</span>
+<div class="flex items-center space-x-sm">
+<span class="font-body-md text-body-md text-on-surface-variant opacity-60">#42</span>
+<span class="material-symbols-outlined text-primary text-sm">trending_up</span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">#12</span>
+</div>
+</div>
+</div>
+<!-- Progress Bar "Stitched" Metaphor -->
+<div class="px-md pb-md">
+<div class="w-full h-4 bg-surface-container-highest rounded-full overflow-hidden flex space-x-1 p-0.5 border border-outline-variant/20">
+<div class="h-full w-1/4 bg-primary rounded-sm transition-all duration-1000 ease-out" style="width: 78%;"></div>
+<div class="h-full w-4 bg-tertiary-fixed-dim animate-pulse rounded-sm"></div>
+</div>
+<div class="flex justify-between mt-xs px-1">
+<span class="font-caption text-caption text-on-surface-variant">SEASON PROGRESS</span>
+<span class="font-caption text-caption text-on-surface-variant font-bold">NEXT REWARD: GOLD PACK</span>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-col md:flex-row gap-md w-full max-w-sm z-20">
+<button class="flex-1 bg-primary text-white py-4 px-lg rounded-lg font-label-bold text-label-bold uppercase tracking-widest shadow-xl active:translate-y-0.5 transition-all hover:bg-primary-container border-b-4 border-primary/40">
+                    Claim Rewards
+                </button>
+<button class="flex-1 bg-transparent text-white/80 py-4 px-lg rounded-lg font-label-bold text-label-bold uppercase tracking-widest border-2 border-white/20 hover:bg-white/10 active:scale-95 transition-all">
+                    Close
+                </button>
+</div>
+</div>
+</div>
+<!-- Decorative Elements -->
+<div class="fixed top-base left-base md:top-md md:left-md z-[60] flex items-center space-x-xs">
+<span class="material-symbols-outlined text-primary text-headline-md" data-icon="sports_baseball">sports_baseball</span>
+<span class="font-headline-md text-headline-md font-bold tracking-tight text-white drop-shadow-md">BALLPARK BINGO</span>
+</div>
+<script>
+        // Confetti Generator
+        const container = document.getElementById('confetti-container');
+        const colors = ['#033016', '#ab3334', '#cea700', '#ffffff', '#a3d2ab'];
+        
+        function createConfetti() {
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const left = Math.random() * 100;
+                const duration = 2 + Math.random() * 3;
+                const delay = Math.random() * 2;
+                const size = 5 + Math.random() * 10;
+                
+                confetti.style.left = `${left}%`;
+                confetti.style.backgroundColor = color;
+                confetti.style.width = `${size}px`;
+                confetti.style.height = `${size}px`;
+                confetti.style.opacity = '0';
+                confetti.style.animation = `confetti-fall ${duration}s linear ${delay}s infinite`;
+                
+                // Random shapes
+                if (Math.random() > 0.5) {
+                    confetti.style.borderRadius = '50%';
+                }
+                
+                container.appendChild(confetti);
+            }
+        }
+
+        createConfetti();
+
+        // Micro-interaction for Claim button
+        const claimBtn = document.querySelector('button:first-of-type');
+        claimBtn.addEventListener('click', function() {
+            this.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Claiming...';
+            setTimeout(() => {
+                this.innerHTML = '<span class="material-symbols-outlined">check_circle</span> Claimed!';
+                this.classList.remove('bg-primary');
+                this.classList.add('bg-tertiary-container');
+            }, 1200);
+        });
+    </script>
+</body></html>

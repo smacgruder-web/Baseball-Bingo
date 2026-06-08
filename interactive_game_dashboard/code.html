@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Baseball Bingo - Live Game Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400;600;700&amp;family=Work+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .paper-texture {
+            background-color: #f9faf5;
+            background-image: radial-gradient(#d9dad6 0.5px, transparent 0.5px);
+            background-size: 16px 16px;
+            background-repeat: repeat;
+        }
+        .pinstripe-overlay {
+            position: relative;
+        }
+        .pinstripe-overlay::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(3, 48, 22, 0.05) 40px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .bingo-cell-pressed {
+            box-shadow: inset 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .diamond-base {
+            width: 14px;
+            height: 14px;
+            transform: rotate(45deg);
+        }
+        @keyframes subtle-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .live-indicator {
+            animation: subtle-pulse 2s infinite;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-fixed-dim": "#ffb3ae",
+                      "surface-container": "#edeee9",
+                      "surface-dim": "#d9dad6",
+                      "secondary-fixed": "#ffdad7",
+                      "inverse-on-surface": "#f0f1ec",
+                      "primary-fixed-dim": "#a3d2ab",
+                      "surface": "#f9faf5",
+                      "on-background": "#1a1c19",
+                      "primary": "#033016",
+                      "on-surface": "#1a1c19",
+                      "inverse-primary": "#a3d2ab",
+                      "surface-container-high": "#e8e9e4",
+                      "outline": "#727971",
+                      "tertiary-fixed-dim": "#eec209",
+                      "on-secondary-container": "#700310",
+                      "on-primary-fixed-variant": "#254f31",
+                      "surface-variant": "#e2e3de",
+                      "on-secondary": "#ffffff",
+                      "outline-variant": "#c1c9bf",
+                      "tertiary-fixed": "#ffe084",
+                      "on-tertiary": "#ffffff",
+                      "surface-tint": "#3d6748",
+                      "secondary": "#ab3334",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary-container": "#4e3d00",
+                      "on-tertiary-fixed": "#231b00",
+                      "error-container": "#ffdad6",
+                      "surface-container-low": "#f3f4ef",
+                      "primary-fixed": "#bfeec5",
+                      "on-error-container": "#93000a",
+                      "secondary-container": "#ff716d",
+                      "background": "#f9faf5",
+                      "error": "#ba1a1a",
+                      "on-primary-fixed": "#00210c",
+                      "surface-container-highest": "#e2e3de",
+                      "on-tertiary-fixed-variant": "#574500",
+                      "on-primary-container": "#88b590",
+                      "surface-bright": "#f9faf5",
+                      "on-secondary-fixed-variant": "#8a1a1f",
+                      "on-secondary-fixed": "#410005",
+                      "inverse-surface": "#2f312e",
+                      "primary-container": "#1d472a",
+                      "on-surface-variant": "#414941",
+                      "on-error": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "tertiary": "#735c00",
+                      "tertiary-container": "#cea700"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "grid-gutter": "16px",
+                      "base": "8px",
+                      "lg": "48px",
+                      "sm": "12px",
+                      "md": "24px",
+                      "xs": "4px",
+                      "xl": "64px",
+                      "grid-margin-desktop": "32px",
+                      "grid-margin-mobile": "16px"
+              },
+              "fontFamily": {
+                      "label-bold": ["Work Sans"],
+                      "display-lg": ["Domine"],
+                      "headline-sm": ["Domine"],
+                      "caption": ["Work Sans"],
+                      "display-lg-mobile": ["Domine"],
+                      "headline-md": ["Domine"],
+                      "body-lg": ["Work Sans"],
+                      "body-md": ["Work Sans"]
+              },
+              "fontSize": {
+                      "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                      "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+    .animate-spin-slow {
+        animation: spin 8s linear infinite;
+    }
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md text-body-md paper-texture pinstripe-overlay min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-grid-margin-mobile py-2 bg-surface border-b border-outline-variant bg-surface-variant/5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">sports_baseball</span>
+<h1 class="font-display-lg-mobile text-display-lg-mobile text-primary uppercase tracking-tight">BASEBALL BINGO</h1>
+</div>
+<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-primary-fixed-dim/20 transition-colors">
+<span class="material-symbols-outlined text-primary">account_circle</span>
+</button>
+</header>
+<main class="pt-20 px-grid-margin-mobile max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-grid-gutter">
+<!-- Left Column: Live Visualization -->
+<section class="md:col-span-4 space-y-grid-gutter">
+<!-- Game Status Card -->
+<div class="bg-surface border border-outline-variant rounded-xl p-md shadow-sm overflow-hidden">
+<div class="flex justify-between items-start mb-4">
+<div class="flex flex-col">
+<span class="font-label-bold text-caption text-secondary flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-secondary live-indicator"></span> LIVE • TOP 7TH
+                        </span>
+<h2 class="font-headline-sm text-headline-sm" id="game-matchup">LAD @ NYY</h2>
+</div>
+<div class="text-right">
+<p class="font-headline-md text-headline-md text-primary"><span id="away-score">4</span> - <span id="home-score">2</span></p>
+<p class="font-label-bold text-caption text-on-surface-variant">2 OUTS</p>
+</div>
+</div>
+<!-- Diamond Visualization -->
+<div class="relative w-48 h-48 mx-auto my-8">
+<!-- Lines -->
+<div class="absolute inset-0 border-2 border-outline-variant rotate-45 transform scale-75 translate-y-2"></div>
+<!-- Bases -->
+<div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1 diamond-base border-2 border-outline bg-surface-container-high" id="base-2" title="Second Base"></div>
+<div class="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1 diamond-base border-2 border-outline bg-primary" id="base-1" title="First Base (Occupied)"></div>
+<div class="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1 diamond-base border-2 border-outline bg-primary" id="base-3" title="Third Base (Occupied)"></div>
+<div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1 diamond-base border-2 border-outline bg-surface-container-high" title="Home Plate"></div>
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<span class="material-symbols-outlined text-outline-variant opacity-20 text-6xl" style="font-variation-settings: 'FILL' 1;">sports_baseball</span>
+</div>
+</div>
+<!-- Count & Stats -->
+<div class="flex justify-around border-t border-outline-variant pt-4">
+<div class="text-center">
+<p class="font-label-bold text-caption text-on-surface-variant">BALLS</p>
+<div class="flex gap-1 justify-center mt-1">
+<div class="w-3 h-3 rounded-full bg-tertiary" id="ball-1"></div>
+<div class="w-3 h-3 rounded-full bg-tertiary" id="ball-2"></div>
+<div class="w-3 h-3 rounded-full bg-surface-variant" id="ball-3"></div>
+</div>
+</div>
+<div class="text-center">
+<p class="font-label-bold text-caption text-on-surface-variant">STRIKES</p>
+<div class="flex gap-1 justify-center mt-1">
+<div class="w-3 h-3 rounded-full bg-secondary" id="strike-1"></div>
+<div class="w-3 h-3 rounded-full bg-surface-variant" id="strike-2"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Player Matchup -->
+<div class="bg-surface border border-outline-variant rounded-xl p-md shadow-sm">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<img class="w-12 h-12 rounded-full object-cover grayscale" data-alt="A close-up portrait of a professional baseball pitcher with a focused expression, wearing a classic pinstriped jersey. The lighting is bright and high-contrast, reminiscent of a sunny stadium afternoon. The aesthetic is clean and athletic, fitting the vintage-meets-modern design system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeAvBZIv4eCqw4qhMq8Epe2q2fbH9gXqxw6pBQOV_yx8c5Ti9ObzRqGojTIH_FQGOk-esBDneg8HR64MlcGMPpZczJwQ_8SmLueHKsvg9ciEZEOnkEW9irLQdfQdl3XyOvdNHNzBDzpDRyeuFDMw3RjOFAE6Zbw436KbGpYFaTDTek_O7nkV7VsFmpMtEvlw7rGQvhlvJDkeAwEwNBmSEONayDiEbQF7JhusV65eAmqM6Ns13tGK7iaCEXqjTuY_ZOhx9DGQsoSaD1"/>
+<div>
+<p class="font-label-bold text-caption text-on-surface-variant uppercase">Pitching</p>
+<p class="font-body-lg text-body-lg font-bold" id="pitcher-name">G. Cole (NYY)</p>
+<p class="font-caption text-caption">98 MPH Fastball • 7 K's</p>
+</div>
+</div>
+<div class="border-t border-dashed border-outline-variant"></div>
+<div class="flex items-center gap-3">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="A professional baseball batter in a batting stance, wearing a clean white jersey with navy accents. The image is shot from a low angle to capture a heroic athletic feel. The lighting is warm and golden, capturing the nostalgia of a ballpark at sunset." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAY_Wc43uGDbtfdrMCYKyTHUmeAT2YnxbDpotYUzfnajB8_zQck5WFka2Ie55zhbYjwQ9pUUngoQOF7LmmySfnp1b9BIFnOI8lgT5V3PGC5viVW7roRQnvj0djnYaRHsHYBXp4UuYNNsTEiGXhVs--w39_rl93pnO0yW6UhUHDNFnEyv0nbrr1IfSGHVXNuYlMS_uzyFQVaKYLYY7MjaR2BdeZh8Fkf2eDkKJ3RJxn3YJ5KcVQ-WVGThjXXEn9jQNC04bKF7PBDPTM4"/>
+<div>
+<p class="font-label-bold text-caption text-on-surface-variant uppercase">Batting</p>
+<p class="font-body-lg text-body-lg font-bold" id="batter-name">M. Betts (LAD)</p>
+<p class="font-caption text-caption">.304 AVG • 1-3 Today</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Center Column: Bingo Card -->
+<section class="md:col-span-5 space-y-grid-gutter">
+<div class="bg-surface border border-outline-variant rounded-xl p-grid-margin-mobile shadow-md">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-md text-headline-md text-primary">Your Bingo Card</h3>
+<div class="flex items-center gap-2">
+<div class="flex -space-x-1">
+<span class="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-[10px] text-white ring-2 ring-surface">B</span>
+<span class="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-[10px] text-white ring-2 ring-surface">I</span>
+<span class="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-[10px] text-white ring-2 ring-surface">N</span>
+</div>
+<button class="font-label-bold text-caption text-primary hover:underline uppercase" onclick="generateBoard(true)">Reshuffle</button>
+</div>
+</div>
+<!-- Bingo Grid -->
+<div class="grid grid-cols-5 gap-2 aspect-square" id="bingo-grid">
+<!-- Row 1 populated by JS -->
+</div>
+<!-- Bingo Meter -->
+<div class="mt-8 space-y-2">
+<div class="flex justify-between items-end">
+<p class="font-label-bold text-caption">BINGO PROGRESS</p>
+<p class="font-headline-sm text-headline-sm text-primary" id="progress-text">2 SQUARES AWAY</p>
+</div>
+<div class="h-4 w-full bg-surface-container rounded-full overflow-hidden flex gap-0.5" id="progress-bar">
+<!-- Progress segments populated by JS -->
+</div>
+<p class="text-center font-caption text-caption text-on-surface-variant italic">Complete a row, column, or diagonal to win $50 MLB Shop credit!</p>
+</div>
+</div>
+</section>
+<!-- Right Column: Stadium Chatter -->
+<section class="md:col-span-3 h-full">
+<div class="bg-surface border border-outline-variant rounded-xl flex flex-col h-[calc(100vh-140px)] sticky top-20 shadow-sm overflow-hidden">
+<div class="p-4 border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
+<h3 class="font-label-bold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">gavel</span> GEMINI UMPIRE
+                </h3>
+<span class="px-2 py-0.5 bg-secondary/10 text-secondary text-[10px] font-bold rounded-full border border-secondary/20">LIVE RULINGS</span>
+</div>
+<!-- Chat Feed -->
+<div class="flex-1 overflow-y-auto p-4 space-y-4" id="gemini-chat-log">
+<div class="flex gap-2">
+<div class="w-6 h-6 rounded-full bg-primary-fixed flex items-center justify-center text-[10px] font-bold">GU</div>
+<div>
+<p class="font-label-bold text-[11px] text-primary">Umpire Gemini</p>
+<div class="bg-surface-container p-2 rounded-lg rounded-tl-none">
+<p class="text-caption">Welcome! Ask me any baseball ruling question. E.g., "Does a sac-fly count towards an RBI strike?"</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Prompts -->
+<div class="px-4 py-2 border-t border-outline-variant/30 flex flex-wrap gap-1 bg-surface-variant/10">
+<button class="text-[10px] bg-surface-container border border-outline-variant px-2 py-1 rounded hover:bg-primary-fixed-dim/20 transition" onclick="sendQuickPrompt('Does a sac-fly break a hitting streak?')">Sac-Fly?</button>
+<button class="text-[10px] bg-surface-container border border-outline-variant px-2 py-1 rounded hover:bg-primary-fixed-dim/20 transition" onclick="sendQuickPrompt('What is a strikeout looking?')">Swing vs Look?</button>
+</div>
+<!-- Input -->
+<div class="p-4 border-t border-outline-variant bg-surface">
+<form class="relative flex items-center" id="gemini-chat-form" onsubmit="handleChatSubmit(event)">
+<input class="w-full bg-surface-container border-none rounded-full py-2 px-4 text-caption focus:ring-2 focus:ring-primary" id="chat-input" placeholder="Ask Umpire Gem..." type="text"/>
+<button class="absolute right-2 text-primary hover:scale-110 transition-transform" type="submit">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</form>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-surface border-t border-outline-variant shadow-lg rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95 duration-150 ease-out" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-bold text-caption">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 active:scale-95 duration-150 ease-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+<span class="font-label-bold text-caption">Card</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95 duration-150 ease-out" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-label-bold text-caption">Rankings</span>
+</a>
+</nav>
+<script>
+    // --- AUDIO LOGIC ---
+    let audioCtx = null;
+    function initAudio() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+    }
+
+    function playSynthSound(type) {
+        initAudio();
+        if (!audioCtx) return;
+
+        if (type === 'bat') {
+            let osc = audioCtx.createOscillator();
+            let gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(320, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.08);
+            gain.gain.setValueAtTime(1.2, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.15);
+        } else if (type === 'organ') {
+            const notes = [261.63, 329.63, 392.00, 523.25];
+            const timing = [0, 0.12, 0.24, 0.36];
+            notes.forEach((freq, i) => {
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime + timing[i]);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + timing[i] + 0.2);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(audioCtx.currentTime + timing[i]);
+                osc.stop(audioCtx.currentTime + timing[i] + 0.22);
+            });
+        } else if (type === 'cheer') {
+            let bufferSize = audioCtx.sampleRate * 1.5;
+            let buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            let data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) { data[i] = Math.random() * 2 - 1; }
+            let noiseNode = audioCtx.createBufferSource();
+            noiseNode.buffer = buffer;
+            let filter = audioCtx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.value = 450;
+            filter.Q.value = 1.0;
+            let gainNode = audioCtx.createGain();
+            gainNode.gain.setValueAtTime(0.01, audioCtx.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.4, audioCtx.currentTime + 0.3);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.4);
+            noiseNode.connect(filter);
+            filter.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            noiseNode.start();
+            noiseNode.stop(audioCtx.currentTime + 1.5);
+        }
+    }
+
+    // --- GAME DATA ---
+    const genericEvents = [
+        "STOLEN BASE", "DOUBLE PLAY", "HOME RUN", "BUNT", "STRIKEOUT",
+        "PINCH HITTER", "WILD PITCH", "FULL COUNT", "FOUL BALL (STANDS)", "SINGLE",
+        "ERROR", "WALK", "BALK", "HIT BY PITCH", "FLY OUT",
+        "TRIPLE", "SAC FLY", "RELIEF PITCHER", "PICK OFF", "CATCHER'S INTERF.",
+        "DOUBLE", "GROUND OUT", "INTENTIONAL WALK", "LINE DRIVE", "NO-HITTER (LIVE)"
+    ];
+
+    let gameTeams = {
+        away: "LAD", home: "NYY",
+        pitcher: "G. Cole", batter: "M. Betts"
+    };
+
+    let markedSquares = Array(25).fill(false);
+    let boardSeed = 42;
+    let currentBoardEvents = [];
+
+    // --- BINGO LOGIC ---
+    function seededRandom(seed) {
+        let x = Math.sin(seed++) * 10000;
+        return x - Math.floor(x);
+    }
+
+    function buildGameEventPool() {
+        let pool = [...genericEvents];
+        // Add dynamic pitcher/batter events
+        pool.push(`${gameTeams.pitcher} K`);
+        pool.push(`${gameTeams.batter} HR`);
+        return pool;
+    }
+
+    function generateBoard(newSeed = false) {
+        if (newSeed) {
+            boardSeed = Math.floor(Math.random() * 10000);
+            markedSquares = Array(25).fill(false);
+            markedSquares[12] = true; // Free space
+        }
+
+        let pool = buildGameEventPool();
+        let selected = [];
+        let tempPool = [...pool];
+        let s = boardSeed;
+        for (let i = 0; i < 24; i++) {
+            let rng = seededRandom(s++);
+            let idx = Math.floor(rng * tempPool.length);
+            selected.push(tempPool.splice(idx, 1)[0]);
+        }
+
+        currentBoardEvents = [];
+        let count = 0;
+        for (let j = 0; j < 25; j++) {
+            if (j === 12) currentBoardEvents.push("FREE SPACE");
+            else currentBoardEvents.push(selected[count++]);
+        }
+        renderGrid();
+        updateProgress();
+    }
+
+    function renderGrid() {
+        const grid = document.getElementById('bingo-grid');
+        grid.innerHTML = '';
+        currentBoardEvents.forEach((evt, i) => {
+            const cell = document.createElement('div');
+            const isMarked = markedSquares[i];
+            const isFree = i === 12;
+            
+            cell.className = `aspect-square flex items-center justify-center text-center p-1 rounded-lg transition-all cursor-pointer ${
+                isMarked 
+                    ? (isFree ? 'bg-tertiary text-on-tertiary-container border-2 border-tertiary-container bingo-cell-pressed' : 'bg-primary text-white bingo-cell-pressed') 
+                    : 'bg-surface border border-outline-variant hover:bg-primary-fixed-dim/20'
+            }`;
+            
+            if (isFree) {
+                cell.innerHTML = `
+                    <div class="flex flex-col items-center">
+                        <span class="font-label-bold text-[10px] leading-tight">FREE SPACE</span>
+                        <span class="material-symbols-outlined text-[10px] animate-spin-slow">sports_baseball</span>
+                    </div>
+                `;
+            } else {
+                cell.innerHTML = `<span class="font-label-bold text-[10px] leading-tight uppercase">${evt}</span>`;
+            }
+            
+            cell.onclick = () => toggleSquare(i);
+            grid.appendChild(cell);
+        });
+    }
+
+    function toggleSquare(idx) {
+        if (idx === 12) return;
+        markedSquares[idx] = !markedSquares[idx];
+        playSynthSound('bat');
+        renderGrid();
+        updateProgress();
+        checkForBingo();
+    }
+
+    function updateProgress() {
+        // Simple progress: count nearest bingo
+        const lines = [
+            [0,1,2,3,4], [5,6,7,8,9], [10,11,12,13,14], [15,16,17,18,19], [20,21,22,23,24], // H
+            [0,5,10,15,20], [1,6,11,16,21], [2,7,12,17,22], [3,8,13,18,23], [4,9,14,19,24], // V
+            [0,6,12,18,24], [4,8,12,16,20] // D
+        ];
+
+        let minAway = 5;
+        let bestLineMarked = 0;
+        lines.forEach(line => {
+            const markedInLine = line.filter(idx => markedSquares[idx]).length;
+            const away = 5 - markedInLine;
+            if (away < minAway) {
+                minAway = away;
+                bestLineMarked = markedInLine;
+            }
+        });
+
+        const text = document.getElementById('progress-text');
+        text.innerText = minAway === 0 ? "BINGO!" : `${minAway} SQUARE${minAway > 1 ? 'S' : ''} AWAY`;
+        
+        const bar = document.getElementById('progress-bar');
+        bar.innerHTML = '';
+        for (let i = 0; i < 5; i++) {
+            const seg = document.createElement('div');
+            seg.className = `h-full flex-1 ${i < bestLineMarked ? 'bg-primary' : 'bg-surface-variant'} ${i > 0 ? 'border-l-2 border-surface border-dashed' : ''}`;
+            bar.appendChild(seg);
+        }
+    }
+
+    function checkForBingo() {
+        const lines = [
+            [0,1,2,3,4], [5,6,7,8,9], [10,11,12,13,14], [15,16,17,18,19], [20,21,22,23,24],
+            [0,5,10,15,20], [1,6,11,16,21], [2,7,12,17,22], [3,8,13,18,23], [4,9,14,19,24],
+            [0,6,12,18,24], [4,8,12,16,20]
+        ];
+        const win = lines.some(line => line.every(idx => markedSquares[idx]));
+        if (win) {
+            playSynthSound('organ');
+            setTimeout(() => playSynthSound('cheer'), 400);
+            alert("BINGO! You've won $50 MLB Shop credit!");
+        }
+    }
+
+    // --- CHAT LOGIC ---
+    const umpireAnswers = {
+        "sac": "Official Ruling: A sacrifice fly counts as an RBI but doesn't count as an At-Bat, preserving the batting average. Check your 'SAC FLY' square!",
+        "streak": "Rule Book Assessment: A sacrifice fly does NOT break a hitting streak as it isn't an official At-Bat. However, it doesn't count as a hit either.",
+        "look": "Umpire's Tip: A strikeout looking happens when the batter takes strike three without swinging. Use it to mark your 'STRIKEOUT' square if the situation fits!",
+        "rule": "Per MLB standards, clear evidence is required to overturn any call. If you're playing with friends, we recommend a majority vote for bingo squares!",
+        "tie": "Tie goes to the runner is a myth! Rule 7.08 states the runner must beat the throw. If it's a tie, the umpire makes a judgment call based on visual completion."
+    };
+
+    function sendQuickPrompt(text) {
+        document.getElementById('chat-input').value = text;
+        handleChatSubmit(new Event('submit'));
+    }
+
+    function handleChatSubmit(e) {
+        e.preventDefault();
+        const input = document.getElementById('chat-input');
+        const msg = input.value.trim();
+        if (!msg) return;
+
+        appendChatMessage("ME", "You", msg, "primary");
+        input.value = '';
+
+        setTimeout(() => {
+            let answer = "Official Ruling: Baseball is a game of inches! If this situation is happening live, reaching a consensus with your fellow fans is best. Good luck on your card!";
+            const lowMsg = msg.toLowerCase();
+            for (let key in umpireAnswers) {
+                if (lowMsg.includes(key)) {
+                    answer = umpireAnswers[key];
+                    break;
+                }
+            }
+            appendChatMessage("GU", "Umpire Gemini", answer, "primary");
+        }, 600);
+    }
+
+    function appendChatMessage(initials, name, text, colorClass) {
+        const log = document.getElementById('gemini-chat-log');
+        const msgDiv = document.createElement('div');
+        msgDiv.className = "flex gap-2";
+        const isUser = initials === "ME";
+        
+        msgDiv.innerHTML = `
+            <div class="w-6 h-6 rounded-full ${isUser ? 'bg-primary-container text-white' : 'bg-primary-fixed text-primary'} flex items-center justify-center text-[10px] font-bold">${initials}</div>
+            <div class="${isUser ? 'flex-1' : ''}">
+                <p class="font-label-bold text-[11px] ${isUser ? 'text-primary text-right' : 'text-primary'}">${name}</p>
+                <div class="${isUser ? 'bg-primary text-white ml-auto max-w-[80%] rounded-tr-none' : 'bg-surface-container rounded-tl-none'} p-2 rounded-lg">
+                    <p class="text-caption">${text}</p>
+                </div>
+            </div>
+        `;
+        log.appendChild(msgDiv);
+        log.scrollTop = log.scrollHeight;
+    }
+
+    // --- INIT ---
+    window.onload = () => {
+        generateBoard();
+    };
+</script>
+</body></html>

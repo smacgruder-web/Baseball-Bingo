@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Baseball Bingo - League Invitation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400..700&amp;family=Work+Sans:wght@300;400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed": "#231b00",
+                    "on-secondary-fixed-variant": "#8a1a1f",
+                    "surface-dim": "#d9dad6",
+                    "primary-fixed": "#bfeec5",
+                    "secondary-fixed": "#ffdad7",
+                    "tertiary-container": "#cea700",
+                    "surface-container-highest": "#e2e3de",
+                    "surface-tint": "#3d6748",
+                    "on-primary-container": "#88b590",
+                    "secondary": "#ab3334",
+                    "inverse-on-surface": "#f0f1ec",
+                    "tertiary-fixed": "#ffe084",
+                    "primary-fixed-dim": "#a3d2ab",
+                    "primary": "#033016",
+                    "on-tertiary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "surface-container-low": "#f3f4ef",
+                    "tertiary-fixed-dim": "#eec209",
+                    "on-primary": "#ffffff",
+                    "primary-container": "#1d472a",
+                    "error-container": "#ffdad6",
+                    "surface-container": "#edeee9",
+                    "outline-variant": "#c1c9bf",
+                    "on-secondary-container": "#700310",
+                    "outline": "#727971",
+                    "on-tertiary-fixed-variant": "#574500",
+                    "surface-bright": "#f9faf5",
+                    "tertiary": "#735c00",
+                    "on-primary-fixed": "#00210c",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-container": "#4e3d00",
+                    "secondary-container": "#ff716d",
+                    "on-primary-fixed-variant": "#254f31",
+                    "on-secondary-fixed": "#410005",
+                    "inverse-surface": "#2f312e",
+                    "on-error-container": "#93000a",
+                    "inverse-primary": "#a3d2ab",
+                    "on-background": "#1a1c19",
+                    "background": "#f9faf5",
+                    "surface-variant": "#e2e3de",
+                    "surface-container-high": "#e8e9e4",
+                    "secondary-fixed-dim": "#ffb3ae",
+                    "surface": "#f9faf5",
+                    "on-surface-variant": "#414941",
+                    "on-secondary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "on-surface": "#1a1c19"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "8px",
+                    "grid-margin-mobile": "16px",
+                    "md": "24px",
+                    "grid-margin-desktop": "32px",
+                    "xs": "4px",
+                    "lg": "48px",
+                    "sm": "12px",
+                    "xl": "64px",
+                    "grid-gutter": "16px"
+            },
+            "fontFamily": {
+                    "caption": ["Work Sans"],
+                    "body-md": ["Work Sans"],
+                    "headline-sm": ["Domine"],
+                    "headline-md": ["Domine"],
+                    "display-lg-mobile": ["Domine"],
+                    "display-lg": ["Domine"],
+                    "label-bold": ["Work Sans"],
+                    "body-lg": ["Work Sans"]
+            },
+            "fontSize": {
+                    "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #f9faf5;
+            background-image: 
+                linear-gradient(90deg, rgba(3, 48, 22, 0.03) 1px, transparent 1px),
+                radial-gradient(circle, rgba(0,0,0,0.02) 1px, transparent 1px);
+            background-size: 20px 100%, 4px 4px;
+        }
+        .paper-texture {
+            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+        }
+        .pressed-cell {
+            box-shadow: inset 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .stitching-border {
+            border-style: dashed;
+            border-width: 2px;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-on-surface">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-grid-margin-mobile py-2 bg-surface border-b border-outline-variant bg-surface-variant/5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">sports_baseball</span>
+<h1 class="font-display-lg-mobile text-display-lg-mobile text-primary uppercase tracking-tight">BASEBALL BINGO</h1>
+</div>
+<button class="hover:bg-primary-fixed-dim/20 transition-colors p-2 rounded-full active:translate-y-0.5 duration-100">
+<span class="material-symbols-outlined text-primary">account_circle</span>
+</button>
+</header>
+<main class="pt-20 pb-32 px-grid-margin-mobile max-w-4xl mx-auto space-y-8">
+<!-- Hero: Welcome Message -->
+<section class="text-center space-y-4 py-8">
+<div class="inline-block px-4 py-1 rounded-full bg-secondary-container/20 text-on-secondary-container font-label-bold text-caption border border-secondary-container/30">
+                OFFICIAL INVITATION
+            </div>
+<h2 class="font-display-lg-mobile text-display-lg-mobile text-primary">Welcome to the League</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl mx-auto">
+                "Grab a cold one and find your seat. You've been invited to join <span class="font-label-bold text-primary">The Bullpen Elite</span> for today's match."
+            </p>
+<div class="flex items-center justify-center gap-3 mt-4">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest border-2 border-outline flex items-center justify-center overflow-hidden">
+<img alt="Host Avatar" class="w-full h-full object-cover" data-alt="A close-up portrait of a friendly man wearing a vintage baseball cap and a striped jersey, smiling warmly. The lighting is bright and natural, like a sunny afternoon at a stadium. The background is softly blurred, showing hints of a green field and wooden bleachers, maintaining a heritage sports aesthetic with rich, earthy tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3iQdl1-FOPFvtecGa2ckbyL2voeEgLAlH1WnNj5S2xdpTIrAouvM7SL1LbE1W-Ro4gRDDwyeYg2PxO8v3R7OjO18JVakPciTkGTVVqDHnlR5sKqtPy_a7G_1JjGwr1V6v2LGJ4fZyYNZKrAZ7DKW4HAcBZ3xAY0sHoBTyKRStlTMEFP18CQLM1OB1mMv0SHhnYULWhcR-BmpAlrDvUdR6X-fIB-MMLImdiSimhBIR5aZmLY3w5EPjx1WeVk1DQu1fBValuZMpVP41"/>
+</div>
+<div class="text-left">
+<p class="font-label-bold text-label-bold">Hosted by Skipper Dave</p>
+<p class="text-caption font-caption text-on-surface-variant">Active since 2022 • 14 Wins</p>
+</div>
+</div>
+</section>
+<!-- Bento Grid Layout for Game Preview & QR -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-grid-gutter">
+<!-- Game Live Preview Card -->
+<div class="md:col-span-8 bg-surface-container-low rounded-xl border border-outline-variant paper-texture overflow-hidden flex flex-col">
+<div class="p-base bg-primary text-on-primary flex justify-between items-center px-grid-margin-mobile">
+<span class="font-label-bold text-caption uppercase tracking-widest">Live from Fenway Park</span>
+<div class="flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="font-label-bold text-caption uppercase">Top 4th</span>
+</div>
+</div>
+<div class="p-md flex-grow flex items-center justify-around text-center">
+<div class="space-y-2">
+<div class="w-16 h-16 mx-auto rounded-full bg-white border border-outline-variant flex items-center justify-center shadow-sm">
+<span class="font-display-lg-mobile text-primary">NY</span>
+</div>
+<p class="font-label-bold text-label-bold">Yankees</p>
+<p class="font-display-lg text-primary">3</p>
+</div>
+<div class="font-headline-sm text-headline-sm text-outline">@</div>
+<div class="space-y-2">
+<div class="w-16 h-16 mx-auto rounded-full bg-white border border-outline-variant flex items-center justify-center shadow-sm">
+<span class="font-display-lg-mobile text-secondary">BO</span>
+</div>
+<p class="font-label-bold text-label-bold">Red Sox</p>
+<p class="font-display-lg text-secondary">2</p>
+</div>
+</div>
+<div class="p-sm bg-surface-container-high/50 border-t border-outline-variant">
+<div class="flex justify-between items-center px-4">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-primary-fixed-dim flex items-center justify-center text-[10px] font-bold">JD</div>
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-secondary-fixed-dim flex items-center justify-center text-[10px] font-bold">MK</div>
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-tertiary-fixed-dim flex items-center justify-center text-[10px] font-bold">SL</div>
+</div>
+<span class="text-caption font-caption text-on-surface-variant">12 others playing Bingo now</span>
+</div>
+</div>
+</div>
+<!-- QR Code Card -->
+<div class="md:col-span-4 bg-white rounded-xl border border-outline-variant shadow-sm p-md flex flex-col items-center justify-center text-center space-y-4">
+<p class="font-label-bold text-caption text-secondary uppercase tracking-tighter">Scan to Join</p>
+<div class="w-32 h-32 bg-surface-container border-4 border-primary rounded-lg flex items-center justify-center overflow-hidden p-2">
+<img alt="League QR Code" class="w-full h-full object-contain mix-blend-multiply opacity-80" data-alt="A clean, high-contrast QR code centered on a square of aged parchment paper. The paper has a subtle grain and a few faint, vintage ink stains around the edges. The lighting is even and flat, emphasizing the tactile quality of the paper against the sharp black digital pattern of the code. The overall style is minimalist yet grounded in historical textures." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQDlqL2AwHchnw8J08kWQUj-3dp10LMwTPFwLndP5UdcRWqqjXRvqFh-Jsa_NQnyDgvXaULgs6PZgI9FeZboamPuWEEbK2jrhnkZYB3VoOfhqsCKJRfc_pG0f_Fzr5FH8TKFdwH-71JfBQEwv0NvkfvneMhOrcpDgyl8LA1zjA_kIar3TzJY8QU5fZtSkBxnJ3vhvXYEXfRGKycicQjI9re3H022ejvhNdQFQfLY-siuMtCUbEDZ1oL2oQ7d6DRyN8GMCyJkVP7gbB"/>
+</div>
+<p class="text-caption font-caption text-on-surface-variant italic">League ID: BULLPEN-77</p>
+<button class="w-full py-2 rounded border border-outline hover:bg-surface-container transition-colors text-caption font-label-bold flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+                    COPY LINK
+                </button>
+</div>
+</div>
+<!-- Call to Action -->
+<div class="flex flex-col items-center space-y-4 py-4">
+<button class="w-full md:w-80 bg-primary text-on-primary py-4 rounded-lg font-label-bold text-label-bold uppercase tracking-widest shadow-lg active:translate-y-1 transition-all">
+                Join the Box
+            </button>
+<p class="text-caption font-caption text-outline text-center">No account required to spectate.</p>
+</div>
+<!-- Room Standings -->
+<section class="bg-surface rounded-xl border-2 border-outline-variant p-md stitching-border space-y-4">
+<div class="flex items-center justify-between border-b border-outline-variant pb-2">
+<h3 class="font-headline-sm text-headline-sm text-primary flex items-center gap-2">
+<span class="material-symbols-outlined">leaderboard</span>
+                    Room Standings
+                </h3>
+<span class="text-caption font-caption text-secondary font-bold">INNING 4</span>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-2 rounded hover:bg-primary-fixed-dim/10 transition-colors">
+<div class="flex items-center gap-3">
+<span class="font-display-lg-mobile text-headline-sm text-outline-variant w-6 text-center">1</span>
+<div>
+<p class="font-label-bold text-label-bold">StrikeoutSam</p>
+<p class="text-caption font-caption text-on-surface-variant">4/5 to BINGO</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-bold text-primary">850 pts</p>
+</div>
+</div>
+<div class="flex items-center justify-between p-2 rounded bg-primary-container/10 border-l-4 border-primary">
+<div class="flex items-center gap-3">
+<span class="font-display-lg-mobile text-headline-sm text-primary w-6 text-center">2</span>
+<div>
+<p class="font-label-bold text-label-bold">Skipper Dave <span class="text-[10px] bg-primary text-on-primary px-1 rounded ml-1">HOST</span></p>
+<p class="text-caption font-caption text-on-surface-variant">3/5 to BINGO</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-bold text-primary">720 pts</p>
+</div>
+</div>
+<div class="flex items-center justify-between p-2 rounded hover:bg-primary-fixed-dim/10 transition-colors">
+<div class="flex items-center gap-3">
+<span class="font-display-lg-mobile text-headline-sm text-outline-variant w-6 text-center">3</span>
+<div>
+<p class="font-label-bold text-label-bold">CurveballCathy</p>
+<p class="text-caption font-caption text-on-surface-variant">2/5 to BINGO</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-bold text-primary">610 pts</p>
+</div>
+</div>
+</div>
+<div class="pt-4 flex justify-center">
+<div class="w-full bg-outline-variant h-[2px] relative overflow-hidden">
+<div class="absolute left-0 top-0 h-full bg-primary w-[75%]" id="progress-bar"></div>
+</div>
+</div>
+<p class="text-center text-caption font-caption text-outline">Game Progress: 75% through Inning 4</p>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-surface border-t border-outline-variant shadow-lg">
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 active:scale-95 duration-150 ease-out" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-bold text-caption">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95 duration-150 ease-out" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="font-label-bold text-caption">Card</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95 duration-150 ease-out" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-label-bold text-caption">Rankings</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction: Smoothly update the progress bar on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const bar = document.getElementById('progress-bar');
+            bar.style.width = '0%';
+            setTimeout(() => {
+                bar.style.transition = 'width 1.5s cubic-bezier(0.65, 0, 0.35, 1)';
+                bar.style.width = '75%';
+            }, 300);
+        });
+
+        // Add "pressed" visual effect to standings items
+        document.querySelectorAll('.rounded').forEach(item => {
+            item.addEventListener('mousedown', () => {
+                item.classList.add('pressed-cell');
+            });
+            item.addEventListener('mouseup', () => {
+                item.classList.remove('pressed-cell');
+            });
+            item.addEventListener('mouseleave', () => {
+                item.classList.remove('pressed-cell');
+            });
+        });
+    </script>
+</body></html>

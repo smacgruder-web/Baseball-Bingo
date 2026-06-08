@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>League Standings - Grand Slam Victory</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400;600;700&amp;family=Work+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+        }
+        .pinstripe-bg {
+            background-image: repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(3, 48, 22, 0.05) 40px);
+        }
+        .paper-grain {
+            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+        }
+        .pressed-cell {
+            box-shadow: inset 2px 2px 4px rgba(0,0,0,0.1), inset -1px -1px 2px rgba(255,255,255,0.5);
+        }
+        @keyframes ticker {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        .animate-ticker {
+            display: inline-block;
+            white-space: nowrap;
+            animation: ticker 25s linear infinite;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-container": "#ff716d",
+                        "primary": "#033016",
+                        "surface-container-highest": "#e2e3de",
+                        "surface-dim": "#d9dad6",
+                        "outline": "#727971",
+                        "inverse-primary": "#a3d2ab",
+                        "on-tertiary-container": "#4e3d00",
+                        "surface-bright": "#f9faf5",
+                        "on-surface-variant": "#414941",
+                        "error": "#ba1a1a",
+                        "background": "#f9faf5",
+                        "tertiary": "#735c00",
+                        "secondary-fixed": "#ffdad7",
+                        "on-tertiary-fixed-variant": "#574500",
+                        "inverse-on-surface": "#f0f1ec",
+                        "on-surface": "#1a1c19",
+                        "surface": "#f9faf5",
+                        "primary-fixed": "#bfeec5",
+                        "on-secondary-fixed": "#410005",
+                        "tertiary-fixed": "#ffe084",
+                        "on-secondary-container": "#700310",
+                        "outline-variant": "#c1c9bf",
+                        "on-primary-fixed-variant": "#254f31",
+                        "primary-container": "#1d472a",
+                        "surface-container-high": "#e8e9e4",
+                        "on-secondary-fixed-variant": "#8a1a1f",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#2f312e",
+                        "on-primary-fixed": "#00210c",
+                        "on-primary-container": "#88b590",
+                        "primary-fixed-dim": "#a3d2ab",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#cea700",
+                        "surface-tint": "#3d6748",
+                        "secondary": "#ab3334",
+                        "on-background": "#1a1c19",
+                        "secondary-fixed-dim": "#ffb3ae",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f3f4ef",
+                        "tertiary-fixed-dim": "#eec209",
+                        "surface-container": "#edeee9",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed": "#231b00",
+                        "on-error": "#ffffff",
+                        "surface-variant": "#e2e3de",
+                        "on-secondary": "#ffffff",
+                        "on-primary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "48px",
+                        "base": "8px",
+                        "grid-margin-desktop": "32px",
+                        "grid-margin-mobile": "16px",
+                        "xs": "4px",
+                        "sm": "12px",
+                        "md": "24px",
+                        "grid-gutter": "16px",
+                        "xl": "64px"
+                    },
+                    "fontFamily": {
+                        "display-lg-mobile": ["Domine"],
+                        "headline-sm": ["Domine"],
+                        "label-bold": ["Work Sans"],
+                        "display-lg": ["Domine"],
+                        "caption": ["Work Sans"],
+                        "body-md": ["Work Sans"],
+                        "headline-md": ["Domine"],
+                        "body-lg": ["Work Sans"]
+                    },
+                    "fontSize": {
+                        "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pinstripe-bg paper-grain">
+<!-- Top AppBar (from JSON Guidance) -->
+<header class="sticky top-0 z-40 bg-background border-b border-outline-variant flex items-center justify-between px-grid-margin-mobile w-full py-4 h-16">
+<button class="text-primary Active: translate-y-0.5 transition-transform duration-100">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-primary">League Standings</h1>
+<button class="text-primary Active: translate-y-0.5 transition-transform duration-100">
+<span class="material-symbols-outlined">history</span>
+</button>
+</header>
+<!-- Global Win Alert Ticker -->
+<div class="bg-secondary text-on-secondary py-2 overflow-hidden border-b border-outline-variant">
+<div class="animate-ticker font-label-bold text-label-bold uppercase flex gap-12 items-center">
+<span>*** GLOBAL WIN ALERT: ROOKIE SLUGGER HITS A GRAND SLAM BINGO! ***</span>
+<span>RANKING UPDATE: PLAYER 'JAXON_99' MOVES TO #12 NATIONALLY</span>
+<span>SEASON 4 LIVE UPDATES: DIAMOND LEAGUE TABLE RESET IN 4H 12M</span>
+<span>*** GLOBAL WIN ALERT: ROOKIE SLUGGER HITS A GRAND SLAM BINGO! ***</span>
+</div>
+</div>
+<main class="max-w-4xl mx-auto px-grid-margin-mobile md:px-grid-margin-desktop py-8 pb-32">
+<!-- Recently Promoted Highlight -->
+<section class="mb-8">
+<div class="bg-surface border border-tertiary-container rounded-xl p-6 shadow-sm relative overflow-hidden">
+<div class="absolute top-0 right-0 bg-tertiary-container text-on-tertiary-container px-4 py-1 font-label-bold text-caption rounded-bl-xl uppercase">
+                    Recently Promoted
+                </div>
+<div class="flex flex-col md:flex-row items-center gap-6">
+<div class="relative">
+<img alt="Rookie Slugger" class="w-24 h-24 rounded-full border-4 border-tertiary-container object-cover" data-alt="A portrait of a triumphant young baseball player with a vintage feel. He wears a classic pinstripe jersey and a team cap, smiling broadly against a sun-drenched stadium backdrop. The lighting is warm and high-key, with a nostalgic paper-grain texture and soft shadows, reflecting a prestigious victory in a heritage sports setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiWMdTQX-7eA1RAR6654OPJzFOciN-GVtgWEvu38riQS37YHe8-1o6yPbLI0rZ9GJxFLpBi6BmUr7zVDQrcUu5VGMBlVScE6KUBmgbtydbV35xlXu7ZbNmkSRDHBr67b3IW985REGKAfFyvmEwbkMU6TWq4f4pbzK1PLGKKbzzNYSnF7UDMhHQX-RdoGc7AypVYiIJqiXSUIDs3aA9L5DDt2zoPE8eEHt6bOtev8w_1XOdSWryvr8X02LECL4H5yuqctun-a4EvruU"/>
+<div class="absolute -bottom-2 -right-2 bg-primary text-white p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<div class="text-center md:text-left flex-1">
+<h2 class="font-headline-md text-headline-md text-primary mb-1">Rookie Slugger</h2>
+<p class="font-body-md text-on-surface-variant flex items-center justify-center md:justify-start gap-2">
+<span class="font-bold text-secondary">#12</span>
+<span>Jumped 45 positions!</span>
+</p>
+<div class="mt-4 flex flex-wrap gap-2 justify-center md:justify-start">
+<span class="bg-primary-fixed text-on-primary-fixed-variant px-3 py-1 rounded-full font-label-bold text-caption">GRAND SLAM WINNER</span>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed-variant px-3 py-1 rounded-full font-label-bold text-caption">CLUTCH PERFORMANCE</span>
+</div>
+</div>
+<div class="hidden md:block text-right">
+<div class="font-display-lg text-display-lg text-primary">1,240</div>
+<div class="font-label-bold text-caption text-on-surface-variant uppercase">Credits Earned</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Standings Table -->
+<div class="bg-surface rounded-xl border border-outline-variant overflow-hidden">
+<div class="grid grid-cols-12 bg-surface-container text-on-surface-variant p-4 font-label-bold text-caption uppercase border-b border-outline-variant">
+<div class="col-span-2">Rank</div>
+<div class="col-span-6">Player</div>
+<div class="col-span-2 text-center">W/L</div>
+<div class="col-span-2 text-right">Points</div>
+</div>
+<!-- Standings Rows -->
+<div class="divide-y divide-outline-variant">
+<!-- Rank 10 -->
+<div class="grid grid-cols-12 p-4 items-center hover:bg-surface-container-low transition-colors group">
+<div class="col-span-2 font-headline-sm text-headline-sm text-outline">10</div>
+<div class="col-span-6 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-dim flex items-center justify-center font-bold text-primary border border-outline-variant">KB</div>
+<span class="font-body-lg text-on-surface">Kid_Bunt</span>
+</div>
+<div class="col-span-2 text-center font-body-md text-on-surface-variant">14-2</div>
+<div class="col-span-2 text-right font-headline-sm text-headline-sm text-primary">2,850</div>
+</div>
+<!-- Rank 11 -->
+<div class="grid grid-cols-12 p-4 items-center hover:bg-surface-container-low transition-colors group">
+<div class="col-span-2 font-headline-sm text-headline-sm text-outline">11</div>
+<div class="col-span-6 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-dim flex items-center justify-center font-bold text-primary border border-outline-variant">AM</div>
+<span class="font-body-lg text-on-surface">Ace_Mound</span>
+</div>
+<div class="col-span-2 text-center font-body-md text-on-surface-variant">12-4</div>
+<div class="col-span-2 text-right font-headline-sm text-headline-sm text-primary">2,410</div>
+</div>
+<!-- Rank 12 (Highlighted Winner) -->
+<div class="grid grid-cols-12 p-4 items-center bg-primary-container group">
+<div class="col-span-2 font-headline-sm text-headline-sm text-on-primary-container">12</div>
+<div class="col-span-6 flex items-center gap-3">
+<img alt="Rookie Slugger" class="w-10 h-10 rounded-full border-2 border-on-primary-container object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAU_Kpt6tRa79bDv9vUcbgaucwHQbyzlZWDlV0DJHhQeusZhqsL8OmjnhFyY5_oQ-Iy5VIPB2Fc79UtSclbS6L3KH7bq5sBVywblxVcRvTCE2PxXODz6Yz8eLIplMXYBe448GuPNlA1v_ZL5Mgsss6h5KUesXRXKQGQWYUFc9EzrCTgbHx4r7DB3Vw_xR-P7ASlZVsOO5zKVBQhLsDrWbES63_DUEUk78INcDs7kVrKAMsSbIABSECk0z2KW0x6t-gSAb1o0hFcwNaC"/>
+<div class="flex flex-col">
+<span class="font-body-lg font-bold text-white">Rookie Slugger</span>
+<span class="text-[10px] text-on-primary-container uppercase font-bold tracking-widest flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">trending_up</span> Just Now
+                            </span>
+</div>
+</div>
+<div class="col-span-2 text-center font-body-md text-on-primary-container">10-6</div>
+<div class="col-span-2 text-right font-headline-sm text-headline-sm text-white">1,240</div>
+</div>
+<!-- Rank 13 -->
+<div class="grid grid-cols-12 p-4 items-center hover:bg-surface-container-low transition-colors group">
+<div class="col-span-2 font-headline-sm text-headline-sm text-outline">13</div>
+<div class="col-span-6 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-dim flex items-center justify-center font-bold text-primary border border-outline-variant">HS</div>
+<span class="font-body-lg text-on-surface">HomeRun_Sam</span>
+</div>
+<div class="col-span-2 text-center font-body-md text-on-surface-variant">9-7</div>
+<div class="col-span-2 text-right font-headline-sm text-headline-sm text-primary">1,190</div>
+</div>
+<!-- Rank 14 -->
+<div class="grid grid-cols-12 p-4 items-center hover:bg-surface-container-low transition-colors group">
+<div class="col-span-2 font-headline-sm text-headline-sm text-outline">14</div>
+<div class="col-span-6 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-dim flex items-center justify-center font-bold text-primary border border-outline-variant">DP</div>
+<span class="font-body-lg text-on-surface">Double_Play</span>
+</div>
+<div class="col-span-2 text-center font-body-md text-on-surface-variant">8-8</div>
+<div class="col-span-2 text-right font-headline-sm text-headline-sm text-primary">1,150</div>
+</div>
+</div>
+</div>
+<!-- Call to Action -->
+<div class="mt-8 flex flex-col sm:flex-row gap-4 items-center justify-center">
+<button class="w-full sm:w-auto bg-primary text-white font-label-bold text-label-bold px-8 py-3 rounded uppercase Active: translate-y-0.5 transition-transform duration-100 shadow-sm">
+                Next Game Starts in 12:45
+            </button>
+<button class="w-full sm:w-auto border-2 border-primary text-primary font-label-bold text-label-bold px-8 py-3 rounded uppercase Active: translate-y-0.5 transition-transform duration-100">
+                View All Seasons
+            </button>
+</div>
+</main>
+<!-- Bottom Navigation (from JSON Guidance) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-3 bg-surface border-t border-outline-variant">
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="font-label-bold text-[10px] mt-1">Bingo</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1 Active: translate-y-0.5 transition-transform duration-100" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">leaderboard</span>
+<span class="font-label-bold text-[10px] mt-1">Leagues</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">sports_baseball</span>
+<span class="font-label-bold text-[10px] mt-1">Draft</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-label-bold text-[10px] mt-1">Profile</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for list items
+        document.querySelectorAll('.grid.divide-y > div').forEach(item => {
+            item.addEventListener('click', () => {
+                item.classList.add('scale-95');
+                setTimeout(() => item.classList.remove('scale-95'), 150);
+            });
+        });
+    </script>
+</body></html>

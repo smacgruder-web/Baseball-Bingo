@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Baseball Bingo - Stats &amp; Rankings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400;600;700&amp;family=Work+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-highest": "#e4e2e1",
+                    "surface-bright": "#fcf9f8",
+                    "secondary-fixed-dim": "#ffb4a6",
+                    "on-error-container": "#93000a",
+                    "primary": "#033016",
+                    "primary-fixed": "#bfeec5",
+                    "primary-container": "#1d472a",
+                    "on-primary-container": "#88b590",
+                    "on-surface-variant": "#414941",
+                    "on-tertiary-fixed-variant": "#484740",
+                    "on-primary-fixed-variant": "#254f31",
+                    "on-secondary-fixed-variant": "#842416",
+                    "tertiary-container": "#403f38",
+                    "on-background": "#1b1c1c",
+                    "tertiary": "#292923",
+                    "surface-container-lowest": "#ffffff",
+                    "surface": "#fcf9f8",
+                    "on-surface": "#1b1c1c",
+                    "surface-container-high": "#eae7e7",
+                    "secondary-fixed": "#ffdad4",
+                    "on-tertiary": "#ffffff",
+                    "secondary": "#a43c2b",
+                    "inverse-on-surface": "#f3f0f0",
+                    "surface-variant": "#e4e2e1",
+                    "error-container": "#ffdad6",
+                    "tertiary-fixed-dim": "#c9c6bd",
+                    "inverse-surface": "#303030",
+                    "surface-tint": "#3d6748",
+                    "on-error": "#ffffff",
+                    "outline-variant": "#c1c9bf",
+                    "on-tertiary-fixed": "#1c1c16",
+                    "on-secondary-fixed": "#3f0200",
+                    "tertiary-fixed": "#e5e2d9",
+                    "error": "#ba1a1a",
+                    "surface-dim": "#dcd9d9",
+                    "secondary-container": "#fd7e67",
+                    "primary-fixed-dim": "#a3d2ab",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-container": "#71170a",
+                    "background": "#fcf9f8",
+                    "on-tertiary-container": "#acaaa1",
+                    "surface-container-low": "#f6f3f2",
+                    "on-primary-fixed": "#00210c",
+                    "on-primary": "#ffffff",
+                    "outline": "#727971",
+                    "surface-container": "#f0eded",
+                    "inverse-primary": "#a3d2ab"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "lg": "48px",
+                    "container-max": "1280px",
+                    "gutter": "24px",
+                    "xs": "4px",
+                    "xl": "80px",
+                    "md": "24px",
+                    "sm": "12px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "body-md": ["Work Sans"],
+                    "stats-number": ["Domine"],
+                    "headline-lg": ["Domine"],
+                    "display-lg": ["Domine"],
+                    "label-md": ["Work Sans"],
+                    "body-lg": ["Work Sans"],
+                    "headline-md": ["Domine"],
+                    "headline-lg-mobile": ["Domine"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "stats-number": ["36px", {"lineHeight": "44px", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(252, 249, 248, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(3, 48, 22, 0.1);
+        }
+        .stadium-glow {
+            box-shadow: 0 0 40px rgba(3, 48, 22, 0.08);
+        }
+        .etched-border {
+            border-bottom: 1px solid rgba(65, 73, 65, 0.2);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/90 dark:bg-surface-container-low/90 backdrop-blur-xl border-b border-outline-variant/30 dark:border-outline/20 shadow-[0_4px_20px_rgba(3,48,22,0.05)]">
+<div class="flex justify-between items-center px-gutter py-4 w-full max-w-container-max mx-auto">
+<div class="flex items-center gap-3">
+<img alt="User Profile" class="w-10 h-10 rounded-full border-2 border-primary-fixed" data-alt="A close-up professional portrait of a cheerful baseball fan wearing a vintage green baseball cap. The lighting is soft and natural, suggesting an afternoon at a classic stadium. The style is clean and high-fidelity, matching a premium sports app aesthetic with a warm cream background and subtle green accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZMAIBG-nc7p-fJ7MGo238lvPWM73P2BOs7vWGGbgSA_rx7bfBAkxBEOTItC5S8PP7Vk2AoifIEs3KDLIZX3TP2H5-qvH71hPTlIjSa7v4rjp3gi6cE5XtB9ZbwgfMgEu5C-hKZl_h1il-vjP1JrjUYDNDpXzRDTC-XxUrj2OXl3OKh7n3qzosdJXE487nqqUg0rFQiHFG7RyPeXrj3gGrOqakbMcvhteBpWDL0zBTxRkjAfn9b6tRWn903z9dDJCLTup4eqD2C_Sl"/>
+<div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-tight leading-none">Baseball Bingo</h1>
+</div>
+</div>
+<button class="material-symbols-outlined text-primary hover:bg-surface-container-high transition-colors p-2 rounded-full active:scale-95 duration-150">settings</button>
+</div>
+</header>
+<main class="pt-24 px-4 max-w-md mx-auto space-y-8">
+<!-- Profile Summary Section -->
+<section class="glass-panel stadium-glow rounded-xl p-6 flex flex-col items-center text-center">
+<div class="relative mb-4">
+<div class="w-20 h-20 rounded-full overflow-hidden border-4 border-primary shadow-lg">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="A high-quality studio headshot of a young man with a friendly expression, styled for a modern sports application. The lighting is crisp and editorial, highlighting clear skin and sharp features against a minimalist, warm-toned studio background that complements a luxury ballpark brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoPYlB3SMlbLxfIHCAImDsukeM6SobqmGBSwbYqOkTkBHvlrbG7oWZbAQh4MKSdf6OeaCCbKNI7x9gcKF4mQzIvK90ScAG1C8BUshqWItQAn1vzlAKSEoMTxze6J3qvywYQCJQk2p5Ol0Zs6BxeAKUwW4NYJqkaAcUU1tfb_nijBIj6H01Su6FKuZEowcD9ZVZxqQY4iDF9yDDWyr9z_7qVEn27CNvd4p19JUqp-vE5Aek8oRCoPwq0b2y0LnSH_H0skoANwIW9Q-C"/>
+</div>
+<div class="absolute -bottom-1 -right-1 bg-secondary text-white text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">MVP</div>
+</div>
+<h2 class="font-headline-md text-headline-md text-primary mb-1">Rookie Slugger</h2>
+<div class="flex items-center gap-2 px-4 py-1 bg-primary-fixed/30 rounded-full">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="font-label-md text-label-md text-on-primary-fixed-variant">1,240 Stadium Credits</span>
+</div>
+</section>
+<!-- Primary Stats Grid -->
+<section class="grid grid-cols-2 gap-4">
+<div class="glass-panel p-4 rounded-lg flex flex-col justify-between">
+<span class="text-on-surface-variant text-label-md uppercase tracking-widest">Total Bingos</span>
+<span class="font-stats-number text-stats-number text-primary mt-2">14</span>
+</div>
+<div class="glass-panel p-4 rounded-lg flex flex-col justify-between">
+<span class="text-on-surface-variant text-label-md uppercase tracking-widest">Stamps</span>
+<span class="font-stats-number text-stats-number text-primary mt-2">286</span>
+</div>
+<div class="glass-panel p-4 rounded-lg flex flex-col justify-between">
+<span class="text-on-surface-variant text-label-md uppercase tracking-widest">Win Rate</span>
+<span class="font-stats-number text-stats-number text-secondary mt-2">12%</span>
+</div>
+<div class="glass-panel p-4 rounded-lg flex flex-col justify-between">
+<span class="text-on-surface-variant text-label-md uppercase tracking-widest">Fastest</span>
+<div class="flex items-baseline gap-1 mt-2">
+<span class="font-stats-number text-stats-number text-primary">3.5</span>
+<span class="text-label-md text-on-surface-variant">INN</span>
+</div>
+</div>
+</section>
+<!-- Visual Performance Graph -->
+<section class="space-y-4">
+<div class="flex justify-between items-end">
+<h3 class="font-headline-md text-headline-md text-primary">Performance Trend</h3>
+<span class="text-label-md text-on-surface-variant italic">Last 10 Games</span>
+</div>
+<div class="glass-panel rounded-xl p-6 h-48 relative overflow-hidden">
+<!-- Simple SVG Chart Representation -->
+<svg class="w-full h-full" viewbox="0 0 400 150">
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#1d472a" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#1d472a" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path d="M0,120 Q50,110 80,80 T160,90 T240,40 T320,60 T400,20 L400,150 L0,150 Z" fill="url(#chartGradient)"></path>
+<path d="M0,120 Q50,110 80,80 T160,90 T240,40 T320,60 T400,20" fill="none" stroke="#033016" stroke-linecap="round" stroke-width="3"></path>
+<!-- Data Points -->
+<circle cx="80" cy="80" fill="#a43c2b" r="4"></circle>
+<circle cx="240" cy="40" fill="#a43c2b" r="4"></circle>
+<circle cx="400" cy="20" fill="#a43c2b" r="4"></circle>
+</svg>
+<div class="absolute bottom-4 left-6 right-6 flex justify-between text-[10px] text-on-surface-variant font-bold uppercase tracking-tighter opacity-50">
+<span>Game 1</span>
+<span>Game 5</span>
+<span>Game 10</span>
+</div>
+</div>
+</section>
+<!-- Achievements Section -->
+<section class="space-y-4">
+<h3 class="font-headline-md text-headline-md text-primary px-2">Achievements</h3>
+<div class="flex overflow-x-auto gap-4 pb-4 hide-scrollbar px-2">
+<!-- Badge 1 -->
+<div class="flex-shrink-0 w-32 flex flex-col items-center gap-2">
+<div class="w-20 h-20 rounded-full bg-primary-fixed flex items-center justify-center border-2 border-primary shadow-inner">
+<span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">calendar_today</span>
+</div>
+<span class="text-center text-[11px] font-bold text-on-surface leading-tight px-1">Opening Day Starter</span>
+</div>
+<!-- Badge 2 -->
+<div class="flex-shrink-0 w-32 flex flex-col items-center gap-2">
+<div class="w-20 h-20 rounded-full bg-secondary-fixed flex items-center justify-center border-2 border-secondary shadow-inner">
+<span class="material-symbols-outlined text-secondary text-4xl" style="font-variation-settings: 'FILL' 1;">sports_baseball</span>
+</div>
+<span class="text-center text-[11px] font-bold text-on-surface leading-tight px-1">Grand Slam Stamp</span>
+</div>
+<!-- Badge 3 -->
+<div class="flex-shrink-0 w-32 flex flex-col items-center gap-2">
+<div class="w-20 h-20 rounded-full bg-surface-container-highest flex items-center justify-center border-2 border-outline shadow-inner opacity-80">
+<span class="material-symbols-outlined text-outline text-4xl">check_circle</span>
+</div>
+<span class="text-center text-[11px] font-bold text-on-surface leading-tight px-1">Perfect Inning</span>
+</div>
+<!-- Badge 4 -->
+<div class="flex-shrink-0 w-32 flex flex-col items-center gap-2">
+<div class="w-20 h-20 rounded-full bg-primary-fixed flex items-center justify-center border-2 border-primary shadow-inner">
+<span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+</div>
+<span class="text-center text-[11px] font-bold text-on-surface leading-tight px-1">Win Streak: 5</span>
+</div>
+</div>
+</section>
+<!-- Recent Games List -->
+<section class="space-y-4">
+<h3 class="font-headline-md text-headline-md text-primary">Recent Games</h3>
+<div class="space-y-3">
+<!-- Game 1 -->
+<div class="glass-panel p-4 rounded-lg flex items-center justify-between etched-border">
+<div class="flex items-center gap-3">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full bg-blue-700 flex items-center justify-center text-[10px] text-white font-bold border-2 border-white">CHC</div>
+<div class="w-8 h-8 rounded-full bg-red-700 flex items-center justify-center text-[10px] text-white font-bold border-2 border-white">STL</div>
+</div>
+<div>
+<p class="font-bold text-sm text-primary">Cubs vs Cardinals</p>
+<p class="text-[11px] text-on-surface-variant uppercase tracking-wide">Oct 12, 2023</p>
+</div>
+</div>
+<div class="bg-primary text-white text-[10px] font-bold px-3 py-1 rounded">WIN</div>
+</div>
+<!-- Game 2 -->
+<div class="glass-panel p-4 rounded-lg flex items-center justify-between etched-border">
+<div class="flex items-center gap-3">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-[10px] text-white font-bold border-2 border-white">NYY</div>
+<div class="w-8 h-8 rounded-full bg-orange-600 flex items-center justify-center text-[10px] text-white font-bold border-2 border-white">HOU</div>
+</div>
+<div>
+<p class="font-bold text-sm text-primary">Yankees vs Astros</p>
+<p class="text-[11px] text-on-surface-variant uppercase tracking-wide">Oct 10, 2023</p>
+</div>
+</div>
+<div class="bg-secondary text-white text-[10px] font-bold px-3 py-1 rounded">LOSS</div>
+</div>
+<!-- Game 3 -->
+<div class="glass-panel p-4 rounded-lg flex items-center justify-between etched-border">
+<div class="flex items-center gap-3">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full bg-blue-900 flex items-center justify-center text-[10px] text-white font-bold border-2 border-white">LAD</div>
+<div class="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center text-[10px] text-white font-bold border-2 border-white">SFG</div>
+</div>
+<div>
+<p class="font-bold text-sm text-primary">Dodgers vs Giants</p>
+<p class="text-[11px] text-on-surface-variant uppercase tracking-wide">Oct 08, 2023</p>
+</div>
+</div>
+<div class="bg-primary text-white text-[10px] font-bold px-3 py-1 rounded">WIN</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2 bg-surface/95 dark:bg-surface-container-lowest/95 backdrop-blur-md border-t border-outline-variant/50 shadow-[0_-8px_30px_rgba(0,0,0,0.04)] z-50">
+<!-- Lobby -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="stadium">stadium</span>
+<span class="font-label-md text-label-md">Lobby</span>
+</a>
+<!-- My Games -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="sports_baseball">sports_baseball</span>
+<span class="font-label-md text-label-md">My Games</span>
+</a>
+<!-- Stats (Active) -->
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim bg-primary-fixed/30 rounded-full px-4 py-1 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="analytics" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<span class="font-label-md text-label-md">Stats</span>
+</a>
+<!-- Profile -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-md text-label-md">Profile</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for badge scrolling
+        const achievementScroll = document.querySelector('.hide-scrollbar');
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        achievementScroll.addEventListener('mousedown', (e) => {
+            isDown = true;
+            startX = e.pageX - achievementScroll.offsetLeft;
+            scrollLeft = achievementScroll.scrollLeft;
+        });
+        achievementScroll.addEventListener('mouseleave', () => {
+            isDown = false;
+        });
+        achievementScroll.addEventListener('mouseup', () => {
+            isDown = false;
+        });
+        achievementScroll.addEventListener('mousemove', (e) => {
+            if(!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - achievementScroll.offsetLeft;
+            const walk = (x - startX) * 2;
+            achievementScroll.scrollLeft = scrollLeft - walk;
+        });
+    </script>
+</body></html>
