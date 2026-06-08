@@ -67,6 +67,14 @@ This is now a production-feeling, installable Progressive Web App:
 
 See `real_time_data_strategy.md` and `database_analytics_strategy.md` for live MLB feed + user accounts direction.
 
+## Live Deployment
+
+**Vercel Production:** https://stitchinteractivebaseballbingo.vercel.app
+
+(Direct latest: https://stitchinteractivebaseballbingo-28hmxylvf.vercel.app)
+
+The app is fully static — perfect for Vercel, Netlify, or any static host. All PWA features (including the service worker) work when served over HTTPS.
+
 ---
 
 Built by stitching together dozens of prototype screens into one cohesive, production-feeling experience.
