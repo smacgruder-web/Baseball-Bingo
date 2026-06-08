@@ -373,6 +373,17 @@
         </div>
       </div>
 
+      <!-- Upcoming Games / Schedule -->
+      <div class="mb-8">
+        <div class="flex items-center justify-between mb-3 px-1">
+          <div class="font-bold text-sm tracking-widest text-[#414941]">UPCOMING GAMES — SELECT TO PLAY</div>
+          <div class="text-[10px] text-[#735c00]">Tap any matchup to load it into your bingo card</div>
+        </div>
+        <div id="upcoming-games-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <!-- Populated by renderUpcomingGames() -->
+        </div>
+      </div>
+
       <!-- Quick Start + Onboarding -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
         <div class="lg:col-span-7 surface-glass rounded-3xl p-6 border border-[#c1c9bf]/60">
@@ -710,6 +721,50 @@
       awayScore: 3, homeScore: 4, inning: 5, top: true,
       awayPitcher: "Trevor McDonald", homePitcher: "Jameson Taillon"
     };
+
+    // Upcoming games data (mock for static PWA; in a real app this would come from MLB Stats API)
+    const upcomingGames = [
+      {
+        id: 0,
+        away: "SF Giants",
+        home: "Chicago Cubs",
+        awayPitcher: "Trevor McDonald",
+        homePitcher: "Jameson Taillon",
+        time: "Tonight • 7:05 PM ET",
+        venue: "Wrigley Field",
+        status: "Live"
+      },
+      {
+        id: 1,
+        away: "LA Dodgers",
+        home: "New York Yankees",
+        awayPitcher: "Yoshinobu Yamamoto",
+        homePitcher: "Gerrit Cole",
+        time: "Tomorrow • 7:05 PM ET",
+        venue: "Yankee Stadium",
+        status: "Upcoming"
+      },
+      {
+        id: 2,
+        away: "Boston Red Sox",
+        home: "Baltimore Orioles",
+        awayPitcher: "Brayan Bello",
+        homePitcher: "Corbin Burnes",
+        time: "Tomorrow • 6:35 PM ET",
+        venue: "Camden Yards",
+        status: "Upcoming"
+      },
+      {
+        id: 3,
+        away: "Atlanta Braves",
+        home: "Philadelphia Phillies",
+        awayPitcher: "Spencer Strider",
+        homePitcher: "Zack Wheeler",
+        time: "Wed • 6:40 PM ET",
+        venue: "Citizens Bank Park",
+        status: "Upcoming"
+      }
+    ];
 
     let bingoState = {
       seed: 1847,
@@ -1442,6 +1497,55 @@
       `).join('');
     }
 
+    // ========== UPCOMING GAMES ==========
+    function renderUpcomingGames() {
+      const container = document.getElementById('upcoming-games-grid');
+      if (!container) return;
+      container.innerHTML = '';
+
+      upcomingGames.forEach((game) => {
+        const isLive = game.status === 'Live';
+        const card = document.createElement('div');
+        card.className = `room-card surface-glass rounded-2xl p-4 cursor-pointer border border-[#c1c9bf]/60 ${isLive ? 'ring-1 ring-[#ab3334]' : ''}`;
+
+        card.innerHTML = `
+          <div>
+            <div class="flex justify-between items-start">
+              <div>
+                <div class="text-[10px] font-bold uppercase tracking-wider ${isLive ? 'text-[#ab3334]' : 'text-[#414941]'}">${game.status} • ${game.venue}</div>
+                <div class="font-display text-xl font-bold text-[#033016] leading-tight mt-1">${game.away} <span class="text-[#414941]">@</span> ${game.home}</div>
+              </div>
+            </div>
+            <div class="mt-3 text-xs text-[#414941]">
+              <div class="font-semibold">${game.time}</div>
+              <div class="mt-1 text-[10px] opacity-80">${game.awayPitcher} vs ${game.homePitcher}</div>
+            </div>
+          </div>
+        `;
+
+        card.onclick = () => selectUpcomingGame(game);
+        container.appendChild(card);
+      });
+    }
+
+    function selectUpcomingGame(game) {
+      // Load the selected matchup into the live game state
+      gameState.away = game.away;
+      gameState.home = game.home;
+      gameState.awayPitcher = game.awayPitcher;
+      gameState.homePitcher = game.homePitcher;
+      gameState.awayScore = 0;
+      gameState.homeScore = 0;
+      gameState.inning = 1;
+      gameState.top = true;
+
+      updateLiveBar();
+      generateBoard(true); // fresh board tailored to the new pitchers/lineup
+
+      showView('play');
+      showToast(`Loaded ${game.away} @ ${game.home}`);
+    }
+
     // ========== ROOMS / LOBBY ==========
     function joinRoom(roomIdx) {
       const names = ["Wrigley Faithful", "Bay City Ballers", "Red Sox Royalty"];
@@ -1566,6 +1670,9 @@
       initStandingsDemoData();
       setupWakeLockListeners();
       setupPWAInstall();
+
+      // Render the upcoming games list (clickable to load matchups)
+      renderUpcomingGames();
 
       // Basic offline detection for PWA resilience
       const offlineBanner = document.getElementById('offline-banner');
