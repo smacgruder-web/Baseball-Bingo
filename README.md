@@ -69,11 +69,15 @@ See `real_time_data_strategy.md` and `database_analytics_strategy.md` for live M
 
 ## Live Deployment
 
-**Vercel Production:** https://stitchinteractivebaseballbingo.vercel.app
+**Project Name (Vercel):** Baseball Bingo Pro
 
-(Direct latest: https://stitchinteractivebaseballbingo-28hmxylvf.vercel.app)
+**Production URL:** https://baseball-bingo-pro.vercel.app
+
+The project was renamed on Vercel to "Baseball Bingo Pro". The clean domain `baseball-bingo-pro.vercel.app` is now active and aliased to the latest deployment.
 
 The app is fully static — perfect for Vercel, Netlify, or any static host. All PWA features (including the service worker) work when served over HTTPS.
+
+You can also access it via the previous domain during the transition: https://stitchinteractivebaseballbingo.vercel.app (will eventually redirect or be updated in dashboard).
 
 ---
 
